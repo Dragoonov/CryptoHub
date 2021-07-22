@@ -1,7 +1,8 @@
 package com.moonlightbutterfly.cryptohub.repository.retrofit
 
 import com.moonlightbutterfly.cryptohub.BuildConfig
-import com.moonlightbutterfly.cryptohub.repository.retrofit.dataobjects.CurrencyOutput
+import com.moonlightbutterfly.cryptohub.CRYPTOCURRENCIES_LOAD_NUMBER_PER_PAGE
+import com.moonlightbutterfly.cryptohub.repository.retrofit.dataobjects.CryptocurrencyOutput
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -10,5 +11,9 @@ import retrofit2.http.Query
  */
 interface NomicsService {
     @GET("currencies/ticker")
-    suspend fun getCurrencies(@Query("key") apiKey: String = BuildConfig.API_KEY): List<CurrencyOutput>
+    suspend fun getCryptocurrencyOutputs(
+        @Query("key") apiKey: String = BuildConfig.API_KEY,
+        @Query("per-page") itemsPerPage: Int = CRYPTOCURRENCIES_LOAD_NUMBER_PER_PAGE,
+        @Query("page") page: Int,
+    ): List<CryptocurrencyOutput>
 }
