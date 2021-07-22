@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 /**
  * Represents the currency class returned by the Nomics (https://nomics.com/docs) API.
  */
-data class CurrencyOutput (
+data class CurrencyOutput(
     val currency: String,
     val symbol: String,
     val price: String,
