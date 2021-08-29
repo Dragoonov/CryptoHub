@@ -13,7 +13,7 @@ abstract class CryptoHubDatabase : RoomDatabase() {
 
     companion object {
         private var INSTANCE: CryptoHubDatabase? = null
-        const val DATABASE_NAME = "app_config_database"
+        private const val DATABASE_NAME = "app_config_database"
 
         fun getInstance(context: Context): CryptoHubDatabase {
             synchronized(this) {

@@ -21,7 +21,7 @@ class CryptoHubNavHostTest {
 
     @get:Rule
     val composeTestRule = createComposeRule()
-    lateinit var navController: NavHostController
+    private lateinit var navController: NavHostController
 
     @Before
     fun setupNavHost() {

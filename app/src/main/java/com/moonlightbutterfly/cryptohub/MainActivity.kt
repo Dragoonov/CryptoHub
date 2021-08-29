@@ -22,7 +22,7 @@ import com.moonlightbutterfly.cryptohub.viewmodels.ViewModelFactory
 
 class MainActivity : AppCompatActivity() {
 
-    lateinit var viewModelFactory: ViewModelFactory
+    private lateinit var viewModelFactory: ViewModelFactory
 
     override fun onCreate(savedInstanceState: Bundle?) {
         viewModelFactory = DaggerAppComponent.factory().create(this).viewModelFactory()
