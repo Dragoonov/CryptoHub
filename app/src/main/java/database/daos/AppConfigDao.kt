@@ -15,5 +15,4 @@ interface AppConfigDao {
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
     suspend fun update(config: AppConfig)
-
 }

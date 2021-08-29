@@ -1,7 +1,14 @@
 package com.moonlightbutterfly.cryptohub.ui.composables
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -46,7 +53,8 @@ fun CryptocurrencyListItem(item: CryptocurrencyListItem) {
     Row(
         Modifier
             .padding(20.dp)
-            .height(50.dp)) {
+            .height(50.dp)
+    ) {
         CryptocurrencyLogoFor(item)
         CryptocurrencyNameColumnFor(item)
         CryptocurrencyPriceColumnFor(item)
@@ -79,7 +87,8 @@ fun RowScope.CryptocurrencyNameColumnFor(item: CryptocurrencyListItem) {
     Column(
         Modifier
             .weight(3f)
-            .fillMaxHeight(), Arrangement.SpaceBetween
+            .fillMaxHeight(),
+        Arrangement.SpaceBetween
     ) {
         Text(
             text = item.name,
@@ -97,7 +106,8 @@ fun RowScope.CryptocurrencyPriceColumnFor(item: CryptocurrencyListItem) {
     Column(
         Modifier
             .weight(2f)
-            .fillMaxHeight(), verticalArrangement = Arrangement.SpaceBetween
+            .fillMaxHeight(),
+        verticalArrangement = Arrangement.SpaceBetween
     ) {
         val textModifier = Modifier.align(Alignment.End)
         Text(

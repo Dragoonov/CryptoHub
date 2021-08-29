@@ -4,7 +4,12 @@ import androidx.lifecycle.MutableLiveData
 import com.moonlightbutterfly.cryptohub.usecases.GetAppConfigSettingsUseCase
 import com.moonlightbutterfly.cryptohub.usecases.SetAppConfigUseCase
 import database.AppConfig
-import io.mockk.*
+import io.mockk.Runs
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineDispatcher
@@ -39,7 +44,7 @@ class SettingsViewModelTest {
     }
 
     @Test
-    fun `should update app config`()  {
+    fun `should update app config`() {
         // WHEN
         viewModel.onNightModeChanged(true)
         // THEN

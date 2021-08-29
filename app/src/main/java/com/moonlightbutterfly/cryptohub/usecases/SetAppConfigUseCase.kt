@@ -9,5 +9,4 @@ class SetAppConfigUseCase @Inject constructor(private val cryptoHubInternalRepos
     suspend fun updateAppConfig(appConfig: AppConfig) {
         cryptoHubInternalRepository.updateAppConfig(appConfig)
     }
-
 }

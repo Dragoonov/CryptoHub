@@ -58,10 +58,8 @@ class CryptoHubNavHostTest {
         composeTestRule.apply {
             onNodeWithText("Settings").performClick()
             onNodeWithText("General").assertIsDisplayed()
-
         }
         val route = navController.currentBackStackEntry?.destination?.route
         assertEquals(route, "settings")
     }
-
 }

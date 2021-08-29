@@ -5,7 +5,7 @@ import database.AppConfig
 import database.daos.AppConfigDao
 import javax.inject.Inject
 
-class CryptoHubInternalRepositoryImpl @Inject constructor(private val appConfigDao: AppConfigDao):
+class CryptoHubInternalRepositoryImpl @Inject constructor(private val appConfigDao: AppConfigDao) :
     CryptoHubInternalRepository {
 
     override val appConfig = appConfigDao

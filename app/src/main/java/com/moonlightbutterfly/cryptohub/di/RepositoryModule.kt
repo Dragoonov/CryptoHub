@@ -25,5 +25,4 @@ abstract class RepositoryModule {
         @Provides
         fun provideAppConfigDao(context: Context): AppConfigDao = CryptoHubDatabase.getInstance(context).appConfigDao()
     }
-
 }

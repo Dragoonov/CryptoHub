@@ -17,7 +17,7 @@ class CryptoHubExternalRepositoryFakeImpl @Inject constructor() : CryptoHubExter
                 ),
                 CryptocurrencyOutput(
                     name = "Ethereum"
-                ),
+                )
             )
         } else listOf(CryptocurrencyOutput())
     }

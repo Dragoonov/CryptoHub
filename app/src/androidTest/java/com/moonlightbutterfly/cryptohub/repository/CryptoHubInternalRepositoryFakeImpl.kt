@@ -10,6 +10,6 @@ class CryptoHubInternalRepositoryFakeImpl @Inject constructor() : CryptoHubInter
     override val appConfig: LiveData<AppConfig> = liveData { AppConfig() }
 
     override suspend fun updateAppConfig(appConfig: AppConfig) {
-        //EMPTY
+        // EMPTY
     }
 }

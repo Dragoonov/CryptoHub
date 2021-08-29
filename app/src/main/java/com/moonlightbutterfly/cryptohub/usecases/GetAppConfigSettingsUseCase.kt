@@ -9,5 +9,4 @@ class GetAppConfigSettingsUseCase @Inject constructor(cryptoHubInternalRepositor
     val appConfig = cryptoHubInternalRepository.appConfig
 
     val isNightModeEnabled = appConfig.map { it.nightModeEnabled }
-
 }

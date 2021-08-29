@@ -2,7 +2,11 @@ package com.moonlightbutterfly.cryptohub.ui.composables
 
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.*
+import androidx.compose.material.BottomNavigation
+import androidx.compose.material.BottomNavigationItem
+import androidx.compose.material.Icon
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -16,8 +20,10 @@ import androidx.navigation.compose.composable
 import com.moonlightbutterfly.cryptohub.ui.Screen
 
 @Composable
-fun AppLayout(navController: NavHostController,
-              backStackEntry: NavBackStackEntry?,) {
+fun AppLayout(
+    navController: NavHostController,
+    backStackEntry: NavBackStackEntry?,
+) {
     Scaffold(
         bottomBar = { AppBottomNavigation(navController, backStackEntry) }
     ) {
@@ -41,9 +47,10 @@ fun AppBottomNavigation(navController: NavHostController, backStackEntry: NavBac
 fun RowScope.AppBottomNavigationItem(
     screen: Screen,
     navController: NavHostController,
-    backStackEntry: NavBackStackEntry?) {
+    backStackEntry: NavBackStackEntry?
+) {
     val currentRoute = backStackEntry?.destination?.route
-        BottomNavigationItem(
+    BottomNavigationItem(
         icon = { Icon(screen.getIconConsideringCurrentRoute(currentRoute), contentDescription = null) },
         label = { Text(stringResource(screen.nameResourceId)) },
         selected = currentRoute == screen.route,

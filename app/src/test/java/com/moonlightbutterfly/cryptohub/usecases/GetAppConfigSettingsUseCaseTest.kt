@@ -22,8 +22,8 @@ class GetAppConfigSettingsUseCaseTest {
     private val appConfigLiveData = MutableLiveData(AppConfig(5, true))
 
     private val useCase = GetAppConfigSettingsUseCase(repositoryMock)
-    private val appConfigObserver: Observer<AppConfig> = Observer {  }
-    private val nightModeObserver: Observer<Boolean> = Observer {  }
+    private val appConfigObserver: Observer<AppConfig> = Observer { }
+    private val nightModeObserver: Observer<Boolean> = Observer { }
 
     @get:Rule
     val rule = InstantTaskExecutorRule()

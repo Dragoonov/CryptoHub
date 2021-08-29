@@ -9,7 +9,8 @@ class ViewModelFactory @Inject constructor(
     private val cryptocurrenciesViewModelProvider: Provider<CryptocurrenciesListViewModel>,
     private val mainViewModelProvider: Provider<MainViewModel>,
     private val settingsViewModelProvider: Provider<SettingsViewModel>,
-): ViewModelProvider.Factory {
+) : ViewModelProvider.Factory {
+    @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         return modelClass.let {
             when {

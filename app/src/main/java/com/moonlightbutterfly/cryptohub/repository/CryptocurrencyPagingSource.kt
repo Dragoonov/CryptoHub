@@ -4,8 +4,8 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.moonlightbutterfly.cryptohub.repository.retrofit.dataobjects.CryptocurrencyOutput
 
-class CryptocurrencyPagingSource(private val cryptocurrencyProvider: suspend (Int) -> List<CryptocurrencyOutput>)
-    : PagingSource<Int, CryptocurrencyOutput>() {
+class CryptocurrencyPagingSource(private val cryptocurrencyProvider: suspend (Int) -> List<CryptocurrencyOutput>) :
+    PagingSource<Int, CryptocurrencyOutput>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, CryptocurrencyOutput> {
         val nextPage = params.key ?: 1
@@ -25,5 +25,4 @@ class CryptocurrencyPagingSource(private val cryptocurrencyProvider: suspend (In
                     ?.nextKey?.minus(1)
         }
     }
-
 }

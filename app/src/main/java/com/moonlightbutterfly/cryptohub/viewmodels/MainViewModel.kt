@@ -9,5 +9,4 @@ class MainViewModel @Inject constructor(
 ) : ViewModel() {
 
     val isNightModeEnabled = getAppConfigSettingsUseCase.isNightModeEnabled
-
 }

@@ -9,17 +9,22 @@ import androidx.compose.material.icons.outlined.ViewList
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.moonlightbutterfly.cryptohub.R
 
-enum class Screen(val route: String,
-                  @StringRes val nameResourceId: Int,
-                  val iconSelected: ImageVector,
-                  val iconUnselected: ImageVector) {
+enum class Screen(
+    val route: String,
+    @StringRes val nameResourceId: Int,
+    val iconSelected: ImageVector,
+    val iconUnselected: ImageVector
+) {
     CRYPTOCURRENCIES_LIST(
         "cryptocurrenciesList",
         R.string.cryptocurrencies_list,
         Icons.Filled.ViewList,
-        Icons.Outlined.ViewList),
-    SETTINGS("settings",
+        Icons.Outlined.ViewList
+    ),
+    SETTINGS(
+        "settings",
         R.string.settings,
         Icons.Filled.Settings,
-        Icons.Outlined.Settings)
+        Icons.Outlined.Settings
+    )
 }

@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity() {
     private fun SetStatusBarColor() {
         val systemUiController = rememberSystemUiController()
         val useDarkIcons = MaterialTheme.colors.isLight
-        val statusBarColor =  MaterialTheme.colors.primary
+        val statusBarColor = MaterialTheme.colors.primary
         SideEffect {
             systemUiController.setStatusBarColor(
                 color = statusBarColor,

@@ -7,5 +7,4 @@ import javax.inject.Inject
 class CryptocurrenciesListViewModel @Inject constructor (getCryptocurrenciesListUseCase: GetCryptocurrenciesListUseCase) : ViewModel() {
 
     val cryptocurrencies = getCryptocurrenciesListUseCase.cryptocurrencies
-
 }

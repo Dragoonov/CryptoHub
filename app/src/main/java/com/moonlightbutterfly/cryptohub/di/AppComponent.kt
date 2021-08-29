@@ -15,5 +15,4 @@ interface AppComponent {
     }
 
     fun viewModelFactory(): ViewModelFactory
-
 }
