@@ -1,4 +1,4 @@
-package com.moonlightbutterfly.cryptohub.repository.retrofit.dataobjects
+package com.moonlightbutterfly.cryptohub.repository.dataobjects
 
 import com.google.gson.annotations.SerializedName
 

@@ -7,7 +7,7 @@ import androidx.paging.map
 import com.moonlightbutterfly.cryptohub.CRYPTOCURRENCIES_LOAD_NUMBER_PER_PAGE
 import com.moonlightbutterfly.cryptohub.dataobjects.CryptocurrencyListItem
 import com.moonlightbutterfly.cryptohub.repository.CryptoHubExternalRepository
-import com.moonlightbutterfly.cryptohub.repository.retrofit.dataobjects.CryptocurrencyOutput
+import com.moonlightbutterfly.cryptohub.repository.dataobjects.CryptocurrencyOutput
 import com.moonlightbutterfly.cryptohub.utils.round
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject

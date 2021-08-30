@@ -2,8 +2,12 @@ package com.moonlightbutterfly.cryptohub.repository
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.moonlightbutterfly.cryptohub.repository.retrofit.dataobjects.CryptocurrencyOutput
+import com.moonlightbutterfly.cryptohub.repository.dataobjects.CryptocurrencyOutput
 
+/**
+ * Used to load the cryptocurrencies indefinitely
+ * @param cryptocurrencyProvider the property providing the cryptocurrencies list to load
+ */
 class CryptocurrencyPagingSource(private val cryptocurrencyProvider: suspend (Int) -> List<CryptocurrencyOutput>) :
     PagingSource<Int, CryptocurrencyOutput>() {
 

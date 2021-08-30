@@ -1,4 +1,4 @@
-package database
+package com.moonlightbutterfly.cryptohub.repository.dataobjects
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

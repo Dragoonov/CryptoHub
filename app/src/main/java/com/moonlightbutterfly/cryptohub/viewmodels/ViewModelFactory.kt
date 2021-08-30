@@ -5,6 +5,10 @@ import androidx.lifecycle.ViewModelProvider
 import javax.inject.Inject
 import javax.inject.Provider
 
+/**
+ * Factory for all app's ViewModels. When a ViewModel is provided, it should be provided through
+ * this factory.
+ */
 class ViewModelFactory @Inject constructor(
     private val cryptocurrenciesViewModelProvider: Provider<CryptocurrenciesListViewModel>,
     private val mainViewModelProvider: Provider<MainViewModel>,

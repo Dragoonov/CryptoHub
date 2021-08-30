@@ -5,7 +5,7 @@ import androidx.room.Dao
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import database.AppConfig
+import com.moonlightbutterfly.cryptohub.repository.dataobjects.AppConfig
 
 @Dao
 interface AppConfigDao {

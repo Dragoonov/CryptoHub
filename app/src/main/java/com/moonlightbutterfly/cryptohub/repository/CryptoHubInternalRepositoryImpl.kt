@@ -1,10 +1,13 @@
 package com.moonlightbutterfly.cryptohub.repository
 
 import androidx.lifecycle.map
-import database.AppConfig
+import com.moonlightbutterfly.cryptohub.repository.dataobjects.AppConfig
 import database.daos.AppConfigDao
 import javax.inject.Inject
 
+/**
+ * Internal app repository living inside the device.
+ */
 class CryptoHubInternalRepositoryImpl @Inject constructor(private val appConfigDao: AppConfigDao) :
     CryptoHubInternalRepository {
 

@@ -1,9 +1,9 @@
 package com.moonlightbutterfly.cryptohub.viewmodels
 
 import androidx.lifecycle.MutableLiveData
+import com.moonlightbutterfly.cryptohub.repository.dataobjects.AppConfig
 import com.moonlightbutterfly.cryptohub.usecases.GetAppConfigSettingsUseCase
 import com.moonlightbutterfly.cryptohub.usecases.SetAppConfigUseCase
-import database.AppConfig
 import io.mockk.Runs
 import io.mockk.coEvery
 import io.mockk.coVerify

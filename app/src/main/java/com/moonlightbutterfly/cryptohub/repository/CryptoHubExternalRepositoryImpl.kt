@@ -2,8 +2,8 @@ package com.moonlightbutterfly.cryptohub.repository
 
 import androidx.paging.PagingSource
 import com.google.gson.GsonBuilder
+import com.moonlightbutterfly.cryptohub.repository.dataobjects.CryptocurrencyOutput
 import com.moonlightbutterfly.cryptohub.repository.retrofit.NomicsService
-import com.moonlightbutterfly.cryptohub.repository.retrofit.dataobjects.CryptocurrencyOutput
 import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

@@ -2,15 +2,13 @@ package com.moonlightbutterfly.cryptohub.usecases
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import com.moonlightbutterfly.cryptohub.repository.CryptoHubInternalRepository
-import database.AppConfig
+import com.moonlightbutterfly.cryptohub.repository.dataobjects.AppConfig
+import com.moonlightbutterfly.cryptohub.utils.observeForTesting
 import io.mockk.every
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertTrue
-import org.junit.After
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
@@ -22,23 +20,9 @@ class GetAppConfigSettingsUseCaseTest {
     private val appConfigLiveData = MutableLiveData(AppConfig(5, true))
 
     private val useCase = GetAppConfigSettingsUseCase(repositoryMock)
-    private val appConfigObserver: Observer<AppConfig> = Observer { }
-    private val nightModeObserver: Observer<Boolean> = Observer { }
 
     @get:Rule
     val rule = InstantTaskExecutorRule()
-
-    @Before
-    fun setup() {
-        useCase.appConfig.observeForever(appConfigObserver)
-        useCase.isNightModeEnabled.observeForever(nightModeObserver)
-    }
-
-    @After
-    fun tearDown() {
-        useCase.appConfig.removeObserver(appConfigObserver)
-        useCase.isNightModeEnabled.removeObserver(nightModeObserver)
-    }
 
     @Test
     fun `should return appConfig`() {
@@ -49,7 +33,7 @@ class GetAppConfigSettingsUseCaseTest {
     }
 
     @Test
-    fun `should return proper night mode`() {
+    fun `should return proper night mode`() = useCase.isNightModeEnabled.observeForTesting {
         // WHEN
         val nightMode = useCase.isNightModeEnabled
         // THEN
