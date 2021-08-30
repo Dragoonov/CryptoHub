@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">CryptoHub</string>
+    <string name="cryptocurrency_item_list_image_description">Cryptocurrency logo description</string>
+    <string name="cryptocurrencies_list">Cryptocurrencies list</string>
+    <string name="settings">Settings</string>
+    <string name="night_mode">Night mode</string>
+    <string name="general">General</string>
 </resources>
