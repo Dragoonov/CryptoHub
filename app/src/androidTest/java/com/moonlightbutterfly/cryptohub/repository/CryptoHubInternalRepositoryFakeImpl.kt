@@ -2,7 +2,7 @@ package com.moonlightbutterfly.cryptohub.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
-import com.moonlightbutterfly.cryptohub.repository.dataobjects.AppConfig
+import com.moonlightbutterfly.cryptohub.dataobjects.AppConfig
 import javax.inject.Inject
 
 class CryptoHubInternalRepositoryFakeImpl @Inject constructor() : CryptoHubInternalRepository {

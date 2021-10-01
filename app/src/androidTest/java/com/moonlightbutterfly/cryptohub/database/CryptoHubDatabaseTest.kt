@@ -10,7 +10,7 @@ import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.moonlightbutterfly.cryptohub.repository.dataobjects.AppConfig
+import com.moonlightbutterfly.cryptohub.dataobjects.AppConfig
 import database.CryptoHubDatabase
 import database.daos.AppConfigDao
 import junit.framework.TestCase.assertEquals

@@ -5,4 +5,10 @@
     <string name="settings">Settings</string>
     <string name="night_mode">Night mode</string>
     <string name="general">General</string>
+    <string name="statistics">Statistics</string>
+    <string name="market_cap">Market Capitalization</string>
+    <string name="volume">Volume</string>
+    <string name="rank">Rank</string>
+    <string name="circulating_supply">Circulating Supply</string>
+    <string name="max_supply">Max Supply</string>
 </resources>

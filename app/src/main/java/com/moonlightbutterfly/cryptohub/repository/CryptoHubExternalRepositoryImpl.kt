@@ -1,8 +1,7 @@
 package com.moonlightbutterfly.cryptohub.repository
 
-import androidx.paging.PagingSource
 import com.google.gson.GsonBuilder
-import com.moonlightbutterfly.cryptohub.repository.dataobjects.CryptocurrencyOutput
+import com.moonlightbutterfly.cryptohub.repository.dataobjects.CryptocurrencyItemOutput
 import com.moonlightbutterfly.cryptohub.repository.retrofit.NomicsService
 import retrofit2.HttpException
 import retrofit2.Retrofit
@@ -20,16 +19,21 @@ class CryptoHubExternalRepositoryImpl @Inject constructor() : CryptoHubExternalR
             .build().create(NomicsService::class.java)
     }
 
-    override fun getCryptocurrencyOutputsSource(): PagingSource<Int, CryptocurrencyOutput> = CryptocurrencyPagingSource {
-        getCryptocurrencyOutputs(it)
-    }
-
-    private suspend fun getCryptocurrencyOutputs(page: Int): List<CryptocurrencyOutput> {
+    override suspend fun getCryptocurrenciesOutput(page: Int): List<CryptocurrencyItemOutput> {
         try {
             return service.getCryptocurrencyOutputs(page = page)
         } catch (exception: HttpException) {
             print(exception)
         }
         return emptyList()
+    }
+
+    override suspend fun getCryptocurrencyOutput(cryptoSymbol: String): CryptocurrencyItemOutput {
+        try {
+            return service.getCryptocurrencyOutputs(id = cryptoSymbol).first()
+        } catch (exception: HttpException) {
+            print(exception)
+        }
+        return CryptocurrencyItemOutput.EMPTY
     }
 }

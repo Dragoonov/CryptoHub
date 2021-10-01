@@ -2,8 +2,8 @@ package com.moonlightbutterfly.cryptohub.usecases
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
+import com.moonlightbutterfly.cryptohub.dataobjects.AppConfig
 import com.moonlightbutterfly.cryptohub.repository.CryptoHubInternalRepository
-import com.moonlightbutterfly.cryptohub.repository.dataobjects.AppConfig
 import com.moonlightbutterfly.cryptohub.utils.observeForTesting
 import io.mockk.every
 import io.mockk.mockk

@@ -12,13 +12,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavBackStackEntry
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import coil.annotation.ExperimentalCoilApi
 import com.moonlightbutterfly.cryptohub.ui.Screen
 
+@ExperimentalCoilApi
 @Composable
 fun AppLayout(
     navController: NavHostController,
@@ -28,7 +29,7 @@ fun AppLayout(
         bottomBar = { AppBottomNavigation(navController, backStackEntry) }
     ) {
         NavHost(navController, startDestination = Screen.CRYPTOCURRENCIES_LIST.route, Modifier.padding(it)) {
-            destinations()
+            destinations(navController)
         }
     }
 }
@@ -36,9 +37,9 @@ fun AppLayout(
 @Composable
 fun AppBottomNavigation(navController: NavHostController, backStackEntry: NavBackStackEntry?) {
     BottomNavigation {
-        val allScreens = Screen.values()
+        val allScreens = Screen.bottomNavigationScreens()
         allScreens.forEach { screen ->
-            AppBottomNavigationItem(screen = screen, navController = navController, backStackEntry)
+            AppBottomNavigationItem(screen = screen, navController = navController, backStackEntry = backStackEntry)
         }
     }
 }
@@ -54,7 +55,7 @@ fun RowScope.AppBottomNavigationItem(
         icon = { Icon(screen.getIconConsideringCurrentRoute(currentRoute), contentDescription = null) },
         label = { Text(stringResource(screen.nameResourceId)) },
         selected = currentRoute == screen.route,
-        onClick = { navController navigateTo screen }
+        onClick = { navController navigateTo screen.route }
     )
 }
 
@@ -66,21 +67,21 @@ private fun Screen.getIconConsideringCurrentRoute(route: String?): ImageVector {
     }
 }
 
-private infix fun NavHostController.navigateTo(screen: Screen) {
-    navigate(screen.route) {
-        popUpTo(graph.findStartDestination().id) {
-            saveState = true
-        }
-        launchSingleTop = true
-        restoreState = true
-    }
+private infix fun NavHostController.navigateTo(route: String) {
+    navigate(route)
 }
 
-fun NavGraphBuilder.destinations() {
+@ExperimentalCoilApi
+fun NavGraphBuilder.destinations(navController: NavHostController) {
     composable(Screen.CRYPTOCURRENCIES_LIST.route) {
-        CryptocurrenciesListScreen()
+        CryptocurrenciesListScreen {
+            navController navigateTo "${Screen.CRYPTOCURRENCY_PANEL.route}/$it"
+        }
     }
     composable(Screen.SETTINGS.route) {
         SettingsScreen()
+    }
+    composable("${Screen.CRYPTOCURRENCY_PANEL.route}/{cryptoSymbol}") {
+        CryptocurrencyPanelScreen(it.arguments?.getString("cryptoSymbol")!!)
     }
 }

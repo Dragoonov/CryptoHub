@@ -1,4 +1,4 @@
-package com.moonlightbutterfly.cryptohub.database
+package com.moonlightbutterfly.cryptohub.ui
 
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -11,14 +11,12 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import coil.annotation.ExperimentalCoilApi
 import com.moonlightbutterfly.cryptohub.di.DaggerTestAppComponent
-import com.moonlightbutterfly.cryptohub.ui.LocalViewModelFactory
 import com.moonlightbutterfly.cryptohub.ui.composables.AppLayout
-import junit.framework.TestCase.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-class CryptoHubNavHostTest {
+class CryptocurrencyPanelTest {
 
     @get:Rule
     val composeTestRule = createComposeRule()
@@ -38,30 +36,18 @@ class CryptoHubNavHostTest {
     }
 
     @Test
-    fun testBottomNavigationIsDisplayed() {
+    fun testGoingThroughApp() {
         composeTestRule.apply {
-            onNodeWithText("Settings").assertIsDisplayed()
-            onNodeWithText("Cryptocurrencies list").assertIsDisplayed()
-        }
-    }
-
-    @Test
-    fun testCryptoListIsFirstDisplayed() {
-        composeTestRule.apply {
+            onNodeWithText("Bitcoin").performClick()
             onNodeWithText("Bitcoin").assertIsDisplayed()
-            onNodeWithText("Ethereum").assertIsDisplayed()
-        }
-        val route = navController.currentBackStackEntry?.destination?.route
-        assertEquals(route, "cryptocurrenciesList")
-    }
+            onNodeWithText("BTC").assertIsDisplayed()
+            onNodeWithText("Statistics").assertIsDisplayed()
 
-    @Test
-    fun testNavigateToSettings() {
-        composeTestRule.apply {
-            onNodeWithText("Settings").performClick()
-            onNodeWithText("General").assertIsDisplayed()
+            onNodeWithText("Cryptocurrencies list").performClick()
+            onNodeWithText("Ethereum").performClick()
+            onNodeWithText("Ethereum").assertIsDisplayed()
+            onNodeWithText("ETH").assertIsDisplayed()
+            onNodeWithText("Statistics").assertIsDisplayed()
         }
-        val route = navController.currentBackStackEntry?.destination?.route
-        assertEquals(route, "settings")
     }
 }
