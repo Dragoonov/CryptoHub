@@ -1,9 +1,10 @@
 package com.moonlightbutterfly.cryptohub.repository
 
-import androidx.paging.PagingSource
-import com.moonlightbutterfly.cryptohub.repository.dataobjects.CryptocurrencyOutput
+import com.moonlightbutterfly.cryptohub.repository.dataobjects.CryptocurrencyItemOutput
 
 interface CryptoHubExternalRepository {
 
-    fun getCryptocurrencyOutputsSource(): PagingSource<Int, CryptocurrencyOutput>
+    suspend fun getCryptocurrenciesOutput(page: Int): List<CryptocurrencyItemOutput>
+
+    suspend fun getCryptocurrencyOutput(cryptoSymbol: String): CryptocurrencyItemOutput
 }

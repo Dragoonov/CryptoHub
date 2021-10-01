@@ -13,6 +13,7 @@ class ViewModelFactory @Inject constructor(
     private val cryptocurrenciesViewModelProvider: Provider<CryptocurrenciesListViewModel>,
     private val mainViewModelProvider: Provider<MainViewModel>,
     private val settingsViewModelProvider: Provider<SettingsViewModel>,
+    private val cryptocurrencyPanelViewModel: Provider<CryptocurrencyPanelViewModel>
 ) : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
@@ -21,6 +22,7 @@ class ViewModelFactory @Inject constructor(
                 it.isAssignableFrom(CryptocurrenciesListViewModel::class.java) -> cryptocurrenciesViewModelProvider.get()
                 it.isAssignableFrom(MainViewModel::class.java) -> mainViewModelProvider.get()
                 it.isAssignableFrom(SettingsViewModel::class.java) -> settingsViewModelProvider.get()
+                it.isAssignableFrom(CryptocurrencyPanelViewModel::class.java) -> cryptocurrencyPanelViewModel.get()
                 else -> throw IllegalArgumentException("Unknown ViewModel class")
             } as T
         }

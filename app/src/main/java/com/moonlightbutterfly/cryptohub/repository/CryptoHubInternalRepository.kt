@@ -1,7 +1,7 @@
 package com.moonlightbutterfly.cryptohub.repository
 
 import androidx.lifecycle.LiveData
-import com.moonlightbutterfly.cryptohub.repository.dataobjects.AppConfig
+import com.moonlightbutterfly.cryptohub.dataobjects.AppConfig
 
 interface CryptoHubInternalRepository {
 

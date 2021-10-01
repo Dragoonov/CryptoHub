@@ -1,4 +1,4 @@
-package com.moonlightbutterfly.cryptohub.repository.dataobjects
+package com.moonlightbutterfly.cryptohub.dataobjects
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

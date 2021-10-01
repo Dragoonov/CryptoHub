@@ -1,7 +1,7 @@
 package com.moonlightbutterfly.cryptohub.repository
 
 import androidx.lifecycle.map
-import com.moonlightbutterfly.cryptohub.repository.dataobjects.AppConfig
+import com.moonlightbutterfly.cryptohub.dataobjects.AppConfig
 import database.daos.AppConfigDao
 import javax.inject.Inject
 

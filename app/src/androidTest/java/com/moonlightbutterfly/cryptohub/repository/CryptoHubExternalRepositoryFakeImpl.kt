@@ -1,21 +1,34 @@
 package com.moonlightbutterfly.cryptohub.repository
 
-import androidx.paging.PagingSource
-import com.moonlightbutterfly.cryptohub.repository.dataobjects.CryptocurrencyOutput
+import com.moonlightbutterfly.cryptohub.repository.dataobjects.CryptocurrencyItemOutput
 import javax.inject.Inject
 
 class CryptoHubExternalRepositoryFakeImpl @Inject constructor() : CryptoHubExternalRepository {
 
-    override fun getCryptocurrencyOutputsSource(): PagingSource<Int, CryptocurrencyOutput> = CryptocurrencyPagingSource {
-        if (it == 1) {
+    override suspend fun getCryptocurrenciesOutput(page: Int): List<CryptocurrencyItemOutput> =
+        if (page == 1) {
             listOf(
-                CryptocurrencyOutput(
-                    name = "Bitcoin"
+                CryptocurrencyItemOutput(
+                    name = "Bitcoin",
+                    symbol = "BTC"
                 ),
-                CryptocurrencyOutput(
-                    name = "Ethereum"
+                CryptocurrencyItemOutput(
+                    name = "Ethereum",
+                    symbol = "ETH"
                 )
             )
-        } else listOf(CryptocurrencyOutput())
-    }
+        } else listOf(CryptocurrencyItemOutput())
+
+    override suspend fun getCryptocurrencyOutput(cryptoSymbol: String): CryptocurrencyItemOutput =
+        if (cryptoSymbol == "BTC") {
+            CryptocurrencyItemOutput(
+                name = "Bitcoin",
+                symbol = "BTC"
+            )
+        } else {
+            CryptocurrencyItemOutput(
+                name = "Ethereum",
+                symbol = "ETH"
+            )
+        }
 }

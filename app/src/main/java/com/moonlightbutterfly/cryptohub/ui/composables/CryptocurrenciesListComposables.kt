@@ -1,6 +1,7 @@
 package com.moonlightbutterfly.cryptohub.ui.composables
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,46 +15,46 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
-import coil.ImageLoader
-import coil.compose.ImagePainter
-import coil.compose.rememberImagePainter
-import coil.decode.SvgDecoder
+import coil.annotation.ExperimentalCoilApi
 import com.moonlightbutterfly.cryptohub.R
-import com.moonlightbutterfly.cryptohub.dataobjects.CryptocurrencyListItem
+import com.moonlightbutterfly.cryptohub.dataobjects.CryptocurrencyItem
 import com.moonlightbutterfly.cryptohub.ui.LocalViewModelFactory
 import com.moonlightbutterfly.cryptohub.viewmodels.CryptocurrenciesListViewModel
 
+@ExperimentalCoilApi
 @Composable
-fun CryptocurrenciesListScreen() {
-    val cryptocurrencyItems: LazyPagingItems<CryptocurrencyListItem> = viewModel<CryptocurrenciesListViewModel>(
+fun CryptocurrenciesListScreen(onItemClicked: (symbol: String) -> Unit) {
+    val cryptocurrencyItems: LazyPagingItems<CryptocurrencyItem> = viewModel<CryptocurrenciesListViewModel>(
         factory = LocalViewModelFactory.current
     )
         .cryptocurrencies
         .collectAsLazyPagingItems()
     LazyColumn {
         items(cryptocurrencyItems) {
-            CryptocurrencyListItem(item = it!!)
+            CryptocurrencyListItem(
+                item = it!!,
+                onItemClicked = onItemClicked
+            )
         }
     }
 }
 
+@ExperimentalCoilApi
 @Composable
-fun CryptocurrencyListItem(item: CryptocurrencyListItem) {
+fun CryptocurrencyListItem(item: CryptocurrencyItem, onItemClicked: (symbol: String) -> Unit) {
     Row(
         Modifier
             .padding(20.dp)
             .height(50.dp)
+            .clickable { onItemClicked(item.symbol) }
     ) {
         CryptocurrencyLogoFor(item)
         CryptocurrencyNameColumnFor(item)
@@ -61,8 +62,9 @@ fun CryptocurrencyListItem(item: CryptocurrencyListItem) {
     }
 }
 
+@ExperimentalCoilApi
 @Composable
-fun CryptocurrencyLogoFor(item: CryptocurrencyListItem) {
+fun CryptocurrencyLogoFor(item: CryptocurrencyItem) {
     val painter = getImagePainterFor(item)
     Image(
         painter = painter,
@@ -75,15 +77,7 @@ fun CryptocurrencyLogoFor(item: CryptocurrencyListItem) {
 }
 
 @Composable
-private fun getImagePainterFor(item: CryptocurrencyListItem): ImagePainter {
-    val imageLoader = ImageLoader.Builder(LocalContext.current)
-        .componentRegistry { add(SvgDecoder(LocalContext.current)) }
-        .build()
-    return rememberImagePainter(item.logoUrl, imageLoader)
-}
-
-@Composable
-fun RowScope.CryptocurrencyNameColumnFor(item: CryptocurrencyListItem) {
+fun RowScope.CryptocurrencyNameColumnFor(item: CryptocurrencyItem) {
     Column(
         Modifier
             .weight(3f)
@@ -102,7 +96,7 @@ fun RowScope.CryptocurrencyNameColumnFor(item: CryptocurrencyListItem) {
 }
 
 @Composable
-fun RowScope.CryptocurrencyPriceColumnFor(item: CryptocurrencyListItem) {
+fun RowScope.CryptocurrencyPriceColumnFor(item: CryptocurrencyItem) {
     Column(
         Modifier
             .weight(2f)
@@ -116,18 +110,8 @@ fun RowScope.CryptocurrencyPriceColumnFor(item: CryptocurrencyListItem) {
         )
         Text(
             modifier = textModifier,
-            text = "${item.priceChange}%",
+            text = "${item.dayChanges.priceChangePercent}%",
             style = getPriceChangeTextStyleFor(item)
         )
     }
-}
-
-private fun getPriceChangeTextStyleFor(item: CryptocurrencyListItem): TextStyle {
-    return TextStyle(
-        if (item.priceChange > 0) {
-            Color.Green
-        } else {
-            Color.Red
-        }
-    )
 }
