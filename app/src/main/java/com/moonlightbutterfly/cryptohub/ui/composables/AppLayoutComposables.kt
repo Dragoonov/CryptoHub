@@ -28,7 +28,7 @@ fun AppLayout(
     Scaffold(
         bottomBar = { AppBottomNavigation(navController, backStackEntry) }
     ) {
-        NavHost(navController, startDestination = Screen.CRYPTOCURRENCIES_LIST.route, Modifier.padding(it)) {
+        NavHost(navController, startDestination = Screen.CRYPTOASSETS_LIST.route, Modifier.padding(it)) {
             destinations(navController)
         }
     }
@@ -73,15 +73,15 @@ private infix fun NavHostController.navigateTo(route: String) {
 
 @ExperimentalCoilApi
 fun NavGraphBuilder.destinations(navController: NavHostController) {
-    composable(Screen.CRYPTOCURRENCIES_LIST.route) {
-        CryptocurrenciesListScreen {
-            navController navigateTo "${Screen.CRYPTOCURRENCY_PANEL.route}/$it"
+    composable(Screen.CRYPTOASSETS_LIST.route) {
+        CryptoassetsListScreen {
+            navController navigateTo "${Screen.CRYPTOASSET_PANEL.route}/$it"
         }
     }
     composable(Screen.SETTINGS.route) {
         SettingsScreen()
     }
-    composable("${Screen.CRYPTOCURRENCY_PANEL.route}/{cryptoSymbol}") {
-        CryptocurrencyPanelScreen(it.arguments?.getString("cryptoSymbol")!!)
+    composable("${Screen.CRYPTOASSET_PANEL.route}/{cryptoSymbol}") {
+        CryptoassetPanelScreen(it.arguments?.getString("cryptoSymbol")!!)
     }
 }

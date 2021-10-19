@@ -53,4 +53,8 @@ class MainActivity : AppCompatActivity() {
             )
         }
     }
+
+    //TODO Wywalić magiczne stringi w database (nazwa tabel etc)
+    //TODO Use Case przerobić na invoke
+    //TODO clean architecture
 }

@@ -23,55 +23,61 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.annotation.ExperimentalCoilApi
 import com.moonlightbutterfly.cryptohub.R
-import com.moonlightbutterfly.cryptohub.dataobjects.CryptocurrencyItem
+import com.moonlightbutterfly.cryptohub.dataobjects.CryptoassetItem
 import com.moonlightbutterfly.cryptohub.ui.LocalViewModelFactory
 import com.moonlightbutterfly.cryptohub.utils.toStringAbbr
-import com.moonlightbutterfly.cryptohub.viewmodels.CryptocurrencyPanelViewModel
+import com.moonlightbutterfly.cryptohub.viewmodels.CryptoassetPanelViewModel
 
 @ExperimentalCoilApi
 @Composable
-fun CryptocurrencyPanelScreen(cryptocurrencySymbol: String) {
-    val viewModel: CryptocurrencyPanelViewModel = viewModel(
+fun CryptoassetPanelScreen(cryptoassetSymbol: String) {
+    val viewModel: CryptoassetPanelViewModel = viewModel(
         factory = LocalViewModelFactory.current
     )
-    val cryptocurrency by viewModel.getCryptocurrency(cryptocurrencySymbol)
-        .observeAsState(CryptocurrencyItem.EMPTY)
-    CryptocurrencyPanel(cryptocurrency)
-}
+    val cryptoasset by viewModel.getCryptoasset(cryptoassetSymbol)
+        .observeAsState(CryptoassetItem.EMPTY)
 
-@ExperimentalCoilApi
-@Composable
-fun CryptocurrencyPanel(cryptocurrencyItem: CryptocurrencyItem) {
+    val isLiked by viewModel.isCryptoInFavourites(cryptoassetSymbol).observeAsState(false)
+
     Column(
         Modifier
             .padding(10.dp)
             .fillMaxWidth()
             .fillMaxHeight()
     ) {
-        Header(cryptocurrencyItem = cryptocurrencyItem)
-        PriceChangeRow(cryptocurrencyItem = cryptocurrencyItem)
+        Header(
+            cryptoassetItem = cryptoasset,
+            isInFavourites = isLiked,
+            onFavouriteClicked = {
+                if (it) {
+                    viewModel.addCryptoToFavourites(cryptoassetSymbol)
+                } else {
+                    viewModel.removeCryptoFromFavourites(cryptoassetSymbol)
+                }
+            })
+        PriceChangeRow(cryptoassetItem = cryptoasset)
         Section(name = stringResource(id = R.string.statistics)) {
             Stat(
                 title = stringResource(id = R.string.market_cap),
-                value = "${cryptocurrencyItem.marketCap.toStringAbbr()} USD (${cryptocurrencyItem.dayChanges.marketCapChangePct} %)",
-                style = getMarketCapChangeTextStyleFor(item = cryptocurrencyItem)
+                value = "${cryptoasset.marketCap.toStringAbbr()} USD (${cryptoasset.dayChanges.marketCapChangePct} %)",
+                style = getMarketCapChangeTextStyleFor(item = cryptoasset)
             )
             Stat(
                 title = stringResource(id = R.string.volume),
-                value = "${cryptocurrencyItem.dayChanges.volume.toStringAbbr()} USD (${cryptocurrencyItem.dayChanges.volumeChangePct} %)",
-                style = getVolumeChangeTextStyleFor(item = cryptocurrencyItem)
+                value = "${cryptoasset.dayChanges.volume.toStringAbbr()} USD (${cryptoasset.dayChanges.volumeChangePct} %)",
+                style = getVolumeChangeTextStyleFor(item = cryptoasset)
             )
             Stat(
                 title = stringResource(id = R.string.circulating_supply),
-                value = cryptocurrencyItem.circulatingSupply.toStringAbbr()
+                value = cryptoasset.circulatingSupply.toStringAbbr()
             )
             Stat(
                 title = stringResource(id = R.string.max_supply),
-                value = cryptocurrencyItem.maxSupply.toStringAbbr()
+                value = cryptoasset.maxSupply.toStringAbbr()
             )
             Stat(
                 title = stringResource(id = R.string.rank),
-                value = "${cryptocurrencyItem.rank}"
+                value = "${cryptoasset.rank}"
             )
         }
     }
@@ -79,21 +85,21 @@ fun CryptocurrencyPanel(cryptocurrencyItem: CryptocurrencyItem) {
 
 @ExperimentalCoilApi
 @Composable
-fun Header(cryptocurrencyItem: CryptocurrencyItem) {
+fun Header(cryptoassetItem: CryptoassetItem, isInFavourites: Boolean, onFavouriteClicked: (Boolean) -> Unit) {
     Row(
         Modifier
             .height(100.dp)
             .fillMaxWidth()
             .padding(bottom = 10.dp)
     ) {
-        val painter = getImagePainterFor(cryptocurrencyItem)
+        val painter = getImagePainterFor(cryptoassetItem)
         Image(
             painter = painter,
             modifier = Modifier
                 .padding(end = 10.dp)
                 .size(100.dp),
             contentScale = ContentScale.Inside,
-            contentDescription = stringResource(R.string.cryptocurrency_item_list_image_description),
+            contentDescription = stringResource(R.string.cryptoasset_item_list_image_description),
         )
         Column(
             Modifier
@@ -102,21 +108,26 @@ fun Header(cryptocurrencyItem: CryptocurrencyItem) {
             Arrangement.SpaceBetween
         ) {
             Text(
-                text = cryptocurrencyItem.name,
+                text = cryptoassetItem.name,
                 modifier = Modifier.padding(5.dp),
                 fontSize = 30.sp
             )
-            Text(
-                text = cryptocurrencyItem.symbol,
-                modifier = Modifier.padding(5.dp),
-                fontSize = 20.sp
-            )
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .padding(5.dp), Arrangement.SpaceBetween) {
+                Text(
+                    text = cryptoassetItem.symbol,
+                    fontSize = 20.sp
+                )
+                Favourite(isInFavourites = isInFavourites, onSelectionChanged = onFavouriteClicked)
+            }
         }
     }
 }
 
 @Composable
-fun PriceChangeRow(cryptocurrencyItem: CryptocurrencyItem) {
+fun PriceChangeRow(cryptoassetItem: CryptoassetItem) {
     Row(
         Modifier
             .height(100.dp)
@@ -129,20 +140,20 @@ fun PriceChangeRow(cryptocurrencyItem: CryptocurrencyItem) {
             Arrangement.Top
         ) {
             Text(
-                text = "${cryptocurrencyItem.price} USD",
+                text = "${cryptoassetItem.price} USD",
                 modifier = Modifier.padding(bottom = 2.dp),
                 fontSize = 30.sp
             )
             Text(
-                text = if (cryptocurrencyItem.dayChanges.priceChange > 0) {
+                text = if (cryptoassetItem.dayChanges.priceChange > 0) {
                     "+ "
                 } else {
-                    "- "
-                } + "${cryptocurrencyItem.dayChanges.priceChange}" +
-                    " (${cryptocurrencyItem.dayChanges.priceChangePercent}%)",
+                    ""
+                } + "${cryptoassetItem.dayChanges.priceChange}" +
+                    " (${cryptoassetItem.dayChanges.priceChangePercent}%)",
                 modifier = Modifier.padding(top = 2.dp),
                 fontSize = 15.sp,
-                style = getPriceChangeTextStyleFor(cryptocurrencyItem)
+                style = getPriceChangeTextStyleFor(cryptoassetItem)
             )
         }
     }

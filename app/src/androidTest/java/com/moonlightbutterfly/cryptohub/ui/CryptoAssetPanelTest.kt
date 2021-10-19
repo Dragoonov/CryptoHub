@@ -16,7 +16,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-class CryptocurrencyPanelTest {
+class CryptoassetPanelTest {
 
     @get:Rule
     val composeTestRule = createComposeRule()
@@ -43,7 +43,7 @@ class CryptocurrencyPanelTest {
             onNodeWithText("BTC").assertIsDisplayed()
             onNodeWithText("Statistics").assertIsDisplayed()
 
-            onNodeWithText("Cryptocurrencies list").performClick()
+            onNodeWithText("Cryptoassets list").performClick()
             onNodeWithText("Ethereum").performClick()
             onNodeWithText("Ethereum").assertIsDisplayed()
             onNodeWithText("ETH").assertIsDisplayed()

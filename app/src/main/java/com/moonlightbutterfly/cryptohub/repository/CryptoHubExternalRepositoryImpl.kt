@@ -1,7 +1,7 @@
 package com.moonlightbutterfly.cryptohub.repository
 
 import com.google.gson.GsonBuilder
-import com.moonlightbutterfly.cryptohub.repository.dataobjects.CryptocurrencyItemOutput
+import com.moonlightbutterfly.cryptohub.repository.dataobjects.CryptoassetItemOutput
 import com.moonlightbutterfly.cryptohub.repository.retrofit.NomicsService
 import retrofit2.HttpException
 import retrofit2.Retrofit
@@ -9,7 +9,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Inject
 
 /**
- * Repository returning the info about cryptocurrencies, using the Nomics (https://nomics.com/docs) API.
+ * Repository returning the info about cryptoassets, using the Nomics (https://nomics.com/docs) API.
  */
 class CryptoHubExternalRepositoryImpl @Inject constructor() : CryptoHubExternalRepository {
     private val service by lazy {
@@ -19,21 +19,31 @@ class CryptoHubExternalRepositoryImpl @Inject constructor() : CryptoHubExternalR
             .build().create(NomicsService::class.java)
     }
 
-    override suspend fun getCryptocurrenciesOutput(page: Int): List<CryptocurrencyItemOutput> {
+    override suspend fun getCryptoassetsOutput(ids: String, page: Int): List<CryptoassetItemOutput> {
         try {
-            return service.getCryptocurrencyOutputs(page = page)
+            return if (ids.isEmpty()) {
+                service.getCryptoassetOutputs(page = page)
+            } else {
+                service.getCryptoassetOutputs(page = page, ids = ids)
+            }
         } catch (exception: HttpException) {
             print(exception)
         }
-        return emptyList()
+        //TODO Change after changing nomics
+        return listOf(
+            CryptoassetItemOutput("Bitcoin"),
+            CryptoassetItemOutput("Szitcoin"),
+            CryptoassetItemOutput("Altcoin"),
+            CryptoassetItemOutput("Kucoin"))
     }
 
-    override suspend fun getCryptocurrencyOutput(cryptoSymbol: String): CryptocurrencyItemOutput {
+    override suspend fun getCryptoassetOutput(cryptoSymbol: String): CryptoassetItemOutput {
         try {
-            return service.getCryptocurrencyOutputs(id = cryptoSymbol).first()
+            return service.getCryptoassetOutputs(id = cryptoSymbol).first()
         } catch (exception: HttpException) {
+            //TODO Change after changing nomics
             print(exception)
         }
-        return CryptocurrencyItemOutput.EMPTY
+        return CryptoassetItemOutput.EMPTY
     }
 }

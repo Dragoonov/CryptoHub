@@ -2,7 +2,7 @@ package com.moonlightbutterfly.cryptohub.dataobjects
 
 import com.google.gson.annotations.SerializedName
 
-data class CryptocurrencyItem(
+data class CryptoassetItem(
     val name: String = "",
     val symbol: String = "",
     val price: Double = .0,
@@ -19,6 +19,6 @@ data class CryptocurrencyItem(
     @SerializedName("ytd") val totalChanges: IntervalChanges = IntervalChanges.EMPTY,
 ) {
     companion object {
-        val EMPTY = CryptocurrencyItem()
+        val EMPTY = CryptoassetItem()
     }
 }

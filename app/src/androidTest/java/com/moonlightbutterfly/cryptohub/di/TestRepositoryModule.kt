@@ -14,5 +14,5 @@ abstract class TestRepositoryModule {
     abstract fun bindInternalRepository(cryptoHubRepositoryImpl: CryptoHubInternalRepositoryFakeImpl): CryptoHubInternalRepository
 
     @Binds
-    abstract fun bindExternalRepository(cryptocurrenciesRepositoryImpl: CryptoHubExternalRepositoryFakeImpl): CryptoHubExternalRepository
+    abstract fun bindExternalRepository(cryptoassetsRepositoryImpl: CryptoHubExternalRepositoryFakeImpl): CryptoHubExternalRepository
 }

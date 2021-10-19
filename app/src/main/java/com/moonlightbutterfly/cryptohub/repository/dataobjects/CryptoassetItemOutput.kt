@@ -3,9 +3,9 @@ package com.moonlightbutterfly.cryptohub.repository.dataobjects
 import com.google.gson.annotations.SerializedName
 
 /**
- * Represents the currency class returned by the Nomics (https://nomics.com/docs) API.
+ * Represents the asset class returned by the Nomics (https://nomics.com/docs) API.
  */
-data class CryptocurrencyItemOutput(
+data class CryptoassetItemOutput(
     val name: String? = null,
     val symbol: String? = null,
     val price: String? = null,
@@ -22,6 +22,6 @@ data class CryptocurrencyItemOutput(
     @SerializedName("ytd") val totalChanges: IntervalChangesOutput? = null,
 ) {
     companion object {
-        val EMPTY = CryptocurrencyItemOutput()
+        val EMPTY = CryptoassetItemOutput()
     }
 }

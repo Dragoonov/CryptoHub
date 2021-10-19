@@ -16,9 +16,9 @@ enum class Screen(
     val iconSelected: ImageVector = Icons.Default.Circle,
     val iconUnselected: ImageVector = Icons.Default.Circle
 ) {
-    CRYPTOCURRENCIES_LIST(
-        "cryptocurrenciesList",
-        R.string.cryptocurrencies_list,
+    CRYPTOASSETS_LIST(
+        "cryptoassetsList",
+        R.string.cryptoassets_list,
         Icons.Filled.ViewList,
         Icons.Outlined.ViewList
     ),
@@ -28,11 +28,11 @@ enum class Screen(
         Icons.Filled.Settings,
         Icons.Outlined.Settings
     ),
-    CRYPTOCURRENCY_PANEL(
-        "cryptocurrencyPanel",
+    CRYPTOASSET_PANEL(
+        "cryptoassetPanel",
     );
 
     companion object {
-        fun bottomNavigationScreens(): List<Screen> = listOf(CRYPTOCURRENCIES_LIST, SETTINGS)
+        fun bottomNavigationScreens(): List<Screen> = listOf(CRYPTOASSETS_LIST, SETTINGS)
     }
 }

@@ -41,7 +41,7 @@ class CryptoHubNavHostTest {
     fun testBottomNavigationIsDisplayed() {
         composeTestRule.apply {
             onNodeWithText("Settings").assertIsDisplayed()
-            onNodeWithText("Cryptocurrencies list").assertIsDisplayed()
+            onNodeWithText("Cryptoassets list").assertIsDisplayed()
         }
     }
 
@@ -52,7 +52,7 @@ class CryptoHubNavHostTest {
             onNodeWithText("Ethereum").assertIsDisplayed()
         }
         val route = navController.currentBackStackEntry?.destination?.route
-        assertEquals(route, "cryptocurrenciesList")
+        assertEquals(route, "cryptoassetsList")
     }
 
     @Test

@@ -1,10 +1,10 @@
 package com.moonlightbutterfly.cryptohub.repository
 
-import com.moonlightbutterfly.cryptohub.repository.dataobjects.CryptocurrencyItemOutput
+import com.moonlightbutterfly.cryptohub.repository.dataobjects.CryptoassetItemOutput
 
 interface CryptoHubExternalRepository {
 
-    suspend fun getCryptocurrenciesOutput(page: Int): List<CryptocurrencyItemOutput>
+    suspend fun getCryptoassetsOutput(ids: String = "", page: Int): List<CryptoassetItemOutput>
 
-    suspend fun getCryptocurrencyOutput(cryptoSymbol: String): CryptocurrencyItemOutput
+    suspend fun getCryptoassetOutput(cryptoSymbol: String): CryptoassetItemOutput
 }

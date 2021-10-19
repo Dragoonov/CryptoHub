@@ -1,32 +1,32 @@
 package com.moonlightbutterfly.cryptohub.repository
 
-import com.moonlightbutterfly.cryptohub.repository.dataobjects.CryptocurrencyItemOutput
+import com.moonlightbutterfly.cryptohub.repository.dataobjects.CryptoassetItemOutput
 import javax.inject.Inject
 
 class CryptoHubExternalRepositoryFakeImpl @Inject constructor() : CryptoHubExternalRepository {
 
-    override suspend fun getCryptocurrenciesOutput(page: Int): List<CryptocurrencyItemOutput> =
+    override suspend fun getCryptoassetsOutput(page: Int): List<CryptoassetItemOutput> =
         if (page == 1) {
             listOf(
-                CryptocurrencyItemOutput(
+                CryptoassetItemOutput(
                     name = "Bitcoin",
                     symbol = "BTC"
                 ),
-                CryptocurrencyItemOutput(
+                CryptoassetItemOutput(
                     name = "Ethereum",
                     symbol = "ETH"
                 )
             )
-        } else listOf(CryptocurrencyItemOutput())
+        } else listOf(CryptoassetItemOutput())
 
-    override suspend fun getCryptocurrencyOutput(cryptoSymbol: String): CryptocurrencyItemOutput =
+    override suspend fun getCryptoassetOutput(cryptoSymbol: String): CryptoassetItemOutput =
         if (cryptoSymbol == "BTC") {
-            CryptocurrencyItemOutput(
+            CryptoassetItemOutput(
                 name = "Bitcoin",
                 symbol = "BTC"
             )
         } else {
-            CryptocurrencyItemOutput(
+            CryptoassetItemOutput(
                 name = "Ethereum",
                 symbol = "ETH"
             )

@@ -1,8 +1,8 @@
 package com.moonlightbutterfly.cryptohub.utils
 
-import com.moonlightbutterfly.cryptohub.dataobjects.CryptocurrencyItem
+import com.moonlightbutterfly.cryptohub.dataobjects.CryptoassetItem
 import com.moonlightbutterfly.cryptohub.dataobjects.IntervalChanges
-import com.moonlightbutterfly.cryptohub.repository.dataobjects.CryptocurrencyItemOutput
+import com.moonlightbutterfly.cryptohub.repository.dataobjects.CryptoassetItemOutput
 import com.moonlightbutterfly.cryptohub.repository.dataobjects.IntervalChangesOutput
 
 fun Double.round(decimals: Int): Double {
@@ -11,8 +11,8 @@ fun Double.round(decimals: Int): Double {
     return kotlin.math.round(this * multiplier) / multiplier
 }
 
-fun CryptocurrencyItemOutput.toCryptocurrencyItem() =
-    CryptocurrencyItem(
+fun CryptoassetItemOutput.toCryptoassetItem() =
+    CryptoassetItem(
         name = name ?: "",
         symbol = symbol ?: "",
         logoUrl = logoUrl ?: "",

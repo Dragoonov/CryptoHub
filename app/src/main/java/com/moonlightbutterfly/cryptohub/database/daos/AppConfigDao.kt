@@ -1,4 +1,4 @@
-package database.daos
+package com.moonlightbutterfly.cryptohub.database.daos
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao

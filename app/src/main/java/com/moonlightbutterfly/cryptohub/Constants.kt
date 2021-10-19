@@ -1,3 +1,3 @@
 package com.moonlightbutterfly.cryptohub
 
-const val CRYPTOCURRENCIES_LOAD_NUMBER_PER_PAGE = 50
+const val CRYPTOASSETS_LOAD_NUMBER_PER_PAGE = 50
