@@ -9,6 +9,7 @@ import androidx.navigation.compose.rememberNavController
 import coil.annotation.ExperimentalCoilApi
 import com.moonlightbutterfly.cryptohub.di.DaggerTestAppComponent
 import com.moonlightbutterfly.cryptohub.presentation.ui.composables.AppLayout
+import kotlinx.coroutines.FlowPreview
 import org.junit.Before
 import org.junit.Rule
 
@@ -18,6 +19,7 @@ open class CryptoHubAndroidTest {
     val composeTestRule = createComposeRule()
     protected lateinit var navController: NavHostController
 
+    @FlowPreview
     @ExperimentalCoilApi
     @Before
     fun setupNavHost() {
