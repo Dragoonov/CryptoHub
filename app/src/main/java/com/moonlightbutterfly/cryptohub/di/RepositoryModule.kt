@@ -1,32 +1,51 @@
 package com.moonlightbutterfly.cryptohub.di
 
 import android.content.Context
-import com.moonlightbutterfly.cryptohub.database.CryptoHubDatabase
-import com.moonlightbutterfly.cryptohub.database.daos.AppConfigDao
-import com.moonlightbutterfly.cryptohub.database.daos.FavouritesDao
-import com.moonlightbutterfly.cryptohub.repository.CryptoHubExternalRepository
-import com.moonlightbutterfly.cryptohub.repository.CryptoHubExternalRepositoryImpl
-import com.moonlightbutterfly.cryptohub.repository.CryptoHubInternalRepository
-import com.moonlightbutterfly.cryptohub.repository.CryptoHubInternalRepositoryImpl
-import dagger.Binds
+import com.moonlightbutterfly.cryptohub.data.CryptoAssetsDataSource
+import com.moonlightbutterfly.cryptohub.data.CryptoAssetsRepository
+import com.moonlightbutterfly.cryptohub.data.UserConfigurationDataSource
+import com.moonlightbutterfly.cryptohub.data.UserConfigurationRepository
+import com.moonlightbutterfly.cryptohub.framework.CryptoAssetsDataSourceImpl
+import com.moonlightbutterfly.cryptohub.framework.UserConfigurationDataSourceImpl
+import com.moonlightbutterfly.cryptohub.framework.database.CryptoHubDatabase
+import com.moonlightbutterfly.cryptohub.framework.database.daos.FavouritesDao
+import com.moonlightbutterfly.cryptohub.framework.database.daos.UserSettingsDao
 import dagger.Module
 import dagger.Provides
 
 @Module
-abstract class RepositoryModule {
+class RepositoryModule {
 
-    @Binds
-    abstract fun bindInternalRepository(cryptoHubRepositoryImpl: CryptoHubInternalRepositoryImpl): CryptoHubInternalRepository
+    @Provides
+    fun provideCryptoAssetsDataSource(): CryptoAssetsDataSource = CryptoAssetsDataSourceImpl()
 
-    @Binds
-    abstract fun bindExternalRepository(cryptoassetsRepositoryImpl: CryptoHubExternalRepositoryImpl): CryptoHubExternalRepository
+    @Provides
+    fun provideUserConfigurationDataSource(
+        userSettingsDao: UserSettingsDao,
+        favouritesDao: FavouritesDao
+    ): UserConfigurationDataSource {
+        return UserConfigurationDataSourceImpl(userSettingsDao, favouritesDao)
+    }
 
-    companion object {
+    @Provides
+    fun provideUserSettingsDao(context: Context): UserSettingsDao =
+        CryptoHubDatabase.getInstance(context).userSettingsDao()
 
-        @Provides
-        fun provideAppConfigDao(context: Context): AppConfigDao = CryptoHubDatabase.getInstance(context).appConfigDao()
+    @Provides
+    fun provideFavouritesDao(context: Context): FavouritesDao =
+        CryptoHubDatabase.getInstance(context).favouritesDao()
 
-        @Provides
-        fun provideFavouritesDao(context: Context): FavouritesDao = CryptoHubDatabase.getInstance(context).favouritesDao()
+    @Provides
+    fun provideUserConfigurationRepository(
+        userConfigurationDataSource: UserConfigurationDataSource
+    ): UserConfigurationRepository {
+        return UserConfigurationRepository(userConfigurationDataSource)
+    }
+
+    @Provides
+    fun provideCryptoAssetsRepository(
+        cryptoAssetsDataSource: CryptoAssetsDataSource
+    ): CryptoAssetsRepository {
+        return CryptoAssetsRepository(cryptoAssetsDataSource)
     }
 }

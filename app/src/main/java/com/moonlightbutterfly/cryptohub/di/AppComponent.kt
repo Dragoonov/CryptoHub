@@ -1,11 +1,11 @@
 package com.moonlightbutterfly.cryptohub.di
 
 import android.content.Context
-import com.moonlightbutterfly.cryptohub.viewmodels.ViewModelFactory
+import com.moonlightbutterfly.cryptohub.presentation.ViewModelFactory
 import dagger.BindsInstance
 import dagger.Component
 
-@Component(modules = [RepositoryModule::class])
+@Component(modules = [RepositoryModule::class, UseCasesModule::class])
 interface AppComponent {
 
     @Component.Factory

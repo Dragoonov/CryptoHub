@@ -1,2 +1,4 @@
 include ':app'
 rootProject.name = "CryptoHub"
+include ':core2'
+include ':core'
