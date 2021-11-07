@@ -6,7 +6,7 @@ import org.junit.Test
 class UtilsTest {
 
     @Test
-    fun `should return proper abbrevation`() {
+    fun `should return proper abbreviation`() {
         // GIVEN
         var value = 234.0
         // WHEN

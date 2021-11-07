@@ -1,18 +1,40 @@
 package com.moonlightbutterfly.cryptohub.di
 
-import com.moonlightbutterfly.cryptohub.repository.CryptoHubExternalRepository
-import com.moonlightbutterfly.cryptohub.repository.CryptoHubExternalRepositoryFakeImpl
-import com.moonlightbutterfly.cryptohub.repository.CryptoHubInternalRepository
-import com.moonlightbutterfly.cryptohub.repository.CryptoHubInternalRepositoryFakeImpl
-import dagger.Binds
+import com.moonlightbutterfly.cryptohub.data.CryptoAssetsDataSource
+import com.moonlightbutterfly.cryptohub.data.CryptoAssetsRepository
+import com.moonlightbutterfly.cryptohub.data.UserConfigurationDataSource
+import com.moonlightbutterfly.cryptohub.data.UserConfigurationRepository
+import com.moonlightbutterfly.cryptohub.repository.FakeCryptoAssetsDataSourceImpl
+import com.moonlightbutterfly.cryptohub.repository.FakeUserConfigurationDataSourceImpl
 import dagger.Module
+import dagger.Provides
+import javax.inject.Singleton
 
 @Module
-abstract class TestRepositoryModule {
+class TestRepositoryModule {
 
-    @Binds
-    abstract fun bindInternalRepository(cryptoHubRepositoryImpl: CryptoHubInternalRepositoryFakeImpl): CryptoHubInternalRepository
+    @Provides
+    fun provideCryptoAssetsDataSource(): CryptoAssetsDataSource {
+        return FakeCryptoAssetsDataSourceImpl()
+    }
 
-    @Binds
-    abstract fun bindExternalRepository(cryptocurrenciesRepositoryImpl: CryptoHubExternalRepositoryFakeImpl): CryptoHubExternalRepository
+    @Provides
+    @Singleton
+    fun provideUserConfigurationDataSource(): UserConfigurationDataSource {
+        return FakeUserConfigurationDataSourceImpl()
+    }
+
+    @Provides
+    fun provideUserConfigurationRepository(
+        userConfigurationDataSource: UserConfigurationDataSource
+    ): UserConfigurationRepository {
+        return UserConfigurationRepository(userConfigurationDataSource)
+    }
+
+    @Provides
+    fun provideCryptoAssetsRepository(
+        cryptoAssetsDataSource: CryptoAssetsDataSource
+    ): CryptoAssetsRepository {
+        return CryptoAssetsRepository(cryptoAssetsDataSource)
+    }
 }
