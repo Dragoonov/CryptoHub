@@ -12,11 +12,10 @@ import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import coil.ImageLoader
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.ImagePainter
+import coil.compose.LocalImageLoader
 import coil.compose.rememberImagePainter
 import coil.size.Scale
 import com.moonlightbutterfly.cryptohub.R
@@ -25,8 +24,7 @@ import com.moonlightbutterfly.cryptohub.domain.models.CryptoAssetMarketInfo
 @ExperimentalCoilApi
 @Composable
 fun getImagePainterFor(asset: CryptoAssetMarketInfo): ImagePainter {
-    val imageLoader = ImageLoader.Builder(LocalContext.current)
-        .build()
+    val imageLoader = LocalImageLoader.current
     return rememberImagePainter(
         data = asset.asset.logoUrl,
         imageLoader = imageLoader,
