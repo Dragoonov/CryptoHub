@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.annotation.ExperimentalCoilApi
 import com.moonlightbutterfly.cryptohub.R
+import com.moonlightbutterfly.cryptohub.domain.models.CryptoAsset
 import com.moonlightbutterfly.cryptohub.domain.models.CryptoAssetMarketInfo
 import com.moonlightbutterfly.cryptohub.presentation.ui.LocalViewModelFactory
 import com.moonlightbutterfly.cryptohub.presentation.viewmodels.CryptoAssetPanelViewModel
@@ -51,7 +52,7 @@ fun CryptoAssetPanelScreen(cryptoAssetSymbol: String) {
             .verticalScroll(rememberScrollState())
     ) {
         Header(
-            asset = asset,
+            asset = asset.asset,
             isInFavourites = isLiked,
             onFavouriteClicked = {
                 if (it) {
@@ -91,7 +92,7 @@ fun CryptoAssetPanelScreen(cryptoAssetSymbol: String) {
 @ExperimentalCoilApi
 @Composable
 fun Header(
-    asset: CryptoAssetMarketInfo,
+    asset: CryptoAsset,
     isInFavourites: Boolean,
     onFavouriteClicked: (Boolean) -> Unit
 ) {
@@ -117,7 +118,7 @@ fun Header(
             Arrangement.SpaceBetween
         ) {
             Text(
-                text = asset.asset.name,
+                text = asset.name,
                 modifier = Modifier.padding(5.dp),
                 fontSize = 30.sp
             )
@@ -128,7 +129,7 @@ fun Header(
                 Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = asset.asset.symbol,
+                    text = asset.symbol,
                     fontSize = 20.sp
                 )
                 Favourite(isInFavourites = isInFavourites, onSelectionChanged = onFavouriteClicked)

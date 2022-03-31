@@ -77,14 +77,29 @@ private infix fun NavHostController.navigateTo(route: String) {
 @ExperimentalCoilApi
 fun NavGraphBuilder.destinations(navController: NavHostController) {
     composable(Screen.CRYPTO_ASSETS_LIST.route) {
-        CryptoAssetsListScreen {
-            navController navigateTo "${Screen.CRYPTO_ASSET_PANEL.route}/$it"
-        }
+        CryptoAssetsListScreen(
+            {
+                navController navigateTo "${Screen.CRYPTO_ASSET_PANEL.route}/$it"
+            },
+            {
+                navController navigateTo Screen.SEARCH_PANEL.route
+            }
+        )
     }
     composable(Screen.SETTINGS.route) {
         SettingsScreen()
     }
     composable("${Screen.CRYPTO_ASSET_PANEL.route}/{cryptoSymbol}") {
         CryptoAssetPanelScreen(it.arguments?.getString("cryptoSymbol")!!)
+    }
+    composable(Screen.SEARCH_PANEL.route) {
+        SearchScreen(
+            {
+                navController.popBackStack()
+            },
+            {
+                navController navigateTo "${Screen.CRYPTO_ASSET_PANEL.route}/$it"
+            }
+        )
     }
 }

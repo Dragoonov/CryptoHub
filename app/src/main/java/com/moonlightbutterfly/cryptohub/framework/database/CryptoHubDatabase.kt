@@ -14,16 +14,19 @@ import com.moonlightbutterfly.cryptohub.domain.models.UserSettings
 import com.moonlightbutterfly.cryptohub.framework.database.converters.CryptoAssetConverter
 import com.moonlightbutterfly.cryptohub.framework.database.converters.UserSettingsConverter
 import com.moonlightbutterfly.cryptohub.framework.database.daos.FavouritesDao
+import com.moonlightbutterfly.cryptohub.framework.database.daos.RecentsDao
 import com.moonlightbutterfly.cryptohub.framework.database.daos.UserSettingsDao
 import com.moonlightbutterfly.cryptohub.framework.database.entities.FavouriteEntity
+import com.moonlightbutterfly.cryptohub.framework.database.entities.RecentEntity
 import com.moonlightbutterfly.cryptohub.framework.database.entities.UserSettingsEntity
 
-@Database(entities = [UserSettingsEntity::class, FavouriteEntity::class], version = 1)
+@Database(entities = [UserSettingsEntity::class, FavouriteEntity::class, RecentEntity::class], version = 1)
 @TypeConverters(UserSettingsConverter::class, CryptoAssetConverter::class)
 abstract class CryptoHubDatabase : RoomDatabase() {
 
     abstract fun userSettingsDao(): UserSettingsDao
     abstract fun favouritesDao(): FavouritesDao
+    abstract fun recentsDao(): RecentsDao
 
     companion object {
         private var INSTANCE: CryptoHubDatabase? = null
@@ -31,8 +34,10 @@ abstract class CryptoHubDatabase : RoomDatabase() {
         private const val DATABASE_TEMPLATE_PATH = "databases/$DATABASE_NAME.db"
         const val USER_SETTINGS_TABLE_NAME = "user_settings"
         const val FAVOURITES_TABLE_NAME = "favourites"
+        const val RECENTS_TABLE_NAME = "recents"
         const val USER_SETTINGS_SETTINGS_COLUMN_NAME = "settings"
         const val FAVOURITES_ASSET_COLUMN_NAME = "asset"
+        const val RECENTS_ASSET_COLUMN_NAME = "asset"
 
         fun getInstance(context: Context): CryptoHubDatabase {
             synchronized(this) {
@@ -48,8 +53,10 @@ abstract class CryptoHubDatabase : RoomDatabase() {
                 context.applicationContext,
                 CryptoHubDatabase::class.java,
                 DATABASE_NAME
-            ).fallbackToDestructiveMigration()
-                .createFromAsset(DATABASE_TEMPLATE_PATH)
+            )
+                .fallbackToDestructiveMigration()
+                // .createFromAsset(DATABASE_TEMPLATE_PATH)
+                .addCallback(initializeCallbackHelper)
                 .build()
         }
 
@@ -66,12 +73,18 @@ abstract class CryptoHubDatabase : RoomDatabase() {
                             "${BaseColumns._ID} INTEGER PRIMARY KEY," +
                             "$FAVOURITES_ASSET_COLUMN_NAME TEXT)"
 
+                    val createRecents =
+                        "CREATE TABLE IF NOT EXISTS $RECENTS_TABLE_NAME (" +
+                            "${BaseColumns._ID} INTEGER PRIMARY KEY," +
+                            "$RECENTS_ASSET_COLUMN_NAME TEXT)"
+
                     val values = ContentValues().apply {
                         put(USER_SETTINGS_SETTINGS_COLUMN_NAME, Gson().toJson(UserSettings.EMPTY))
                     }
 
                     db.execSQL(createUserSettings)
                     db.execSQL(createFavourites)
+                    db.execSQL(createRecents)
                     db.insert(USER_SETTINGS_TABLE_NAME, OnConflictStrategy.REPLACE, values)
                 }
             }

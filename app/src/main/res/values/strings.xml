@@ -12,4 +12,9 @@
     <string name="circulating_supply">Circulating Supply</string>
     <string name="max_supply">Max Supply</string>
     <string name="favourites">Favourites</string>
+    <string name="search">Search</string>
+    <string name="cancel">Cancel</string>
+    <string name="recently_viewed">Recently viewed</string>
+    <string name="delete">Delete</string>
+    <string name="refresh">Refresh</string>
 </resources>

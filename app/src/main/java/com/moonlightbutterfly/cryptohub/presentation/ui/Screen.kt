@@ -30,6 +30,9 @@ enum class Screen(
     ),
     CRYPTO_ASSET_PANEL(
         Routes.CRYPTO_PANEL,
+    ),
+    SEARCH_PANEL(
+        Routes.SEARCH_PANEL,
     );
 
     companion object {

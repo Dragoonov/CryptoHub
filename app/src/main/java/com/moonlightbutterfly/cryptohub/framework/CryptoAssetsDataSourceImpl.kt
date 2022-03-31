@@ -43,9 +43,8 @@ class CryptoAssetsDataSourceImpl : CryptoAssetsDataSource {
     }
 
     override suspend fun getCryptoAssetsMarketInfo(page: Int): List<CryptoAssetMarketInfo> {
-
         val firstIndex = CRYPTO_ASSETS_LOAD_NUMBER_PER_PAGE * (page - 1) + 1
-        val assetAmountPerCall = page * CRYPTO_ASSETS_LOAD_NUMBER_PER_PAGE
+        val assetAmountPerCall = CRYPTO_ASSETS_LOAD_NUMBER_PER_PAGE
         val listing = service.getListings(
             apiKey = BuildConfig.API_KEY,
             start = firstIndex,

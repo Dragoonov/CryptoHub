@@ -19,14 +19,14 @@ import coil.compose.LocalImageLoader
 import coil.compose.rememberImagePainter
 import coil.size.Scale
 import com.moonlightbutterfly.cryptohub.R
-import com.moonlightbutterfly.cryptohub.domain.models.CryptoAssetMarketInfo
+import com.moonlightbutterfly.cryptohub.domain.models.CryptoAsset
 
 @ExperimentalCoilApi
 @Composable
-fun getImagePainterFor(asset: CryptoAssetMarketInfo): ImagePainter {
+fun getImagePainterFor(asset: CryptoAsset): ImagePainter {
     val imageLoader = LocalImageLoader.current
     return rememberImagePainter(
-        data = asset.asset.logoUrl,
+        data = asset.logoUrl,
         imageLoader = imageLoader,
         builder = {
             scale(Scale.FILL)
