@@ -10,11 +10,19 @@ import kotlinx.coroutines.flow.Flow
 class UserConfigurationRepository(
     private val userConfigurationDataSource: UserConfigurationDataSource
 ) {
+    fun getRecents(): Flow<List<CryptoAsset>> = userConfigurationDataSource.getRecents()
+
+    suspend fun addRecent(asset: CryptoAsset) = userConfigurationDataSource.addRecent(asset)
+
+    suspend fun removeRecents() = userConfigurationDataSource.removeRecents()
+
     fun getFavourites(): Flow<List<CryptoAsset>> = userConfigurationDataSource.getFavourites()
 
     suspend fun addFavourite(asset: CryptoAsset) = userConfigurationDataSource.addFavourite(asset)
 
     suspend fun removeFavourite(asset: CryptoAsset) = userConfigurationDataSource.removeFavourite(asset)
+
+    suspend fun removeRecent(asset: CryptoAsset) = userConfigurationDataSource.removeRecent(asset)
 
     suspend fun updateUserSettings(userSettings: UserSettings) = userConfigurationDataSource.updateUserSettings(userSettings)
 

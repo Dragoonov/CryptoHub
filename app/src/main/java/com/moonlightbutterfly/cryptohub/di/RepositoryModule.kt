@@ -9,6 +9,7 @@ import com.moonlightbutterfly.cryptohub.framework.CryptoAssetsDataSourceImpl
 import com.moonlightbutterfly.cryptohub.framework.UserConfigurationDataSourceImpl
 import com.moonlightbutterfly.cryptohub.framework.database.CryptoHubDatabase
 import com.moonlightbutterfly.cryptohub.framework.database.daos.FavouritesDao
+import com.moonlightbutterfly.cryptohub.framework.database.daos.RecentsDao
 import com.moonlightbutterfly.cryptohub.framework.database.daos.UserSettingsDao
 import dagger.Module
 import dagger.Provides
@@ -22,9 +23,10 @@ class RepositoryModule {
     @Provides
     fun provideUserConfigurationDataSource(
         userSettingsDao: UserSettingsDao,
-        favouritesDao: FavouritesDao
+        favouritesDao: FavouritesDao,
+        recentsDao: RecentsDao,
     ): UserConfigurationDataSource {
-        return UserConfigurationDataSourceImpl(userSettingsDao, favouritesDao)
+        return UserConfigurationDataSourceImpl(userSettingsDao, favouritesDao, recentsDao)
     }
 
     @Provides
@@ -34,6 +36,10 @@ class RepositoryModule {
     @Provides
     fun provideFavouritesDao(context: Context): FavouritesDao =
         CryptoHubDatabase.getInstance(context).favouritesDao()
+
+    @Provides
+    fun provideRecentsDao(context: Context): RecentsDao =
+        CryptoHubDatabase.getInstance(context).recentsDao()
 
     @Provides
     fun provideUserConfigurationRepository(

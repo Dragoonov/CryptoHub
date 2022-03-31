@@ -20,13 +20,18 @@ import org.junit.Test
 class UserConfigurationRepositoryTest {
 
     private val favourites = flowOf(listOf(CryptoAsset.EMPTY, CryptoAsset.EMPTY))
+    private val recents = flowOf(listOf(CryptoAsset.EMPTY, CryptoAsset.EMPTY))
     private val userSettings = flowOf(UserSettings.EMPTY)
 
     private val userConfigurationDataSource = mockk<UserConfigurationDataSource> {
         every { getFavourites() } returns favourites
         every { getUserSettings() } returns userSettings
+        every { getRecents() } returns recents
         coEvery { addFavourite(any()) } just Runs
         coEvery { removeFavourite(any()) } just Runs
+        coEvery { addRecent(any()) } just Runs
+        coEvery { removeRecent(any()) } just Runs
+        coEvery { removeRecents() } just Runs
         coEvery { updateUserSettings(any()) } just Runs
     }
 
@@ -45,6 +50,18 @@ class UserConfigurationRepositoryTest {
     }
 
     @Test
+    fun `should get recents`() = runBlockingTest {
+        // GIVEN WHEN
+        val recentList = repository.getRecents().first()
+
+        // THEN
+        verify {
+            userConfigurationDataSource.getFavourites()
+        }
+        assertEquals(listOf(CryptoAsset.EMPTY, CryptoAsset.EMPTY), recentList)
+    }
+
+    @Test
     fun `should add favourite`() = runBlockingTest {
         // GIVEN
         val favourite = CryptoAsset(name = "test")
@@ -58,6 +75,19 @@ class UserConfigurationRepositoryTest {
     }
 
     @Test
+    fun `should add recent`() = runBlockingTest {
+        // GIVEN
+        val recent = CryptoAsset(name = "test")
+        // WHEN
+        repository.addRecent(recent)
+
+        // THEN
+        coVerify {
+            userConfigurationDataSource.addRecent(recent)
+        }
+    }
+
+    @Test
     fun `should remove favourite`() = runBlockingTest {
         // GIVEN
         val favourite = CryptoAsset(name = "test")
@@ -67,6 +97,30 @@ class UserConfigurationRepositoryTest {
         // THEN
         coVerify {
             userConfigurationDataSource.removeFavourite(favourite)
+        }
+    }
+
+    @Test
+    fun `should remove recent`() = runBlockingTest {
+        // GIVEN
+        val recent = CryptoAsset(name = "test")
+        // WHEN
+        repository.removeRecent(recent)
+
+        // THEN
+        coVerify {
+            userConfigurationDataSource.removeRecent(recent)
+        }
+    }
+
+    @Test
+    fun `should remove recents`() = runBlockingTest {
+        // GIVEN WHEN
+        repository.removeRecents()
+
+        // THEN
+        coVerify {
+            userConfigurationDataSource.removeRecents()
         }
     }
 
