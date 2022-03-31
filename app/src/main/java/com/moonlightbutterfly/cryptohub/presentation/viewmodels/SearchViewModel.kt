@@ -41,6 +41,10 @@ class SearchViewModel @Inject constructor(
 
     private var currentSearchJob: Job? = null
 
+    /**
+     * Search is performed only after at least 3 characters have been typed. It is also performed
+     * after the delay of [WAITING_TIME_MS], to give user time to type more characters before search.
+     */
     fun onQueryChange(query: String) {
         _currentSearchQuery.value = query
         currentSearchJob?.cancel()

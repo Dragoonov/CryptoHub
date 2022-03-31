@@ -8,11 +8,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
+import androidx.compose.material.TextField
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
@@ -22,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -105,10 +108,15 @@ fun SearchHeader(
             .padding(start = 10.dp, end = 10.dp)
             .fillMaxWidth()
     ) {
-        BasicTextField(
+        TextField(
             value = query,
             onValueChange = onQueryChange,
-            textStyle = TextStyle(fontSize = 20.sp),
+            textStyle = TextStyle(fontSize = 18.sp),
+            colors = TextFieldDefaults.textFieldColors(
+                backgroundColor = Color.Transparent,
+                cursorColor = MaterialTheme.colors.onPrimary,
+                focusedIndicatorColor = Color.Transparent
+            ),
             modifier = Modifier
                 .focusRequester(focusRequester)
                 .semantics {
