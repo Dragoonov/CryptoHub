@@ -2,9 +2,12 @@ package com.moonlightbutterfly.cryptohub.di
 
 import com.moonlightbutterfly.cryptohub.data.CryptoAssetsDataSource
 import com.moonlightbutterfly.cryptohub.data.CryptoAssetsRepository
+import com.moonlightbutterfly.cryptohub.data.LocalPreferencesDataSource
+import com.moonlightbutterfly.cryptohub.data.LocalPreferencesRepository
 import com.moonlightbutterfly.cryptohub.data.UserConfigurationDataSource
 import com.moonlightbutterfly.cryptohub.data.UserConfigurationRepository
 import com.moonlightbutterfly.cryptohub.repository.FakeCryptoAssetsDataSourceImpl
+import com.moonlightbutterfly.cryptohub.repository.FakeLocalPreferencesDataSourceImpl
 import com.moonlightbutterfly.cryptohub.repository.FakeUserConfigurationDataSourceImpl
 import dagger.Module
 import dagger.Provides
@@ -32,9 +35,21 @@ class TestRepositoryModule {
     }
 
     @Provides
+    fun provideLocalPreferencesRepository(
+        localPreferencesDataSource: LocalPreferencesDataSource
+    ): LocalPreferencesRepository {
+        return LocalPreferencesRepository(localPreferencesDataSource)
+    }
+
+    @Provides
     fun provideCryptoAssetsRepository(
         cryptoAssetsDataSource: CryptoAssetsDataSource
     ): CryptoAssetsRepository {
         return CryptoAssetsRepository(cryptoAssetsDataSource)
     }
+
+    @Provides
+    @Singleton
+    fun provideLocalPreferencesDataSource(): LocalPreferencesDataSource =
+        FakeLocalPreferencesDataSourceImpl()
 }

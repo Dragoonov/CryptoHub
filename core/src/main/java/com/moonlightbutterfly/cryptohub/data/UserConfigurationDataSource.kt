@@ -1,7 +1,6 @@
 package com.moonlightbutterfly.cryptohub.data
 
 import com.moonlightbutterfly.cryptohub.domain.models.CryptoAsset
-import com.moonlightbutterfly.cryptohub.domain.models.UserSettings
 import kotlinx.coroutines.flow.Flow
 
 interface UserConfigurationDataSource {
@@ -19,8 +18,4 @@ interface UserConfigurationDataSource {
     suspend fun removeFavourite(asset: CryptoAsset)
 
     suspend fun removeRecent(asset: CryptoAsset)
-
-    fun getUserSettings(): Flow<UserSettings>
-
-    suspend fun updateUserSettings(userSettings: UserSettings)
 }

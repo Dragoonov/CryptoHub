@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "529920843856",
+    "project_id": "cryptohub-54d30",
+    "storage_bucket": "cryptohub-54d30.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:529920843856:android:b9a0573ef4f84317cbb155",
+        "android_client_info": {
+          "package_name": "com.moonlightbutterfly.cryptohub"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "529920843856-la800p0fm3n4qmhjpp9t6jgivumfi3oi.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.moonlightbutterfly.cryptohub",
+            "certificate_hash": "bed9f6c8f745704f450b4ce23f4974c63f8c7181"
+          }
+        },
+        {
+          "client_id": "529920843856-8in6elri7d9egchj5ic1fusgn2i74akd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCYbOfkDEFU-CkGDShvzYyRa3fel0MW5Fs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "529920843856-8in6elri7d9egchj5ic1fusgn2i74akd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

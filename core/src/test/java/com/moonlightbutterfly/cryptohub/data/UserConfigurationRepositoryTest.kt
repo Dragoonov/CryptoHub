@@ -1,7 +1,6 @@
 package com.moonlightbutterfly.cryptohub.data
 
 import com.moonlightbutterfly.cryptohub.domain.models.CryptoAsset
-import com.moonlightbutterfly.cryptohub.domain.models.UserSettings
 import io.mockk.Runs
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -21,18 +20,15 @@ class UserConfigurationRepositoryTest {
 
     private val favourites = flowOf(listOf(CryptoAsset.EMPTY, CryptoAsset.EMPTY))
     private val recents = flowOf(listOf(CryptoAsset.EMPTY, CryptoAsset.EMPTY))
-    private val userSettings = flowOf(UserSettings.EMPTY)
 
     private val userConfigurationDataSource = mockk<UserConfigurationDataSource> {
         every { getFavourites() } returns favourites
-        every { getUserSettings() } returns userSettings
         every { getRecents() } returns recents
         coEvery { addFavourite(any()) } just Runs
         coEvery { removeFavourite(any()) } just Runs
         coEvery { addRecent(any()) } just Runs
         coEvery { removeRecent(any()) } just Runs
         coEvery { removeRecents() } just Runs
-        coEvery { updateUserSettings(any()) } just Runs
     }
 
     private val repository = UserConfigurationRepository(userConfigurationDataSource)
@@ -56,7 +52,7 @@ class UserConfigurationRepositoryTest {
 
         // THEN
         verify {
-            userConfigurationDataSource.getFavourites()
+            userConfigurationDataSource.getRecents()
         }
         assertEquals(listOf(CryptoAsset.EMPTY, CryptoAsset.EMPTY), recentList)
     }
@@ -122,30 +118,5 @@ class UserConfigurationRepositoryTest {
         coVerify {
             userConfigurationDataSource.removeRecents()
         }
-    }
-
-    @Test
-    fun `should update user settings`() = runBlockingTest {
-        // GIVEN
-        val settings = UserSettings(true)
-        // WHEN
-        repository.updateUserSettings(settings)
-
-        // THEN
-        coVerify {
-            userConfigurationDataSource.updateUserSettings(settings)
-        }
-    }
-
-    @Test
-    fun `should get user settings`() = runBlockingTest {
-        // GIVEN WHEN
-        val settings = repository.getUserSettings().first()
-
-        // THEN
-        verify {
-            userConfigurationDataSource.getUserSettings()
-        }
-        assertEquals(UserSettings.EMPTY, settings)
     }
 }

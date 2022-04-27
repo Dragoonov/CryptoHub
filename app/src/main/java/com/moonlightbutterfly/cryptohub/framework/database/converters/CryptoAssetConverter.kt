@@ -10,12 +10,12 @@ import com.moonlightbutterfly.cryptohub.domain.models.CryptoAsset
 class CryptoAssetConverter {
 
     @TypeConverter
-    fun fromUserSettings(asset: CryptoAsset): String {
+    fun fromCryptoAsset(asset: CryptoAsset): String {
         return Gson().toJson(asset)
     }
 
     @TypeConverter
-    fun stringToUserSettings(serializedAsset: String): CryptoAsset {
+    fun stringToCryptoAsset(serializedAsset: String): CryptoAsset {
         return Gson().fromJson(serializedAsset, CryptoAsset::class.java)
     }
 }

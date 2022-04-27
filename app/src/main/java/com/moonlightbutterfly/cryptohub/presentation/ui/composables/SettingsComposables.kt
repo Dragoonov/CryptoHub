@@ -1,44 +1,84 @@
 package com.moonlightbutterfly.cryptohub.presentation.ui.composables
 
+import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Switch
 import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.firebase.ui.auth.AuthUI
 import com.moonlightbutterfly.cryptohub.R
 import com.moonlightbutterfly.cryptohub.presentation.ui.LocalViewModelFactory
 import com.moonlightbutterfly.cryptohub.presentation.viewmodels.SettingsViewModel
 
 @Composable
-fun SettingsScreen() {
+fun SettingsScreen(onSignOutClicked: () -> Unit) {
     val viewModel: SettingsViewModel = viewModel(
         factory = LocalViewModelFactory.current
     )
     val nightModeEnabled by viewModel.isNightModeEnabled.observeAsState(false)
+    val onSignedOut = {
+        viewModel.onSignedOut()
+        onSignOutClicked()
+    }
     Column(Modifier.fillMaxWidth()) {
-        GeneralSection(
+        DeviceSpecificSection(
             nightModeEnabled = nightModeEnabled,
             onNightModeChanged = viewModel::onNightModeChanged
         )
+        if (viewModel.isUserSignedIn()) {
+            SignOutButton(onSignedOut)
+        }
     }
 }
 
 @Composable
-fun GeneralSection(nightModeEnabled: Boolean, onNightModeChanged: (Boolean) -> Unit) {
-    Title(stringResource(R.string.general))
+fun DeviceSpecificSection(
+    nightModeEnabled: Boolean,
+    onNightModeChanged: (Boolean) -> Unit
+) {
+    Title(stringResource(R.string.device_specific))
     Entries(nightModeEnabled = nightModeEnabled, onNightModeChanged = onNightModeChanged)
+}
+
+@Composable
+fun SignOutButton(onSignedOut: () -> Unit) {
+    val context = LocalContext.current
+    Column(
+        Modifier
+            .fillMaxHeight()
+            .fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Bottom
+    ) {
+        TextButton(
+            onClick = {
+                signOut(context, onSignedOut)
+            }
+        ) {
+            Text(
+                text = stringResource(id = R.string.sign_out),
+                fontSize = 20.sp,
+                modifier = Modifier.padding(30.dp)
+            )
+        }
+    }
 }
 
 @Composable
@@ -77,4 +117,12 @@ fun EntryRow(content: @Composable () -> Unit) {
     ) {
         content()
     }
+}
+
+fun signOut(context: Context, onSignedOut: () -> Unit) {
+    AuthUI.getInstance()
+        .signOut(context)
+        .addOnCompleteListener {
+            onSignedOut()
+        }
 }

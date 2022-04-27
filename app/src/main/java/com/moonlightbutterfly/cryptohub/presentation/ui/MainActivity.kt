@@ -23,6 +23,7 @@ import com.moonlightbutterfly.cryptohub.presentation.viewmodels.MainViewModel
 class MainActivity : AppCompatActivity() {
 
     private lateinit var viewModelFactory: ViewModelFactory
+    private val signInFlowProvider: SignInFlowProvider = SignInFlowProviderImpl(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         viewModelFactory = DaggerAppComponent.factory().create(this).viewModelFactory()
@@ -34,7 +35,7 @@ class MainActivity : AppCompatActivity() {
                 CryptoHubTheme(darkTheme = isNightMode) {
                     val navController = rememberNavController()
                     val backStackEntry by navController.currentBackStackEntryAsState()
-                    AppLayout(navController, backStackEntry)
+                    AppLayout(navController, backStackEntry, signInFlowProvider)
                     SetStatusBarColor()
                 }
             }

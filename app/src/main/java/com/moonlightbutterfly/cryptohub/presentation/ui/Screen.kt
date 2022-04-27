@@ -33,6 +33,9 @@ enum class Screen(
     ),
     SEARCH_PANEL(
         Routes.SEARCH_PANEL,
+    ),
+    SIGN_IN_PANEL(
+        Routes.SIGN_IN_PANEL
     );
 
     companion object {

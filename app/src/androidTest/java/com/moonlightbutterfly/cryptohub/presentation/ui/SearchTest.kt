@@ -16,6 +16,7 @@ class SearchTest : CryptoHubAndroidTest() {
     @Test
     fun testOpenSearch() {
         composeTestRule.apply {
+            onNodeWithText("Continue without sign in").performClick()
             onNodeWithContentDescription("Search").performClick()
         }
         val route = navController.currentBackStackEntry?.destination?.route
@@ -25,6 +26,7 @@ class SearchTest : CryptoHubAndroidTest() {
     @Test
     fun testClickOnSearchItemAndSaveToRecents() {
         composeTestRule.apply {
+            onNodeWithText("Continue without sign in").performClick()
             onNodeWithContentDescription("Search").performClick()
             onNodeWithContentDescription("SearchInputField").performTextInput("Eth")
             runBlocking { delay(2000) }

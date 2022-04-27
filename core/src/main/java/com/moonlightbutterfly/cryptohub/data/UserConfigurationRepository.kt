@@ -1,7 +1,6 @@
 package com.moonlightbutterfly.cryptohub.data
 
 import com.moonlightbutterfly.cryptohub.domain.models.CryptoAsset
-import com.moonlightbutterfly.cryptohub.domain.models.UserSettings
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -23,8 +22,4 @@ class UserConfigurationRepository(
     suspend fun removeFavourite(asset: CryptoAsset) = userConfigurationDataSource.removeFavourite(asset)
 
     suspend fun removeRecent(asset: CryptoAsset) = userConfigurationDataSource.removeRecent(asset)
-
-    suspend fun updateUserSettings(userSettings: UserSettings) = userConfigurationDataSource.updateUserSettings(userSettings)
-
-    fun getUserSettings(): Flow<UserSettings> = userConfigurationDataSource.getUserSettings()
 }

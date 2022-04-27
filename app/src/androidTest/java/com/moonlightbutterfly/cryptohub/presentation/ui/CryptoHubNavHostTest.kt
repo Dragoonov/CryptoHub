@@ -11,6 +11,7 @@ class CryptoHubNavHostTest : CryptoHubAndroidTest() {
     @Test
     fun testBottomNavigationIsDisplayed() {
         composeTestRule.apply {
+            onNodeWithText("Continue without sign in").performClick()
             onNodeWithText("Settings").assertIsDisplayed()
             onNodeWithText("Crypto assets list").assertIsDisplayed()
         }
@@ -19,6 +20,7 @@ class CryptoHubNavHostTest : CryptoHubAndroidTest() {
     @Test
     fun testCryptoListIsFirstDisplayed() {
         composeTestRule.apply {
+            onNodeWithText("Continue without sign in").performClick()
             onNodeWithText("Bitcoin").assertIsDisplayed()
             onNodeWithText("Ethereum").assertIsDisplayed()
         }
@@ -29,8 +31,9 @@ class CryptoHubNavHostTest : CryptoHubAndroidTest() {
     @Test
     fun testNavigateToSettings() {
         composeTestRule.apply {
+            onNodeWithText("Continue without sign in").performClick()
             onNodeWithText("Settings").performClick()
-            onNodeWithText("General").assertIsDisplayed()
+            onNodeWithText("Device specific").assertIsDisplayed()
         }
         val route = navController.currentBackStackEntry?.destination?.route
         assertEquals(route, "settings")
