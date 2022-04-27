@@ -2,13 +2,13 @@ package com.moonlightbutterfly.cryptohub.presentation.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
-import com.moonlightbutterfly.cryptohub.usecases.GetUserSettingsUseCase
+import com.moonlightbutterfly.cryptohub.usecases.GetLocalPreferencesUseCase
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class MainViewModel @Inject constructor(
-    getUserSettingsUseCase: GetUserSettingsUseCase
+    getLocalPreferencesUseCase: GetLocalPreferencesUseCase
 ) : ViewModel() {
 
-    val isNightModeEnabled = getUserSettingsUseCase().map { it.nightModeEnabled }.asLiveData()
+    val isNightModeEnabled = getLocalPreferencesUseCase().map { it.nightModeEnabled }.asLiveData()
 }

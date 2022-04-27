@@ -1,18 +1,19 @@
 package com.moonlightbutterfly.cryptohub.di
 
 import com.moonlightbutterfly.cryptohub.data.CryptoAssetsRepository
+import com.moonlightbutterfly.cryptohub.data.LocalPreferencesRepository
 import com.moonlightbutterfly.cryptohub.data.UserConfigurationRepository
 import com.moonlightbutterfly.cryptohub.usecases.AddFavouriteUseCase
 import com.moonlightbutterfly.cryptohub.usecases.AddRecentUseCase
 import com.moonlightbutterfly.cryptohub.usecases.GetAllCryptoAssetsMarketInfoUseCase
 import com.moonlightbutterfly.cryptohub.usecases.GetCryptoAssetsMarketInfoUseCase
 import com.moonlightbutterfly.cryptohub.usecases.GetFavouritesUseCase
+import com.moonlightbutterfly.cryptohub.usecases.GetLocalPreferencesUseCase
 import com.moonlightbutterfly.cryptohub.usecases.GetRecentsUseCase
-import com.moonlightbutterfly.cryptohub.usecases.GetUserSettingsUseCase
 import com.moonlightbutterfly.cryptohub.usecases.RemoveFavouriteUseCase
 import com.moonlightbutterfly.cryptohub.usecases.RemoveRecentUseCase
 import com.moonlightbutterfly.cryptohub.usecases.RemoveRecentsUseCase
-import com.moonlightbutterfly.cryptohub.usecases.UpdateUserSettingsUseCase
+import com.moonlightbutterfly.cryptohub.usecases.UpdateLocalPreferencesUseCase
 import dagger.Module
 import dagger.Provides
 
@@ -76,10 +77,10 @@ class UseCasesModule {
     }
 
     @Provides
-    fun provideGetUserSettingsUseCase(
-        userConfigurationRepository: UserConfigurationRepository
-    ): GetUserSettingsUseCase {
-        return GetUserSettingsUseCase(userConfigurationRepository)
+    fun provideGetLocalPreferencesUseCase(
+        localPreferencesRepository: LocalPreferencesRepository
+    ): GetLocalPreferencesUseCase {
+        return GetLocalPreferencesUseCase(localPreferencesRepository)
     }
 
     @Provides
@@ -90,9 +91,9 @@ class UseCasesModule {
     }
 
     @Provides
-    fun provideUpdateUserSettingsUseCase(
-        userConfigurationRepository: UserConfigurationRepository
-    ): UpdateUserSettingsUseCase {
-        return UpdateUserSettingsUseCase(userConfigurationRepository)
+    fun provideUpdateLocalPreferencesUseCase(
+        localPreferencesRepository: LocalPreferencesRepository
+    ): UpdateLocalPreferencesUseCase {
+        return UpdateLocalPreferencesUseCase(localPreferencesRepository)
     }
 }

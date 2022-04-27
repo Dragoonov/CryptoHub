@@ -4,8 +4,10 @@ import android.content.Context
 import com.moonlightbutterfly.cryptohub.presentation.ViewModelFactory
 import dagger.BindsInstance
 import dagger.Component
+import javax.inject.Singleton
 
-@Component(modules = [RepositoryModule::class, UseCasesModule::class])
+@Component(modules = [RepositoryModule::class, UseCasesModule::class, UserDataModule::class])
+@Singleton
 interface AppComponent {
 
     @Component.Factory

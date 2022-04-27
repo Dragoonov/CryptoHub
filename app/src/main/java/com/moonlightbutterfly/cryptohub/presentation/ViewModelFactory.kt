@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.moonlightbutterfly.cryptohub.presentation.viewmodels.CryptoAssetPanelViewModel
 import com.moonlightbutterfly.cryptohub.presentation.viewmodels.CryptoAssetsListViewModel
+import com.moonlightbutterfly.cryptohub.presentation.viewmodels.LoginViewModel
 import com.moonlightbutterfly.cryptohub.presentation.viewmodels.MainViewModel
 import com.moonlightbutterfly.cryptohub.presentation.viewmodels.SearchViewModel
 import com.moonlightbutterfly.cryptohub.presentation.viewmodels.SettingsViewModel
@@ -20,6 +21,7 @@ class ViewModelFactory @Inject constructor(
     private val settingsViewModelProvider: Provider<SettingsViewModel>,
     private val cryptoAssetPanelViewModel: Provider<CryptoAssetPanelViewModel>,
     private val searchViewModel: Provider<SearchViewModel>,
+    private val loginViewModel: Provider<LoginViewModel>,
 ) : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
@@ -30,6 +32,7 @@ class ViewModelFactory @Inject constructor(
                 it.isAssignableFrom(SettingsViewModel::class.java) -> settingsViewModelProvider.get()
                 it.isAssignableFrom(CryptoAssetPanelViewModel::class.java) -> cryptoAssetPanelViewModel.get()
                 it.isAssignableFrom(SearchViewModel::class.java) -> searchViewModel.get()
+                it.isAssignableFrom(LoginViewModel::class.java) -> loginViewModel.get()
                 else -> throw IllegalArgumentException("Unknown ViewModel class")
             } as T
         }

@@ -12,6 +12,7 @@ class CryptoAssetPanelTest : CryptoHubAndroidTest() {
     @Test
     fun testGoingThroughApp() {
         composeTestRule.apply {
+            onNodeWithText("Continue without sign in").performClick()
             onNodeWithText("BTC").performClick()
             onNodeWithText("BTC").assertIsDisplayed()
             onNodeWithText("Statistics").assertIsDisplayed()
@@ -26,6 +27,7 @@ class CryptoAssetPanelTest : CryptoHubAndroidTest() {
     @Test
     fun testManagingFavourites() {
         composeTestRule.apply {
+            onNodeWithText("Continue without sign in").performClick()
             onNodeWithText("Bitcoin").performClick()
             onNodeWithText("BTC").assertIsDisplayed()
             onNodeWithContentDescription("Favourites").performClick()
@@ -33,6 +35,7 @@ class CryptoAssetPanelTest : CryptoHubAndroidTest() {
             onNodeWithText("Favourites").performClick()
             onNodeWithText("BTC").assertIsDisplayed()
             onNodeWithContentDescription("Favourites").performClick()
+            onNodeWithText("Settings").performClick()
             onNodeWithText("Crypto assets list").performClick()
             onNodeWithText("Favourites").performClick()
             onNodeWithText("BTC").assertDoesNotExist()

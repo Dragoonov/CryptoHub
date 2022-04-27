@@ -4,7 +4,7 @@
     <string name="crypto_assets_list">Crypto assets list</string>
     <string name="settings">Settings</string>
     <string name="night_mode">Night mode</string>
-    <string name="general">General</string>
+    <string name="device_specific">Device specific</string>
     <string name="statistics">Statistics</string>
     <string name="market_cap">Market Capitalization</string>
     <string name="volume">Volume</string>
@@ -17,4 +17,10 @@
     <string name="recently_viewed">Recently viewed</string>
     <string name="delete">Delete</string>
     <string name="refresh">Refresh</string>
+    <string name="sign_in_google">Sign in with Google</string>
+    <string name="sign_out">Sign out</string>
+    <string name="continue_without_sign_in">Continue without sign in</string>
+    <string name="or">or</string>
+    <string name="google_icon">Google icon</string>
+    <string name="sign_in_failed">Sign in failed</string>
 </resources>

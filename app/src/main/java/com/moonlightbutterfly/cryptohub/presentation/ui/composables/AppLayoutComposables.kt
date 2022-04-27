@@ -12,12 +12,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavBackStackEntry
-import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import coil.annotation.ExperimentalCoilApi
 import com.moonlightbutterfly.cryptohub.presentation.ui.Screen
+import com.moonlightbutterfly.cryptohub.presentation.ui.SignInFlowProvider
+import com.moonlightbutterfly.cryptohub.presentation.ui.composables.navigation.appGraph
 import kotlinx.coroutines.FlowPreview
 
 @FlowPreview
@@ -26,12 +26,17 @@ import kotlinx.coroutines.FlowPreview
 fun AppLayout(
     navController: NavHostController,
     backStackEntry: NavBackStackEntry?,
+    signInFlowProvider: SignInFlowProvider
 ) {
     Scaffold(
-        bottomBar = { AppBottomNavigation(navController, backStackEntry) }
+        bottomBar = {
+            if (navController.currentDestination?.route != Screen.SIGN_IN_PANEL.route) {
+                AppBottomNavigation(navController, backStackEntry)
+            }
+        }
     ) {
-        NavHost(navController, startDestination = Screen.CRYPTO_ASSETS_LIST.route, Modifier.padding(it)) {
-            destinations(navController)
+        NavHost(navController, startDestination = Screen.SIGN_IN_PANEL.route, Modifier.padding(it)) {
+            appGraph(navController, signInFlowProvider)
         }
     }
 }
@@ -41,7 +46,11 @@ fun AppBottomNavigation(navController: NavHostController, backStackEntry: NavBac
     BottomNavigation {
         val allScreens = Screen.bottomNavigationScreens()
         allScreens.forEach { screen ->
-            AppBottomNavigationItem(screen = screen, navController = navController, backStackEntry = backStackEntry)
+            AppBottomNavigationItem(
+                screen = screen,
+                navController = navController,
+                backStackEntry = backStackEntry
+            )
         }
     }
 }
@@ -54,10 +63,20 @@ fun RowScope.AppBottomNavigationItem(
 ) {
     val currentRoute = backStackEntry?.destination?.route
     BottomNavigationItem(
-        icon = { Icon(screen.getIconConsideringCurrentRoute(currentRoute), contentDescription = null) },
+        icon = {
+            Icon(
+                screen.getIconConsideringCurrentRoute(currentRoute),
+                contentDescription = null
+            )
+        },
         label = { Text(stringResource(screen.nameResourceId)) },
         selected = currentRoute == screen.route,
-        onClick = { navController navigateTo screen.route }
+        onClick = {
+            navController.navigate(screen.route) {
+                popUpTo(HOME_ROUTE)
+                launchSingleTop = true
+            }
+        }
     )
 }
 
@@ -69,37 +88,4 @@ private fun Screen.getIconConsideringCurrentRoute(route: String?): ImageVector {
     }
 }
 
-private infix fun NavHostController.navigateTo(route: String) {
-    navigate(route)
-}
-
-@FlowPreview
-@ExperimentalCoilApi
-fun NavGraphBuilder.destinations(navController: NavHostController) {
-    composable(Screen.CRYPTO_ASSETS_LIST.route) {
-        CryptoAssetsListScreen(
-            {
-                navController navigateTo "${Screen.CRYPTO_ASSET_PANEL.route}/$it"
-            },
-            {
-                navController navigateTo Screen.SEARCH_PANEL.route
-            }
-        )
-    }
-    composable(Screen.SETTINGS.route) {
-        SettingsScreen()
-    }
-    composable("${Screen.CRYPTO_ASSET_PANEL.route}/{cryptoSymbol}") {
-        CryptoAssetPanelScreen(it.arguments?.getString("cryptoSymbol")!!)
-    }
-    composable(Screen.SEARCH_PANEL.route) {
-        SearchScreen(
-            {
-                navController.popBackStack()
-            },
-            {
-                navController navigateTo "${Screen.CRYPTO_ASSET_PANEL.route}/$it"
-            }
-        )
-    }
-}
+val HOME_ROUTE = Screen.CRYPTO_ASSETS_LIST.route

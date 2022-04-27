@@ -1,24 +1,18 @@
-package com.moonlightbutterfly.cryptohub.framework
+package com.moonlightbutterfly.cryptohub.framework.datasources
 
-import com.google.gson.GsonBuilder
 import com.moonlightbutterfly.cryptohub.BuildConfig
 import com.moonlightbutterfly.cryptohub.CRYPTO_ASSETS_LOAD_NUMBER_PER_PAGE
 import com.moonlightbutterfly.cryptohub.data.CryptoAssetsDataSource
 import com.moonlightbutterfly.cryptohub.domain.models.CryptoAsset
 import com.moonlightbutterfly.cryptohub.domain.models.CryptoAssetMarketInfo
+import com.moonlightbutterfly.cryptohub.framework.CoinMarketCapService
 import com.moonlightbutterfly.cryptohub.framework.dtos.CryptoAssetMarketQuoteDto
 import com.moonlightbutterfly.cryptohub.framework.dtos.CryptoAssetMetadataDto
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
-class CryptoAssetsDataSourceImpl : CryptoAssetsDataSource {
-
-    private val service by lazy {
-        Retrofit.Builder()
-            .baseUrl(API_ADDRESS)
-            .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
-            .build().create(CoinMarketCapService::class.java)
-    }
+/**
+ * Data source interacting with CoinMarketCap service for info.
+ */
+class CryptoAssetsDataSourceImpl(private val service: CoinMarketCapService) : CryptoAssetsDataSource {
 
     override suspend fun getCryptoAssetsMarketInfo(
         symbols: List<String>
@@ -26,7 +20,6 @@ class CryptoAssetsDataSourceImpl : CryptoAssetsDataSource {
         if (symbols.isEmpty()) {
             return emptyList()
         }
-
         val metadataList = service.getMetadata(
             apiKey = BuildConfig.API_KEY,
             symbols = symbols.joinToString(separator = ",")
@@ -78,9 +71,5 @@ class CryptoAssetsDataSourceImpl : CryptoAssetsDataSource {
             volumeChangePct24H = marketQuote.quotes?.get("USD")?.volumeChange24H ?: CryptoAssetMarketInfo.EMPTY_VOLUME_CHANGE_PCT_24H,
             description = metadata.description ?: CryptoAssetMarketInfo.EMPTY_DESCRIPTION
         )
-    }
-
-    private companion object {
-        private const val API_ADDRESS = "https://pro-api.coinmarketcap.com/"
     }
 }
