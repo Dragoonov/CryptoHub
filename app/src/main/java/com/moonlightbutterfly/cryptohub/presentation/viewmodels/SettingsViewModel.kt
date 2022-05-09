@@ -3,8 +3,9 @@ package com.moonlightbutterfly.cryptohub.presentation.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import com.moonlightbutterfly.cryptohub.domain.models.UserData
 import com.moonlightbutterfly.cryptohub.usecases.GetLocalPreferencesUseCase
+import com.moonlightbutterfly.cryptohub.usecases.GetSignedInUserUseCase
+import com.moonlightbutterfly.cryptohub.usecases.SignOutUserUseCase
 import com.moonlightbutterfly.cryptohub.usecases.UpdateLocalPreferencesUseCase
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -14,7 +15,8 @@ import javax.inject.Inject
 class SettingsViewModel @Inject constructor(
     private val getLocalPreferencesUseCase: GetLocalPreferencesUseCase,
     private val updateLocalPreferencesUseCase: UpdateLocalPreferencesUseCase,
-    private val userData: UserData
+    private val signOutUserUseCase: SignOutUserUseCase,
+    private val getSignedInUserUseCase: GetSignedInUserUseCase
 ) : ViewModel() {
 
     val isNightModeEnabled = getLocalPreferencesUseCase().map { it.nightModeEnabled }.asLiveData()
@@ -27,10 +29,10 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun isUserSignedIn(): Boolean {
-        return userData.isUserSignedIn()
+        return getSignedInUserUseCase() != null
     }
 
     fun onSignedOut() {
-        userData.clear()
+        signOutUserUseCase()
     }
 }

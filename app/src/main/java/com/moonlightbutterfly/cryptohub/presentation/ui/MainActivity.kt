@@ -18,15 +18,19 @@ import com.moonlightbutterfly.cryptohub.di.DaggerAppComponent
 import com.moonlightbutterfly.cryptohub.presentation.ViewModelFactory
 import com.moonlightbutterfly.cryptohub.presentation.ui.composables.AppLayout
 import com.moonlightbutterfly.cryptohub.presentation.viewmodels.MainViewModel
+import com.moonlightbutterfly.cryptohub.signincontrollers.GoogleSignInIntentControllerImpl
 
 @ExperimentalCoilApi
 class MainActivity : AppCompatActivity() {
 
     private lateinit var viewModelFactory: ViewModelFactory
-    private val signInFlowProvider: SignInFlowProvider = SignInFlowProviderImpl(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        viewModelFactory = DaggerAppComponent.factory().create(this).viewModelFactory()
+        val appComponent = DaggerAppComponent.factory().create(
+            this,
+            GoogleSignInIntentControllerImpl(this)
+        )
+        viewModelFactory = appComponent.viewModelFactory()
         super.onCreate(savedInstanceState)
         setContent {
             CompositionLocalProvider(LocalViewModelFactory provides viewModelFactory) {
@@ -35,7 +39,7 @@ class MainActivity : AppCompatActivity() {
                 CryptoHubTheme(darkTheme = isNightMode) {
                     val navController = rememberNavController()
                     val backStackEntry by navController.currentBackStackEntryAsState()
-                    AppLayout(navController, backStackEntry, signInFlowProvider)
+                    AppLayout(navController, backStackEntry)
                     SetStatusBarColor()
                 }
             }

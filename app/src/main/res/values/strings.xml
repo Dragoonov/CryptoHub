@@ -18,9 +18,25 @@
     <string name="delete">Delete</string>
     <string name="refresh">Refresh</string>
     <string name="sign_in_google">Sign in with Google</string>
+    <string name="sign_in_email">Sign in with email</string>
+    <string name="sign_in_phone">Sign in with phone number</string>
+    <string name="sign_in_facebook">Sign in with Facebook</string>
+    <string name="sign_in_twitter">Sign in with Twitter</string>
     <string name="sign_out">Sign out</string>
     <string name="continue_without_sign_in">Continue without sign in</string>
     <string name="or">or</string>
     <string name="google_icon">Google icon</string>
     <string name="sign_in_failed">Sign in failed</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="continue_sign_in">Continue</string>
+    <string name="phone_number">Phone number</string>
+    <string name="code">Code</string>
+    <string name="phone_sign_in_description">After signing you might receive an SMS message for verification. Standard rates apply.</string>
+    <string name="sign_in">Sign in</string>
+    <string name="code_description">Type here the code you received through SMS</string>
+    <string name="facebook_application_id">998474207469300</string>
+    <string name="fb_app_client_token">f0a4d6359aeb3c2d52e242cb9495a2ef</string>
+    <string name="fields_not_empty">Fields cannot be empty</string>
+    <string name="field_not_empty">Field cannot be empty</string>
 </resources>

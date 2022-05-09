@@ -6,6 +6,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.core.app.ActivityOptionsCompat
 import androidx.navigation.NavHostController
@@ -13,7 +14,9 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import coil.annotation.ExperimentalCoilApi
 import com.moonlightbutterfly.cryptohub.di.DaggerTestAppComponent
+import com.moonlightbutterfly.cryptohub.domain.models.UserData
 import com.moonlightbutterfly.cryptohub.presentation.ui.composables.AppLayout
+import com.moonlightbutterfly.cryptohub.signincontrollers.GoogleSignInIntentController
 import kotlinx.coroutines.FlowPreview
 import org.junit.Before
 import org.junit.Rule
@@ -52,19 +55,21 @@ open class CryptoHubAndroidTest {
     @Before
     fun setupNavHost() {
         composeTestRule.setContent {
-            val provider = object : SignInFlowProvider {
-                override fun getSignInIntentLauncher(
-                    onSignInSuccess: () -> Unit,
-                    onSignInFailure: () -> Unit
-                ): ActivityResultLauncher<Intent> {
-                    return launcher
+            val viewModelFactory = DaggerTestAppComponent.factory().create(
+                LocalContext.current,
+                object : GoogleSignInIntentController {
+                    override fun getLauncher(
+                        actionOnSuccess: (UserData) -> Unit,
+                        actionOnFailure: (String) -> Unit
+                    ): ActivityResultLauncher<Intent> {
+                        return launcher
+                    }
                 }
-            }
-            val viewModelFactory = DaggerTestAppComponent.create().viewModelFactory()
+            ).viewModelFactory()
             CompositionLocalProvider(LocalViewModelFactory provides viewModelFactory) {
                 navController = rememberNavController()
                 val backStackEntry by navController.currentBackStackEntryAsState()
-                AppLayout(navController = navController, backStackEntry = backStackEntry, provider)
+                AppLayout(navController = navController, backStackEntry = backStackEntry)
             }
         }
     }

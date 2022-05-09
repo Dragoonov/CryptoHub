@@ -3,6 +3,7 @@ package com.moonlightbutterfly.cryptohub.di
 import com.moonlightbutterfly.cryptohub.data.CryptoAssetsRepository
 import com.moonlightbutterfly.cryptohub.data.LocalPreferencesRepository
 import com.moonlightbutterfly.cryptohub.data.UserConfigurationRepository
+import com.moonlightbutterfly.cryptohub.data.UserDataCache
 import com.moonlightbutterfly.cryptohub.usecases.AddFavouriteUseCase
 import com.moonlightbutterfly.cryptohub.usecases.AddRecentUseCase
 import com.moonlightbutterfly.cryptohub.usecases.GetAllCryptoAssetsMarketInfoUseCase
@@ -10,9 +11,12 @@ import com.moonlightbutterfly.cryptohub.usecases.GetCryptoAssetsMarketInfoUseCas
 import com.moonlightbutterfly.cryptohub.usecases.GetFavouritesUseCase
 import com.moonlightbutterfly.cryptohub.usecases.GetLocalPreferencesUseCase
 import com.moonlightbutterfly.cryptohub.usecases.GetRecentsUseCase
+import com.moonlightbutterfly.cryptohub.usecases.GetSignedInUserUseCase
 import com.moonlightbutterfly.cryptohub.usecases.RemoveFavouriteUseCase
 import com.moonlightbutterfly.cryptohub.usecases.RemoveRecentUseCase
 import com.moonlightbutterfly.cryptohub.usecases.RemoveRecentsUseCase
+import com.moonlightbutterfly.cryptohub.usecases.SignInUserUseCase
+import com.moonlightbutterfly.cryptohub.usecases.SignOutUserUseCase
 import com.moonlightbutterfly.cryptohub.usecases.UpdateLocalPreferencesUseCase
 import dagger.Module
 import dagger.Provides
@@ -95,5 +99,26 @@ class UseCasesModule {
         localPreferencesRepository: LocalPreferencesRepository
     ): UpdateLocalPreferencesUseCase {
         return UpdateLocalPreferencesUseCase(localPreferencesRepository)
+    }
+
+    @Provides
+    fun provideGetSignedInUserUseCase(
+        userDataCache: UserDataCache
+    ): GetSignedInUserUseCase {
+        return GetSignedInUserUseCase(userDataCache)
+    }
+
+    @Provides
+    fun provideSignInUserUseCase(
+        userDataCache: UserDataCache
+    ): SignInUserUseCase {
+        return SignInUserUseCase(userDataCache)
+    }
+
+    @Provides
+    fun provideSignOutUserUseCase(
+        userDataCache: UserDataCache
+    ): SignOutUserUseCase {
+        return SignOutUserUseCase(userDataCache)
     }
 }
