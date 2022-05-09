@@ -1,23 +1,20 @@
 package com.moonlightbutterfly.cryptohub.presentation.ui.composables
 
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
 import coil.annotation.ExperimentalCoilApi
 import com.moonlightbutterfly.cryptohub.presentation.ui.Screen
-import com.moonlightbutterfly.cryptohub.presentation.ui.SignInFlowProvider
-import com.moonlightbutterfly.cryptohub.presentation.ui.composables.navigation.appGraph
+import com.moonlightbutterfly.cryptohub.presentation.ui.Screen.Companion.isSignInScreen
+import com.moonlightbutterfly.cryptohub.presentation.ui.navigation.AppGraph
 import kotlinx.coroutines.FlowPreview
 
 @FlowPreview
@@ -25,19 +22,16 @@ import kotlinx.coroutines.FlowPreview
 @Composable
 fun AppLayout(
     navController: NavHostController,
-    backStackEntry: NavBackStackEntry?,
-    signInFlowProvider: SignInFlowProvider
+    backStackEntry: NavBackStackEntry?
 ) {
     Scaffold(
         bottomBar = {
-            if (navController.currentDestination?.route != Screen.SIGN_IN_PANEL.route) {
+            if (navController.currentDestination?.route?.isSignInScreen() == false) {
                 AppBottomNavigation(navController, backStackEntry)
             }
         }
     ) {
-        NavHost(navController, startDestination = Screen.SIGN_IN_PANEL.route, Modifier.padding(it)) {
-            appGraph(navController, signInFlowProvider)
-        }
+        AppGraph(navController = navController, padding = it)
     }
 }
 

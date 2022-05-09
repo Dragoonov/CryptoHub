@@ -1,11 +1,14 @@
 package com.moonlightbutterfly.cryptohub.di
 
+import com.google.firebase.auth.FirebaseAuth
 import com.moonlightbutterfly.cryptohub.data.CryptoAssetsDataSource
 import com.moonlightbutterfly.cryptohub.data.CryptoAssetsRepository
 import com.moonlightbutterfly.cryptohub.data.LocalPreferencesDataSource
 import com.moonlightbutterfly.cryptohub.data.LocalPreferencesRepository
 import com.moonlightbutterfly.cryptohub.data.UserConfigurationDataSource
 import com.moonlightbutterfly.cryptohub.data.UserConfigurationRepository
+import com.moonlightbutterfly.cryptohub.data.UserDataCache
+import com.moonlightbutterfly.cryptohub.framework.UserDataCacheImpl
 import com.moonlightbutterfly.cryptohub.repository.FakeCryptoAssetsDataSourceImpl
 import com.moonlightbutterfly.cryptohub.repository.FakeLocalPreferencesDataSourceImpl
 import com.moonlightbutterfly.cryptohub.repository.FakeUserConfigurationDataSourceImpl
@@ -52,4 +55,8 @@ class TestRepositoryModule {
     @Singleton
     fun provideLocalPreferencesDataSource(): LocalPreferencesDataSource =
         FakeLocalPreferencesDataSourceImpl()
+
+    @Provides
+    @Singleton
+    fun provideUserDataCache(): UserDataCache = UserDataCacheImpl(FirebaseAuth.getInstance())
 }

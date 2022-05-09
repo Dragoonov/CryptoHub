@@ -1,6 +1,7 @@
 package com.moonlightbutterfly.cryptohub.di
 
 import android.content.Context
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -11,8 +12,9 @@ import com.moonlightbutterfly.cryptohub.data.LocalPreferencesDataSource
 import com.moonlightbutterfly.cryptohub.data.LocalPreferencesRepository
 import com.moonlightbutterfly.cryptohub.data.UserConfigurationDataSource
 import com.moonlightbutterfly.cryptohub.data.UserConfigurationRepository
-import com.moonlightbutterfly.cryptohub.domain.models.UserData
+import com.moonlightbutterfly.cryptohub.data.UserDataCache
 import com.moonlightbutterfly.cryptohub.framework.CoinMarketCapService
+import com.moonlightbutterfly.cryptohub.framework.UserDataCacheImpl
 import com.moonlightbutterfly.cryptohub.framework.database.CryptoHubDatabase
 import com.moonlightbutterfly.cryptohub.framework.database.daos.FavouritesDao
 import com.moonlightbutterfly.cryptohub.framework.database.daos.LocalPreferencesDao
@@ -21,10 +23,12 @@ import com.moonlightbutterfly.cryptohub.framework.datasources.CryptoAssetsDataSo
 import com.moonlightbutterfly.cryptohub.framework.datasources.LocalPreferencesDataSourceImpl
 import com.moonlightbutterfly.cryptohub.framework.datasources.UserConfigurationLocalDataSourceImpl
 import com.moonlightbutterfly.cryptohub.framework.datasources.UserConfigurationRemoteDataSourceImpl
+import com.moonlightbutterfly.cryptohub.usecases.GetSignedInUserUseCase
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Singleton
 
 @Module
 class RepositoryModule {
@@ -51,10 +55,11 @@ class RepositoryModule {
     fun provideUserConfigurationDataSource(
         favouritesDao: FavouritesDao,
         recentsDao: RecentsDao,
-        userData: UserData,
+        getSignedInUserUseCase: GetSignedInUserUseCase,
     ): UserConfigurationDataSource {
-        return if (userData.isUserSignedIn())
-            userConfigurationRemoteDataSource.apply { registerFor(userData.userId) }
+        val user = getSignedInUserUseCase()
+        return if (user != null)
+            userConfigurationRemoteDataSource.apply { registerFor(user.userId) }
         else {
             UserConfigurationLocalDataSourceImpl(favouritesDao, recentsDao)
         }
@@ -99,6 +104,10 @@ class RepositoryModule {
     ): CryptoAssetsRepository {
         return CryptoAssetsRepository(cryptoAssetsDataSource)
     }
+
+    @Provides
+    @Singleton
+    fun provideUserDataCache(): UserDataCache = UserDataCacheImpl(FirebaseAuth.getInstance())
 
     private companion object {
         private const val API_ADDRESS = "https://pro-api.coinmarketcap.com/"
