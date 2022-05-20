@@ -33,12 +33,12 @@ class CryptoAssetsListViewModel @Inject constructor(
 
     private val favouriteAssets = getFavouritesUseCase()
 
-    val favourites = favouriteAssets.map { list ->
-        getCryptoAssetsMarketInfoUseCase(symbols = list.map { it.symbol })
+    val favourites = favouriteAssets.map { collection ->
+        getCryptoAssetsMarketInfoUseCase(symbols = collection.cryptoAssets.map { it.symbol })
     }
 
-    fun isCryptoInFavourites(asset: CryptoAsset) = favouriteAssets.map { list ->
-        list.find { it.symbol == asset.symbol } != null
+    fun isCryptoInFavourites(asset: CryptoAsset) = favouriteAssets.map { collection ->
+        collection.cryptoAssets.find { it.symbol == asset.symbol } != null
     }.asLiveData()
 
     fun addToFavourites(cryptoAsset: CryptoAsset) {

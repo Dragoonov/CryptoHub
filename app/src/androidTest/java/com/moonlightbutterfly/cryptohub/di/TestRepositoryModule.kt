@@ -5,13 +5,13 @@ import com.moonlightbutterfly.cryptohub.data.CryptoAssetsDataSource
 import com.moonlightbutterfly.cryptohub.data.CryptoAssetsRepository
 import com.moonlightbutterfly.cryptohub.data.LocalPreferencesDataSource
 import com.moonlightbutterfly.cryptohub.data.LocalPreferencesRepository
-import com.moonlightbutterfly.cryptohub.data.UserConfigurationDataSource
-import com.moonlightbutterfly.cryptohub.data.UserConfigurationRepository
+import com.moonlightbutterfly.cryptohub.data.UserCollectionsDataSource
+import com.moonlightbutterfly.cryptohub.data.UserCollectionsRepository
 import com.moonlightbutterfly.cryptohub.data.UserDataCache
 import com.moonlightbutterfly.cryptohub.framework.UserDataCacheImpl
 import com.moonlightbutterfly.cryptohub.repository.FakeCryptoAssetsDataSourceImpl
 import com.moonlightbutterfly.cryptohub.repository.FakeLocalPreferencesDataSourceImpl
-import com.moonlightbutterfly.cryptohub.repository.FakeUserConfigurationDataSourceImpl
+import com.moonlightbutterfly.cryptohub.repository.FakeUserCollectionsDataSourceImpl
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -26,15 +26,15 @@ class TestRepositoryModule {
 
     @Provides
     @Singleton
-    fun provideUserConfigurationDataSource(): UserConfigurationDataSource {
-        return FakeUserConfigurationDataSourceImpl()
+    fun provideUserConfigurationDataSource(): UserCollectionsDataSource {
+        return FakeUserCollectionsDataSourceImpl()
     }
 
     @Provides
     fun provideUserConfigurationRepository(
-        userConfigurationDataSource: UserConfigurationDataSource
-    ): UserConfigurationRepository {
-        return UserConfigurationRepository(userConfigurationDataSource)
+        userCollectionsDataSource: UserCollectionsDataSource
+    ): UserCollectionsRepository {
+        return UserCollectionsRepository(userCollectionsDataSource)
     }
 
     @Provides

@@ -35,8 +35,8 @@ class CryptoAssetPanelViewModel @Inject constructor(
 
     private val favourites = getFavouritesUseCase()
 
-    fun isCryptoInFavourites() = favourites.combine(asset.asFlow()) { list, asset ->
-        list.find { it.symbol == asset.asset.symbol } != null
+    fun isCryptoInFavourites() = favourites.combine(asset.asFlow()) { collection, asset ->
+        collection.cryptoAssets.find { it.symbol == asset.asset.symbol } != null
     }
 
     fun addCryptoToFavourites() {

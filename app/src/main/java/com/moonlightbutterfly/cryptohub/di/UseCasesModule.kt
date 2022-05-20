@@ -2,16 +2,21 @@ package com.moonlightbutterfly.cryptohub.di
 
 import com.moonlightbutterfly.cryptohub.data.CryptoAssetsRepository
 import com.moonlightbutterfly.cryptohub.data.LocalPreferencesRepository
-import com.moonlightbutterfly.cryptohub.data.UserConfigurationRepository
+import com.moonlightbutterfly.cryptohub.data.UserCollectionsRepository
 import com.moonlightbutterfly.cryptohub.data.UserDataCache
+import com.moonlightbutterfly.cryptohub.usecases.AddAssetToCollectionUseCase
 import com.moonlightbutterfly.cryptohub.usecases.AddFavouriteUseCase
 import com.moonlightbutterfly.cryptohub.usecases.AddRecentUseCase
+import com.moonlightbutterfly.cryptohub.usecases.CreateCollectionUseCase
 import com.moonlightbutterfly.cryptohub.usecases.GetAllCryptoAssetsMarketInfoUseCase
+import com.moonlightbutterfly.cryptohub.usecases.GetCollectionUseCase
 import com.moonlightbutterfly.cryptohub.usecases.GetCryptoAssetsMarketInfoUseCase
 import com.moonlightbutterfly.cryptohub.usecases.GetFavouritesUseCase
 import com.moonlightbutterfly.cryptohub.usecases.GetLocalPreferencesUseCase
 import com.moonlightbutterfly.cryptohub.usecases.GetRecentsUseCase
 import com.moonlightbutterfly.cryptohub.usecases.GetSignedInUserUseCase
+import com.moonlightbutterfly.cryptohub.usecases.RemoveAssetFromCollectionUseCase
+import com.moonlightbutterfly.cryptohub.usecases.RemoveCollectionUseCase
 import com.moonlightbutterfly.cryptohub.usecases.RemoveFavouriteUseCase
 import com.moonlightbutterfly.cryptohub.usecases.RemoveRecentUseCase
 import com.moonlightbutterfly.cryptohub.usecases.RemoveRecentsUseCase
@@ -26,37 +31,37 @@ class UseCasesModule {
 
     @Provides
     fun provideAddRecentUseCase(
-        userConfigurationRepository: UserConfigurationRepository
+        addAssetToCollectionUseCase: AddAssetToCollectionUseCase
     ): AddRecentUseCase {
-        return AddRecentUseCase(userConfigurationRepository)
+        return AddRecentUseCase(addAssetToCollectionUseCase)
     }
 
     @Provides
     fun provideGetRecentsUseCase(
-        userConfigurationRepository: UserConfigurationRepository
+        getCollectionUseCase: GetCollectionUseCase
     ): GetRecentsUseCase {
-        return GetRecentsUseCase(userConfigurationRepository)
+        return GetRecentsUseCase(getCollectionUseCase)
     }
 
     @Provides
     fun provideRemoveRecentsUseCase(
-        userConfigurationRepository: UserConfigurationRepository
+        userCollectionsRepository: UserCollectionsRepository
     ): RemoveRecentsUseCase {
-        return RemoveRecentsUseCase(userConfigurationRepository)
+        return RemoveRecentsUseCase(userCollectionsRepository)
     }
 
     @Provides
     fun provideRemoveRecentUseCase(
-        userConfigurationRepository: UserConfigurationRepository
+        removeAssetFromCollectionUseCase: RemoveAssetFromCollectionUseCase
     ): RemoveRecentUseCase {
-        return RemoveRecentUseCase(userConfigurationRepository)
+        return RemoveRecentUseCase(removeAssetFromCollectionUseCase)
     }
 
     @Provides
     fun provideAddFavouriteUseCase(
-        userConfigurationRepository: UserConfigurationRepository
+        addAssetToCollectionUseCase: AddAssetToCollectionUseCase
     ): AddFavouriteUseCase {
-        return AddFavouriteUseCase(userConfigurationRepository)
+        return AddFavouriteUseCase(addAssetToCollectionUseCase)
     }
 
     @Provides
@@ -75,9 +80,9 @@ class UseCasesModule {
 
     @Provides
     fun provideGetFavouritesUseCase(
-        userConfigurationRepository: UserConfigurationRepository
+        getCollectionUseCase: GetCollectionUseCase
     ): GetFavouritesUseCase {
-        return GetFavouritesUseCase(userConfigurationRepository)
+        return GetFavouritesUseCase(getCollectionUseCase)
     }
 
     @Provides
@@ -89,9 +94,9 @@ class UseCasesModule {
 
     @Provides
     fun provideRemoveFavouriteUseCase(
-        userConfigurationRepository: UserConfigurationRepository
+        removeAssetFromCollectionUseCase: RemoveAssetFromCollectionUseCase
     ): RemoveFavouriteUseCase {
-        return RemoveFavouriteUseCase(userConfigurationRepository)
+        return RemoveFavouriteUseCase(removeAssetFromCollectionUseCase)
     }
 
     @Provides
@@ -120,5 +125,40 @@ class UseCasesModule {
         userDataCache: UserDataCache
     ): SignOutUserUseCase {
         return SignOutUserUseCase(userDataCache)
+    }
+
+    @Provides
+    fun provideGetCollectionUseCase(
+        userCollectionsRepository: UserCollectionsRepository
+    ): GetCollectionUseCase {
+        return GetCollectionUseCase(userCollectionsRepository)
+    }
+
+    @Provides
+    fun provideAddAssetToCollectionUseCase(
+        userCollectionsRepository: UserCollectionsRepository
+    ): AddAssetToCollectionUseCase {
+        return AddAssetToCollectionUseCase(userCollectionsRepository)
+    }
+
+    @Provides
+    fun provideCreateCollectionUseCase(
+        userCollectionsRepository: UserCollectionsRepository
+    ): CreateCollectionUseCase {
+        return CreateCollectionUseCase(userCollectionsRepository)
+    }
+
+    @Provides
+    fun provideRemoveAssetFromCollectionUseCase(
+        userCollectionsRepository: UserCollectionsRepository
+    ): RemoveAssetFromCollectionUseCase {
+        return RemoveAssetFromCollectionUseCase(userCollectionsRepository)
+    }
+
+    @Provides
+    fun provideRemoveCollectionUseCase(
+        userCollectionsRepository: UserCollectionsRepository
+    ): RemoveCollectionUseCase {
+        return RemoveCollectionUseCase(userCollectionsRepository)
     }
 }

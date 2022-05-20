@@ -13,31 +13,27 @@ import com.google.gson.Gson
 import com.moonlightbutterfly.cryptohub.domain.models.LocalPreferences
 import com.moonlightbutterfly.cryptohub.framework.database.converters.CryptoAssetConverter
 import com.moonlightbutterfly.cryptohub.framework.database.converters.LocalPreferencesConverter
-import com.moonlightbutterfly.cryptohub.framework.database.daos.FavouritesDao
+import com.moonlightbutterfly.cryptohub.framework.database.daos.CryptoCollectionsDao
 import com.moonlightbutterfly.cryptohub.framework.database.daos.LocalPreferencesDao
-import com.moonlightbutterfly.cryptohub.framework.database.daos.RecentsDao
-import com.moonlightbutterfly.cryptohub.framework.database.entities.FavouriteEntity
+import com.moonlightbutterfly.cryptohub.framework.database.entities.CryptoCollectionEntity
 import com.moonlightbutterfly.cryptohub.framework.database.entities.LocalPreferencesEntity
-import com.moonlightbutterfly.cryptohub.framework.database.entities.RecentEntity
 
-@Database(entities = [LocalPreferencesEntity::class, FavouriteEntity::class, RecentEntity::class], version = 1)
+@Database(entities = [LocalPreferencesEntity::class, CryptoCollectionEntity::class], version = 1)
 @TypeConverters(LocalPreferencesConverter::class, CryptoAssetConverter::class)
 abstract class CryptoHubDatabase : RoomDatabase() {
 
     abstract fun localPreferencesDao(): LocalPreferencesDao
-    abstract fun favouritesDao(): FavouritesDao
-    abstract fun recentsDao(): RecentsDao
+    abstract fun cryptoCollectionsDao(): CryptoCollectionsDao
 
     companion object {
         private var INSTANCE: CryptoHubDatabase? = null
         private const val DATABASE_NAME = "crypto_hub_database"
         private const val DATABASE_TEMPLATE_PATH = "databases/$DATABASE_NAME.db"
         const val LOCAL_PREFERENCES_TABLE_NAME = "local_preferences"
-        const val FAVOURITES_TABLE_NAME = "favourites"
-        const val RECENTS_TABLE_NAME = "recents"
         const val LOCAL_PREFERENCES_COLUMN_NAME = "preferences"
-        const val FAVOURITES_ASSET_COLUMN_NAME = "asset"
-        const val RECENTS_ASSET_COLUMN_NAME = "asset"
+        const val CRYPTO_COLLECTIONS_TABLE_NAME = "crypto_collection"
+        const val CRYPTO_COLLECTIONS_NAME_COLUMN_NAME = "name"
+        const val CRYPTO_COLLECTIONS_ASSETS_COLUMN_NAME = "assets"
 
         fun getInstance(context: Context): CryptoHubDatabase {
             synchronized(this) {
@@ -68,23 +64,18 @@ abstract class CryptoHubDatabase : RoomDatabase() {
                             "${BaseColumns._ID} INTEGER PRIMARY KEY," +
                             "$LOCAL_PREFERENCES_COLUMN_NAME TEXT)"
 
-                    val createFavourites =
-                        "CREATE TABLE IF NOT EXISTS $FAVOURITES_TABLE_NAME (" +
+                    val createCryptoCollections =
+                        "CREATE TABLE IF NOT EXISTS $CRYPTO_COLLECTIONS_TABLE_NAME (" +
                             "${BaseColumns._ID} INTEGER PRIMARY KEY," +
-                            "$FAVOURITES_ASSET_COLUMN_NAME TEXT)"
-
-                    val createRecents =
-                        "CREATE TABLE IF NOT EXISTS $RECENTS_TABLE_NAME (" +
-                            "${BaseColumns._ID} INTEGER PRIMARY KEY," +
-                            "$RECENTS_ASSET_COLUMN_NAME TEXT)"
+                            "$CRYPTO_COLLECTIONS_NAME_COLUMN_NAME TEXT," +
+                            "$CRYPTO_COLLECTIONS_ASSETS_COLUMN_NAME TEXT)"
 
                     val values = ContentValues().apply {
                         put(LOCAL_PREFERENCES_COLUMN_NAME, Gson().toJson(LocalPreferences.DEFAULT))
                     }
 
                     db.execSQL(createLocalPreferences)
-                    db.execSQL(createFavourites)
-                    db.execSQL(createRecents)
+                    db.execSQL(createCryptoCollections)
                     db.insert(LOCAL_PREFERENCES_TABLE_NAME, OnConflictStrategy.REPLACE, values)
                 }
             }

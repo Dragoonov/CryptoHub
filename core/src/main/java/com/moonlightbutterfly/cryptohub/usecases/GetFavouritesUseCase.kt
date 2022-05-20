@@ -1,7 +1,7 @@
 package com.moonlightbutterfly.cryptohub.usecases
 
-import com.moonlightbutterfly.cryptohub.data.UserConfigurationRepository
+import com.moonlightbutterfly.cryptohub.data.UserCollectionsRepository
 
-class GetFavouritesUseCase(private val userConfigurationRepository: UserConfigurationRepository) {
-    operator fun invoke() = userConfigurationRepository.getFavourites()
+class GetFavouritesUseCase(private val getCollectionUseCase: GetCollectionUseCase) {
+    operator fun invoke() = getCollectionUseCase.invoke(UserCollectionsRepository.FAVOURITES_COLLECTION_NAME)
 }

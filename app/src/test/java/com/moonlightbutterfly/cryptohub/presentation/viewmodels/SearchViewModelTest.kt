@@ -3,6 +3,7 @@ package com.moonlightbutterfly.cryptohub.presentation.viewmodels
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.moonlightbutterfly.cryptohub.domain.models.CryptoAsset
 import com.moonlightbutterfly.cryptohub.domain.models.CryptoAssetMarketInfo
+import com.moonlightbutterfly.cryptohub.domain.models.CryptoCollection
 import com.moonlightbutterfly.cryptohub.usecases.AddRecentUseCase
 import com.moonlightbutterfly.cryptohub.usecases.GetAllCryptoAssetsMarketInfoUseCase
 import com.moonlightbutterfly.cryptohub.usecases.GetRecentsUseCase
@@ -31,7 +32,7 @@ import org.junit.Test
 @ExperimentalCoroutinesApi
 class SearchViewModelTest {
 
-    private val recentsFlow = MutableStateFlow<List<CryptoAsset>>(listOf())
+    private val recentsFlow = MutableStateFlow(CryptoCollection.EMPTY)
     private val getRecentsUseCase: GetRecentsUseCase = mockk()
     private val addRecentUseCase: AddRecentUseCase = mockk()
     private val removeRecentUseCase: RemoveRecentUseCase = mockk()
@@ -87,25 +88,26 @@ class SearchViewModelTest {
     }
 
     @Test
-    fun `should search and filter by query of 3 characters`() = viewModel.cryptoAssetsResults.observeForTesting {
-        runBlockingTest(testDispatcher) {
-            // WHEN
-            viewModel.onQueryChange("ada")
-            advanceTimeBy(1500)
+    fun `should search and filter by query of 3 characters`() =
+        viewModel.cryptoAssetsResults.observeForTesting {
+            runBlockingTest(testDispatcher) {
+                // WHEN
+                viewModel.onQueryChange("ada")
+                advanceTimeBy(1500)
 
-            // THEN
-            assertEquals(2, viewModel.cryptoAssetsResults.value!!.size)
-            coVerify(exactly = 10) {
-                getAllCryptoAssetsMarketInfoUseCase(any())
+                // THEN
+                assertEquals(2, viewModel.cryptoAssetsResults.value!!.size)
+                coVerify(exactly = 10) {
+                    getAllCryptoAssetsMarketInfoUseCase(any())
+                }
             }
         }
-    }
 
     @Test
     fun `should just add crypto asset to recents`() = viewModel.recents.observeForTesting {
         runBlockingTest {
             // GIVEN
-            recentsFlow.emit(listOf())
+            recentsFlow.emit(CryptoCollection.EMPTY)
 
             // WHEN
             viewModel.onResultClicked(CryptoAsset.EMPTY)
@@ -121,54 +123,59 @@ class SearchViewModelTest {
     }
 
     @Test
-    fun `should add crypto asset to recents and remove the same asset`() = viewModel.recents.observeForTesting {
-        runBlockingTest {
-            // GIVEN
-            val asset = CryptoAsset(name = "test")
-            recentsFlow.emit(listOf(asset))
+    fun `should add crypto asset to recents and remove the same asset`() =
+        viewModel.recents.observeForTesting {
+            runBlockingTest {
+                // GIVEN
+                val asset = CryptoAsset(name = "test")
+                recentsFlow.emit(CryptoCollection(cryptoAssets = listOf(asset)))
 
-            // WHEN
-            viewModel.onResultClicked(asset)
+                // WHEN
+                viewModel.onResultClicked(asset)
 
-            // THEN
-            coVerify {
-                removeRecentUseCase(asset)
-                addRecentUseCase(asset)
+                // THEN
+                coVerify {
+                    removeRecentUseCase(asset)
+                    addRecentUseCase(asset)
+                }
             }
         }
-    }
 
     @Test
-    fun `should add crypto asset to recents and remove last asset`() = viewModel.recents.observeForTesting {
-        runBlockingTest {
-            // GIVEN
-            val asset = CryptoAsset(name = "test")
-            val asset2 = CryptoAsset(name = "test2")
-            recentsFlow.emit(
-                listOf(
-                    asset,
-                    CryptoAsset.EMPTY,
-                    CryptoAsset.EMPTY,
-                    CryptoAsset.EMPTY,
-                    CryptoAsset.EMPTY,
-                    CryptoAsset.EMPTY,
-                    CryptoAsset.EMPTY,
-                    CryptoAsset.EMPTY,
-                    CryptoAsset.EMPTY,
-                    CryptoAsset.EMPTY,
+    fun `should add crypto asset to recents and remove last asset`() =
+        viewModel.recents.observeForTesting {
+            runBlockingTest {
+                // GIVEN
+                val asset = CryptoAsset(name = "test")
+                val asset2 = CryptoAsset(name = "test2")
+                recentsFlow.emit(
+                    CryptoCollection(
+                        cryptoAssets =
+                        listOf(
+                            asset,
+                            CryptoAsset.EMPTY,
+                            CryptoAsset.EMPTY,
+                            CryptoAsset.EMPTY,
+                            CryptoAsset.EMPTY,
+                            CryptoAsset.EMPTY,
+                            CryptoAsset.EMPTY,
+                            CryptoAsset.EMPTY,
+                            CryptoAsset.EMPTY,
+                            CryptoAsset.EMPTY,
+                        )
+                    )
                 )
-            )
 
-            // WHEN
-            viewModel.onResultClicked(asset2)
+                // WHEN
+                viewModel.onResultClicked(asset2)
 
-            // THEN
-            coVerify {
-                removeRecentUseCase(asset)
-                addRecentUseCase(asset2)
+                // THEN
+                coVerify {
+                    removeRecentUseCase(asset)
+                    addRecentUseCase(asset2)
+                }
             }
         }
-    }
 
     @Test
     fun `should remove recents`() {

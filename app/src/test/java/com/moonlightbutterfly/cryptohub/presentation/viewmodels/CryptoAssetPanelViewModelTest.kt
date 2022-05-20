@@ -3,6 +3,7 @@ package com.moonlightbutterfly.cryptohub.presentation.viewmodels
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.moonlightbutterfly.cryptohub.domain.models.CryptoAsset
 import com.moonlightbutterfly.cryptohub.domain.models.CryptoAssetMarketInfo
+import com.moonlightbutterfly.cryptohub.domain.models.CryptoCollection
 import com.moonlightbutterfly.cryptohub.usecases.AddFavouriteUseCase
 import com.moonlightbutterfly.cryptohub.usecases.GetCryptoAssetsMarketInfoUseCase
 import com.moonlightbutterfly.cryptohub.usecases.GetFavouritesUseCase
@@ -51,11 +52,14 @@ class CryptoAssetPanelViewModelTest {
     fun setup() {
         Dispatchers.setMain(testDispatcher)
         every { getFavouritesUseCase() } returns flowOf(
-            listOf(
-                CryptoAsset(symbol = "BTC"),
-                CryptoAsset(symbol = "ETH"),
-                CryptoAsset(symbol = "XRP"),
-                CryptoAsset(symbol = "ADA")
+            CryptoCollection(
+                cryptoAssets =
+                listOf(
+                    CryptoAsset(symbol = "BTC"),
+                    CryptoAsset(symbol = "ETH"),
+                    CryptoAsset(symbol = "XRP"),
+                    CryptoAsset(symbol = "ADA")
+                )
             )
         )
         coEvery { getCryptoAssetsMarketInfoUseCase(any()) } returns listOf(marketAsset)
