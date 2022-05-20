@@ -10,21 +10,23 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Test
 
-class RemoveRecentsUseCaseTest {
+class RemoveCollectionUseCaseTest {
 
-    private val repositoryMock: UserCollectionsRepository = mockk {
-        coEvery { clearCollection(any()) } just Runs
+    private val userCollectionsRepository: UserCollectionsRepository = mockk {
+        coEvery { removeCollection(any()) } just Runs
     }
-    private val useCase = RemoveRecentsUseCase(repositoryMock)
+
+    private val useCase = RemoveCollectionUseCase(userCollectionsRepository)
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `should remove recents`() = runBlockingTest {
-        // GIVEN WHEN
-        useCase()
+    fun `should remove collection`() = runBlockingTest {
+        // WHEN
+        useCase("")
+
         // THEN
         coVerify {
-            repositoryMock.clearCollection(UserCollectionsRepository.RECENTS_COLLECTION_NAME)
+            userCollectionsRepository.removeCollection("")
         }
     }
 }

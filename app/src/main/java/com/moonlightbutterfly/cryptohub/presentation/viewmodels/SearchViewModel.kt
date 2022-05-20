@@ -13,6 +13,7 @@ import com.moonlightbutterfly.cryptohub.usecases.RemoveRecentUseCase
 import com.moonlightbutterfly.cryptohub.usecases.RemoveRecentsUseCase
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -33,7 +34,7 @@ class SearchViewModel @Inject constructor(
     private val _isLoading = MutableLiveData(false)
     val isLoading: LiveData<Boolean> = _isLoading
 
-    val recents = getRecentsUseCase().asLiveData()
+    val recents = getRecentsUseCase().map { it.cryptoAssets }.asLiveData()
 
     private var searchPage = 1
 

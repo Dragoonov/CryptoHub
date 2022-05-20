@@ -2,7 +2,9 @@ package com.moonlightbutterfly.cryptohub.framework.database.converters
 
 import androidx.room.TypeConverter
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.moonlightbutterfly.cryptohub.domain.models.CryptoAsset
+import java.lang.reflect.Type
 
 /**
  * Class used for converting objects to Room database types and vice versa.
@@ -10,12 +12,13 @@ import com.moonlightbutterfly.cryptohub.domain.models.CryptoAsset
 class CryptoAssetConverter {
 
     @TypeConverter
-    fun fromCryptoAsset(asset: CryptoAsset): String {
-        return Gson().toJson(asset)
+    fun fromCryptoAssetList(assets: List<CryptoAsset>): String {
+        return Gson().toJson(assets)
     }
 
     @TypeConverter
-    fun stringToCryptoAsset(serializedAsset: String): CryptoAsset {
-        return Gson().fromJson(serializedAsset, CryptoAsset::class.java)
+    fun stringToCryptoAssetList(serializedAsset: String): List<CryptoAsset> {
+        val list: Type = object : TypeToken<List<CryptoAsset>>() {}.type
+        return Gson().fromJson(serializedAsset, list)
     }
 }

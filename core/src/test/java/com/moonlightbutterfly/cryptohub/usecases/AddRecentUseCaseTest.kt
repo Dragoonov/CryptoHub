@@ -1,6 +1,6 @@
 package com.moonlightbutterfly.cryptohub.usecases
 
-import com.moonlightbutterfly.cryptohub.data.UserConfigurationRepository
+import com.moonlightbutterfly.cryptohub.data.UserCollectionsRepository
 import com.moonlightbutterfly.cryptohub.domain.models.CryptoAsset
 import io.mockk.Runs
 import io.mockk.coEvery
@@ -9,25 +9,30 @@ import io.mockk.just
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
+import org.junit.Before
 import org.junit.Test
 
 class AddRecentUseCaseTest {
 
-    private val repositoryMock: UserConfigurationRepository = mockk {
-        coEvery { addRecent(any()) } just Runs
+    private val addAssetToCollectionUseCase: AddAssetToCollectionUseCase = mockk()
+
+    private val useCase = AddRecentUseCase(addAssetToCollectionUseCase)
+
+    @Before
+    fun setup() {
+        coEvery { addAssetToCollectionUseCase(any(), any()) } just Runs
     }
-    private val useCase = AddRecentUseCase(repositoryMock)
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `should add recent`() = runBlockingTest {
+    fun `should add to collection`() = runBlockingTest {
         // GIVEN
-        val recent = CryptoAsset("test1", "ts1", "test1")
+        val asset = CryptoAsset("test1", "ts1", "test1")
         // WHEN
-        useCase(recent)
+        useCase(asset)
         // THEN
         coVerify(exactly = 1) {
-            repositoryMock.addRecent(recent)
+            addAssetToCollectionUseCase(asset, UserCollectionsRepository.RECENTS_COLLECTION_NAME)
         }
     }
 }

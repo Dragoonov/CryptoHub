@@ -1,6 +1,6 @@
 package com.moonlightbutterfly.cryptohub.usecases
 
-import com.moonlightbutterfly.cryptohub.data.UserConfigurationRepository
+import com.moonlightbutterfly.cryptohub.data.UserCollectionsRepository
 import com.moonlightbutterfly.cryptohub.domain.models.CryptoAsset
 import io.mockk.Runs
 import io.mockk.coEvery
@@ -9,25 +9,30 @@ import io.mockk.just
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
+import org.junit.Before
 import org.junit.Test
 
 class AddFavouriteUseCaseTest {
 
-    private val repositoryMock: UserConfigurationRepository = mockk {
-        coEvery { addFavourite(any()) } just Runs
+    private val addAssetToCollectionUseCase: AddAssetToCollectionUseCase = mockk()
+
+    private val useCase = AddFavouriteUseCase(addAssetToCollectionUseCase)
+
+    @Before
+    fun setup() {
+        coEvery { addAssetToCollectionUseCase(any(), any()) } just Runs
     }
-    private val useCase = AddFavouriteUseCase(repositoryMock)
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `should add favourite`() = runBlockingTest {
+    fun `should add to collection`() = runBlockingTest {
         // GIVEN
-        val favourite = CryptoAsset("test1", "ts1", "test1")
+        val asset = CryptoAsset("test1", "ts1", "test1")
         // WHEN
-        useCase(favourite)
+        useCase(asset)
         // THEN
         coVerify(exactly = 1) {
-            repositoryMock.addFavourite(favourite)
+            addAssetToCollectionUseCase(asset, UserCollectionsRepository.FAVOURITES_COLLECTION_NAME)
         }
     }
 }

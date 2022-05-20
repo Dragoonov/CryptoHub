@@ -10,19 +10,18 @@ import com.moonlightbutterfly.cryptohub.data.CryptoAssetsDataSource
 import com.moonlightbutterfly.cryptohub.data.CryptoAssetsRepository
 import com.moonlightbutterfly.cryptohub.data.LocalPreferencesDataSource
 import com.moonlightbutterfly.cryptohub.data.LocalPreferencesRepository
-import com.moonlightbutterfly.cryptohub.data.UserConfigurationDataSource
-import com.moonlightbutterfly.cryptohub.data.UserConfigurationRepository
+import com.moonlightbutterfly.cryptohub.data.UserCollectionsDataSource
+import com.moonlightbutterfly.cryptohub.data.UserCollectionsRepository
 import com.moonlightbutterfly.cryptohub.data.UserDataCache
 import com.moonlightbutterfly.cryptohub.framework.CoinMarketCapService
 import com.moonlightbutterfly.cryptohub.framework.UserDataCacheImpl
 import com.moonlightbutterfly.cryptohub.framework.database.CryptoHubDatabase
-import com.moonlightbutterfly.cryptohub.framework.database.daos.FavouritesDao
+import com.moonlightbutterfly.cryptohub.framework.database.daos.CryptoCollectionsDao
 import com.moonlightbutterfly.cryptohub.framework.database.daos.LocalPreferencesDao
-import com.moonlightbutterfly.cryptohub.framework.database.daos.RecentsDao
 import com.moonlightbutterfly.cryptohub.framework.datasources.CryptoAssetsDataSourceImpl
 import com.moonlightbutterfly.cryptohub.framework.datasources.LocalPreferencesDataSourceImpl
-import com.moonlightbutterfly.cryptohub.framework.datasources.UserConfigurationLocalDataSourceImpl
-import com.moonlightbutterfly.cryptohub.framework.datasources.UserConfigurationRemoteDataSourceImpl
+import com.moonlightbutterfly.cryptohub.framework.datasources.UserCollectionsLocalDataSourceImpl
+import com.moonlightbutterfly.cryptohub.framework.datasources.UserCollectionsRemoteDataSourceImpl
 import com.moonlightbutterfly.cryptohub.usecases.GetSignedInUserUseCase
 import dagger.Module
 import dagger.Provides
@@ -40,8 +39,6 @@ class RepositoryModule {
             .build().create(CoinMarketCapService::class.java)
     }
 
-    private val userConfigurationRemoteDataSource = UserConfigurationRemoteDataSourceImpl(Firebase.firestore)
-
     @Provides
     fun provideCoinMarketCapService(): CoinMarketCapService = service
 
@@ -52,16 +49,16 @@ class RepositoryModule {
     fun provideCryptoAssetsDataSource(): CryptoAssetsDataSource = CryptoAssetsDataSourceImpl(service)
 
     @Provides
-    fun provideUserConfigurationDataSource(
-        favouritesDao: FavouritesDao,
-        recentsDao: RecentsDao,
-        getSignedInUserUseCase: GetSignedInUserUseCase,
-    ): UserConfigurationDataSource {
-        val user = getSignedInUserUseCase()
-        return if (user != null)
-            userConfigurationRemoteDataSource.apply { registerFor(user.userId) }
-        else {
-            UserConfigurationLocalDataSourceImpl(favouritesDao, recentsDao)
+    fun provideUserCollectionsDataSource(
+        cryptoCollectionsDao: CryptoCollectionsDao,
+        firebaseFirestore: FirebaseFirestore,
+        getSignedInUserUseCase: GetSignedInUserUseCase
+    ): UserCollectionsDataSource {
+        val id = getSignedInUserUseCase()?.userId
+        return if (id != null) {
+            UserCollectionsRemoteDataSourceImpl(firebaseFirestore, id)
+        } else {
+            UserCollectionsLocalDataSourceImpl(cryptoCollectionsDao)
         }
     }
 
@@ -84,18 +81,14 @@ class RepositoryModule {
         CryptoHubDatabase.getInstance(context).localPreferencesDao()
 
     @Provides
-    fun provideFavouritesDao(context: Context): FavouritesDao =
-        CryptoHubDatabase.getInstance(context).favouritesDao()
+    fun provideCryptoCollectionsDao(context: Context): CryptoCollectionsDao =
+        CryptoHubDatabase.getInstance(context).cryptoCollectionsDao()
 
     @Provides
-    fun provideRecentsDao(context: Context): RecentsDao =
-        CryptoHubDatabase.getInstance(context).recentsDao()
-
-    @Provides
-    fun provideUserConfigurationRepository(
-        userConfigurationDataSource: UserConfigurationDataSource
-    ): UserConfigurationRepository {
-        return UserConfigurationRepository(userConfigurationDataSource)
+    fun provideUserCollectionsRepository(
+        userCollectionsDataSource: UserCollectionsDataSource
+    ): UserCollectionsRepository {
+        return UserCollectionsRepository(userCollectionsDataSource)
     }
 
     @Provides
