@@ -1,21 +1,12 @@
 package com.moonlightbutterfly.cryptohub.framework
 
-import com.google.firebase.auth.FirebaseAuth
 import com.moonlightbutterfly.cryptohub.domain.models.UserData
-import io.mockk.Runs
-import io.mockk.every
-import io.mockk.just
-import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
 import org.junit.Test
 
 class UserDataCacheImplTest {
 
-    private val firebaseAuth: FirebaseAuth = mockk {
-        every { signOut() } just Runs
-    }
-
-    private val userDataCache = UserDataCacheImpl(firebaseAuth)
+    private val userDataCache = UserDataCacheImpl
 
     @Test
     fun `should manage user`() {

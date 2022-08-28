@@ -13,14 +13,13 @@ import org.junit.Before
 import org.junit.Test
 
 class TwitterSignInControllerTest {
-    private val hostActivity: ComponentActivity = mockk()
     private val firebaseAuth: FirebaseAuth = mockk {
         every { startActivityForSignInWithProvider(any(), any()) } returns mockk(relaxed = true)
         every { pendingAuthResult } returns null
     }
     private val oAuthProvider: OAuthProvider = mockk()
 
-    private val twitterSignInController = TwitterSignInController(hostActivity, firebaseAuth)
+    private val twitterSignInController = TwitterSignInController(firebaseAuth)
 
     @Before
     fun setup() {
@@ -32,8 +31,11 @@ class TwitterSignInControllerTest {
 
     @Test
     fun `should sign in`() {
+        // GIVEN
+        val hostActivity: ComponentActivity = mockk()
+
         // WHEN
-        twitterSignInController.signIn({}, {})
+        twitterSignInController.signIn({}, {}, hostActivity)
 
         // THEN
         verify {
@@ -45,9 +47,10 @@ class TwitterSignInControllerTest {
     fun `should not start sign in flow`() {
         // GIVEN
         every { firebaseAuth.pendingAuthResult } returns mockk<Task<AuthResult>>(relaxed = true)
+        val hostActivity: ComponentActivity = mockk()
 
         // WHEN
-        twitterSignInController.signIn({}, {})
+        twitterSignInController.signIn({}, {}, hostActivity)
 
         // THEN
         verify(exactly = 0) {

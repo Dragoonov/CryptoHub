@@ -25,7 +25,6 @@ class EmailSignInControllerTest {
     private val onSignInFailure: (String) -> Unit = mockk()
 
     private val emailSignInController = EmailSignInController(
-        hostActivity,
         firebaseAuth
     )
 
@@ -41,8 +40,8 @@ class EmailSignInControllerTest {
         val password = ""
 
         // WHEN
-        emailSignInController.signIn(email, "not_empty", onSignInSuccess, onSignInFailure)
-        emailSignInController.signIn("not_empty", password, onSignInSuccess, onSignInFailure)
+        emailSignInController.signIn(email, "not_empty", onSignInSuccess, onSignInFailure, hostActivity)
+        emailSignInController.signIn("not_empty", password, onSignInSuccess, onSignInFailure, hostActivity)
 
         // THEN
         verify(exactly = 2) {
@@ -60,7 +59,7 @@ class EmailSignInControllerTest {
         val password = "test"
 
         // WHEN
-        emailSignInController.signIn(email, password, onSignInSuccess, onSignInFailure)
+        emailSignInController.signIn(email, password, onSignInSuccess, onSignInFailure, hostActivity)
 
         // THEN
         verify {

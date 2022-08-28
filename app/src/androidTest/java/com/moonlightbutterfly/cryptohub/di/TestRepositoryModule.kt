@@ -1,6 +1,5 @@
 package com.moonlightbutterfly.cryptohub.di
 
-import com.google.firebase.auth.FirebaseAuth
 import com.moonlightbutterfly.cryptohub.data.CryptoAssetsDataSource
 import com.moonlightbutterfly.cryptohub.data.CryptoAssetsRepository
 import com.moonlightbutterfly.cryptohub.data.LocalPreferencesDataSource
@@ -14,7 +13,6 @@ import com.moonlightbutterfly.cryptohub.repository.FakeLocalPreferencesDataSourc
 import com.moonlightbutterfly.cryptohub.repository.FakeUserCollectionsDataSourceImpl
 import dagger.Module
 import dagger.Provides
-import javax.inject.Singleton
 
 @Module
 class TestRepositoryModule {
@@ -25,7 +23,7 @@ class TestRepositoryModule {
     }
 
     @Provides
-    @Singleton
+    @ActivityScope
     fun provideUserConfigurationDataSource(): UserCollectionsDataSource {
         return FakeUserCollectionsDataSourceImpl()
     }
@@ -52,11 +50,11 @@ class TestRepositoryModule {
     }
 
     @Provides
-    @Singleton
+    @ActivityScope
     fun provideLocalPreferencesDataSource(): LocalPreferencesDataSource =
         FakeLocalPreferencesDataSourceImpl()
 
     @Provides
-    @Singleton
-    fun provideUserDataCache(): UserDataCache = UserDataCacheImpl(FirebaseAuth.getInstance())
+    @ActivityScope
+    fun provideUserDataCache(): UserDataCache = UserDataCacheImpl
 }

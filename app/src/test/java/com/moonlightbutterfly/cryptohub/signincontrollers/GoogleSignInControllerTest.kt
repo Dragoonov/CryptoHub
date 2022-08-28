@@ -19,11 +19,8 @@ class GoogleSignInControllerTest {
     private val launcher: ActivityResultLauncher<Intent> = mockk {
         every { launch(any()) } just Runs
     }
-    private val googleSignInIntentController: GoogleSignInIntentController = mockk {
-        every { getLauncher(any(), any()) } returns launcher
-    }
 
-    private val googleSignInController = GoogleSignInController(googleSignInIntentController)
+    private val googleSignInController = GoogleSignInController()
 
     @Before
     fun setup() {
@@ -44,9 +41,12 @@ class GoogleSignInControllerTest {
         // GIVEN
         val onSignInSuccess: (UserData) -> Unit = {}
         val onSignInFailure: (String) -> Unit = {}
+        val googleSignInIntentController: GoogleSignInIntentController = mockk {
+            every { getLauncher(any(), any()) } returns launcher
+        }
 
         // WHEN
-        googleSignInController.signIn(onSignInSuccess, onSignInFailure)
+        googleSignInController.signIn(onSignInSuccess, onSignInFailure, googleSignInIntentController)
 
         // THEN
         verify {

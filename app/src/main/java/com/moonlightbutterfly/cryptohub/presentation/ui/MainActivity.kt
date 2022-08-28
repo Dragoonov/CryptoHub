@@ -14,26 +14,25 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import coil.annotation.ExperimentalCoilApi
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.moonlightbutterfly.cryptohub.di.ActivityScope
 import com.moonlightbutterfly.cryptohub.di.DaggerAppComponent
-import com.moonlightbutterfly.cryptohub.presentation.ViewModelFactory
 import com.moonlightbutterfly.cryptohub.presentation.ui.composables.AppLayout
 import com.moonlightbutterfly.cryptohub.presentation.viewmodels.MainViewModel
-import com.moonlightbutterfly.cryptohub.signincontrollers.GoogleSignInIntentControllerImpl
 
 @ExperimentalCoilApi
+@ActivityScope
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var viewModelFactory: ViewModelFactory
-
     override fun onCreate(savedInstanceState: Bundle?) {
-        val appComponent = DaggerAppComponent.factory().create(
-            this,
-            GoogleSignInIntentControllerImpl(this)
-        )
-        viewModelFactory = appComponent.viewModelFactory()
         super.onCreate(savedInstanceState)
+        val appComponent = DaggerAppComponent.factory().create(this)
+        val signInController = appComponent.googleSignInIntentController()
+        val viewModelFactory = appComponent.viewModelFactory()
         setContent {
-            CompositionLocalProvider(LocalViewModelFactory provides viewModelFactory) {
+            CompositionLocalProvider(
+                LocalViewModelFactory provides viewModelFactory,
+                LocalSignInIntentControllerProvider provides signInController
+            ) {
                 val viewModel: MainViewModel = viewModel(factory = LocalViewModelFactory.current)
                 val isNightMode by viewModel.isNightModeEnabled.observeAsState(false)
                 CryptoHubTheme(darkTheme = isNightMode) {

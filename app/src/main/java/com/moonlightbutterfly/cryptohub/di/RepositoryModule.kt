@@ -1,7 +1,6 @@
 package com.moonlightbutterfly.cryptohub.di
 
 import android.content.Context
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -27,7 +26,6 @@ import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import javax.inject.Singleton
 
 @Module
 class RepositoryModule {
@@ -99,8 +97,8 @@ class RepositoryModule {
     }
 
     @Provides
-    @Singleton
-    fun provideUserDataCache(): UserDataCache = UserDataCacheImpl(FirebaseAuth.getInstance())
+    @ActivityScope
+    fun provideUserDataCache(): UserDataCache = UserDataCacheImpl
 
     private companion object {
         private const val API_ADDRESS = "https://pro-api.coinmarketcap.com/"

@@ -5,20 +5,19 @@ import com.moonlightbutterfly.cryptohub.presentation.ViewModelFactory
 import com.moonlightbutterfly.cryptohub.signincontrollers.GoogleSignInIntentController
 import dagger.BindsInstance
 import dagger.Component
-import javax.inject.Singleton
 
 @Component(modules = [UseCasesModule::class, RepositoryModule::class, SignInModule::class])
-@Singleton
+@ActivityScope
 interface AppComponent {
 
     @Component.Factory
     interface Factory {
 
         fun create(
-            @BindsInstance context: Context,
-            @BindsInstance googleSignInIntentController: GoogleSignInIntentController
+            @BindsInstance context: Context
         ): AppComponent
     }
 
     fun viewModelFactory(): ViewModelFactory
+    fun googleSignInIntentController(): GoogleSignInIntentController
 }

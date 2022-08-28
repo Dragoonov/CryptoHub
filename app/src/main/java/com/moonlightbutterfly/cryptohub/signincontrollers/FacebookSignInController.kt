@@ -15,12 +15,10 @@ import com.moonlightbutterfly.cryptohub.utils.toUserData
 
 /**
  * Controller that's responsible for the facebook sign in flow.
- * @param hostActivity Activity that hosts the flow
  * @param loginManager [LoginManager] instance that manages the flow at Facebook side
  * @param firebaseAuth [FirebaseAuth] instance that manages the flow at Google side
  */
 class FacebookSignInController(
-    private val hostActivity: ComponentActivity,
     private val loginManager: LoginManager,
     private val firebaseAuth: FirebaseAuth
 ) {
@@ -29,51 +27,67 @@ class FacebookSignInController(
      * Launches sign in flow.
      * @param onSignInSuccess Callback to invoke if sign in flow ends successfully
      * @param onSignInFailure Callback to invoke if sign in flow ends with failure
+     * @param componentActivity Activity hosting the flow
      */
     fun signIn(
         onSignInSuccess: (user: UserData) -> Unit,
-        onSignInFailure: (message: String) -> Unit
+        onSignInFailure: (message: String) -> Unit,
+        componentActivity: ComponentActivity
     ) {
         val callbackManager = CallbackManager.Factory.create()
         loginManager.apply {
             registerCallback(
                 callbackManager,
-                object : FacebookCallback<LoginResult> {
-                    override fun onCancel() {
-                        onSignInFailure(hostActivity.getString(R.string.sign_in_failed))
-                    }
-
-                    override fun onError(error: FacebookException) {
-                        onSignInFailure(
-                            error.localizedMessage ?: hostActivity.getString(R.string.sign_in_failed)
-                        )
-                    }
-
-                    override fun onSuccess(result: LoginResult) {
-                        handleFacebookAccessToken(result.accessToken, onSignInSuccess, onSignInFailure)
-                    }
-                }
+                getFacebookCallback(onSignInSuccess, onSignInFailure, componentActivity)
             )
             logInWithReadPermissions(
-                hostActivity,
+                componentActivity,
                 callbackManager,
                 listOf("public_profile", "email")
             )
         }
     }
 
+    private fun getFacebookCallback(
+        onSignInSuccess: (user: UserData) -> Unit,
+        onSignInFailure: (message: String) -> Unit,
+        componentActivity: ComponentActivity
+    ): FacebookCallback<LoginResult> {
+        return object : FacebookCallback<LoginResult> {
+            override fun onCancel() {
+                onSignInFailure(componentActivity.getString(R.string.sign_in_failed))
+            }
+
+            override fun onError(error: FacebookException) {
+                onSignInFailure(
+                    error.localizedMessage ?: componentActivity.getString(R.string.sign_in_failed)
+                )
+            }
+
+            override fun onSuccess(result: LoginResult) {
+                handleFacebookAccessToken(
+                    result.accessToken,
+                    onSignInSuccess,
+                    onSignInFailure,
+                    componentActivity
+                )
+            }
+        }
+    }
+
     private fun handleFacebookAccessToken(
         token: AccessToken,
         onSignInSuccess: (user: UserData) -> Unit,
-        onSignInFailure: (message: String) -> Unit
+        onSignInFailure: (message: String) -> Unit,
+        componentActivity: ComponentActivity
     ) {
         val credential = FacebookAuthProvider.getCredential(token.token)
         firebaseAuth.signInWithCredential(credential)
-            .addOnCompleteListener(hostActivity) { task ->
+            .addOnCompleteListener(componentActivity) { task ->
                 if (task.isSuccessful) {
                     onSignInSuccess(firebaseAuth.currentUser?.toUserData() ?: UserData())
                 } else {
-                    onSignInFailure(task.exception?.localizedMessage ?: hostActivity.getString(R.string.sign_in_failed))
+                    onSignInFailure(task.exception?.localizedMessage ?: componentActivity.getString(R.string.sign_in_failed))
                 }
             }
     }

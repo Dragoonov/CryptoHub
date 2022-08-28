@@ -1,10 +1,9 @@
 package com.moonlightbutterfly.cryptohub.framework
 
-import com.google.firebase.auth.FirebaseAuth
 import com.moonlightbutterfly.cryptohub.data.UserDataCache
 import com.moonlightbutterfly.cryptohub.domain.models.UserData
 
-class UserDataCacheImpl(private val firebaseAuth: FirebaseAuth) : UserDataCache {
+object UserDataCacheImpl : UserDataCache {
 
     private var userData: UserData? = null
 
@@ -14,7 +13,6 @@ class UserDataCacheImpl(private val firebaseAuth: FirebaseAuth) : UserDataCache 
 
     override fun signOutUser() {
         this.userData = null
-        firebaseAuth.signOut()
     }
 
     override fun getUserData(): UserData? {

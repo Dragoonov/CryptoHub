@@ -1,5 +1,6 @@
 package com.moonlightbutterfly.cryptohub.signincontrollers
 
+import androidx.activity.ComponentActivity
 import com.moonlightbutterfly.cryptohub.domain.models.UserData
 import io.mockk.Runs
 import io.mockk.every
@@ -11,22 +12,25 @@ import org.junit.Test
 
 class SignInManagerImplTest {
 
+    private val googleSignInIntentController: GoogleSignInIntentController = mockk()
+    private val componentActivity: ComponentActivity = mockk()
+
     private val googleSignInController: GoogleSignInController = mockk {
-        every { signIn(any(), any()) } just Runs
+        every { signIn(any(), any(), any()) } just Runs
     }
     private val emailSignInController: EmailSignInController = mockk {
-        every { signIn(any(), any(), any(), any()) } just Runs
+        every { signIn(any(), any(), any(), any(), any()) } just Runs
     }
     private val phoneSignInController: PhoneSignInController = mockk {
         every { isPhoneRequestInProcess } returns MutableStateFlow(false)
-        every { signIn(any(), any(), any()) } just Runs
-        every { signInWithCode(any()) } just Runs
+        every { signIn(any(), any(), any(), any()) } just Runs
+        every { signInWithCode(any(), any()) } just Runs
     }
     private val facebookSignInController: FacebookSignInController = mockk {
-        every { signIn(any(), any()) } just Runs
+        every { signIn(any(), any(), any()) } just Runs
     }
     private val twitterSignInController: TwitterSignInController = mockk {
-        every { signIn(any(), any()) } just Runs
+        every { signIn(any(), any(), any()) } just Runs
     }
 
     private val onSignedIn: (UserData) -> Unit = {}
@@ -43,30 +47,30 @@ class SignInManagerImplTest {
     @Test
     fun `should sign in through Google`() {
         // WHEN
-        signInManager.signInThroughGoogle(onSignedIn, onSignInFailed)
+        signInManager.signInThroughGoogle(onSignedIn, onSignInFailed, googleSignInIntentController)
         // THEN
         verify {
-            googleSignInController.signIn(onSignedIn, onSignInFailed)
+            googleSignInController.signIn(onSignedIn, onSignInFailed, googleSignInIntentController)
         }
     }
 
     @Test
     fun `should sign in through Facebook`() {
         // WHEN
-        signInManager.signInThroughFacebook(onSignedIn, onSignInFailed)
+        signInManager.signInThroughFacebook(onSignedIn, onSignInFailed, componentActivity)
         // THEN
         verify {
-            facebookSignInController.signIn(onSignedIn, onSignInFailed)
+            facebookSignInController.signIn(onSignedIn, onSignInFailed, componentActivity)
         }
     }
 
     @Test
     fun `should sign in through Twitter`() {
         // WHEN
-        signInManager.signInThroughTwitter(onSignedIn, onSignInFailed)
+        signInManager.signInThroughTwitter(onSignedIn, onSignInFailed, componentActivity)
         // THEN
         verify {
-            twitterSignInController.signIn(onSignedIn, onSignInFailed)
+            twitterSignInController.signIn(onSignedIn, onSignInFailed, componentActivity)
         }
     }
 
@@ -77,11 +81,11 @@ class SignInManagerImplTest {
         val password = "pass_test"
 
         // WHEN
-        signInManager.signInThroughEmail(email, password, onSignedIn, onSignInFailed)
+        signInManager.signInThroughEmail(email, password, onSignedIn, onSignInFailed, componentActivity)
 
         // THEN
         verify {
-            emailSignInController.signIn(email, password, onSignedIn, onSignInFailed)
+            emailSignInController.signIn(email, password, onSignedIn, onSignInFailed, componentActivity)
         }
     }
 
@@ -91,11 +95,11 @@ class SignInManagerImplTest {
         val phone = "09"
 
         // WHEN
-        signInManager.signInThroughPhone(phone, onSignedIn, onSignInFailed)
+        signInManager.signInThroughPhone(phone, onSignedIn, onSignInFailed, componentActivity)
 
         // THEN
         verify {
-            phoneSignInController.signIn(phone, onSignedIn, onSignInFailed)
+            phoneSignInController.signIn(phone, onSignedIn, onSignInFailed, componentActivity)
         }
     }
 
@@ -105,11 +109,11 @@ class SignInManagerImplTest {
         val code = "09"
 
         // WHEN
-        signInManager.signInThroughPhoneWithCode(code)
+        signInManager.signInThroughPhoneWithCode(code, componentActivity)
 
         // THEN
         verify {
-            phoneSignInController.signInWithCode(code)
+            phoneSignInController.signInWithCode(code, componentActivity)
         }
     }
 }
