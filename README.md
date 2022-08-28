@@ -1,5 +1,5 @@
 
-# GitHub
+# CryptoHub
 
 An app for viewing cryptocurrency related info like market capitalisation of the coin or the info about it.
 
