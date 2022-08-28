@@ -17,9 +17,6 @@ import org.junit.Test
 
 class PhoneSignInControllerTest {
 
-    private val hostActivity: ComponentActivity = mockk {
-        every { getString(any()) } returns "Field cannot be empty"
-    }
     private val firebaseAuth: FirebaseAuth = mockk {
         every { signInWithCredential(any()) } returns mockk(relaxed = true)
     }
@@ -27,7 +24,6 @@ class PhoneSignInControllerTest {
     private val phoneAuthCredential: PhoneAuthCredential = mockk()
 
     private val phoneSignInController = PhoneSignInController(
-        hostActivity,
         firebaseAuth,
     )
 
@@ -50,9 +46,12 @@ class PhoneSignInControllerTest {
     fun `should not sign in with empty phone number`() {
         // GIVEN
         val onSignInFailure: (String) -> Unit = mockk(relaxed = true)
+        val hostActivity: ComponentActivity = mockk {
+            every { getString(any()) } returns "Field cannot be empty"
+        }
 
         // WHEN
-        phoneSignInController.signIn("", {}, onSignInFailure)
+        phoneSignInController.signIn("", {}, onSignInFailure, hostActivity)
 
         // THEN
         verify {
@@ -62,8 +61,13 @@ class PhoneSignInControllerTest {
 
     @Test
     fun `should sign in with phone number`() {
+        // GIVEN
+        val hostActivity: ComponentActivity = mockk {
+            every { getString(any()) } returns "Field cannot be empty"
+        }
+
         // WHEN
-        phoneSignInController.signIn("89", {}, {})
+        phoneSignInController.signIn("89", {}, {}, hostActivity)
 
         // THEN
         verify {
@@ -73,8 +77,13 @@ class PhoneSignInControllerTest {
 
     @Test
     fun `should sign in with code`() {
+        // GIVEN
+        val hostActivity: ComponentActivity = mockk {
+            every { getString(any()) } returns "Field cannot be empty"
+        }
+
         // WHEN
-        phoneSignInController.signInWithCode("89")
+        phoneSignInController.signInWithCode("89", hostActivity)
 
         // THEN
         verify {

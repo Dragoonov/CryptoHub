@@ -21,7 +21,6 @@ class FacebookSignInControllerTest {
     private val firebaseAuth: FirebaseAuth = mockk()
 
     private val facebookSignInController = FacebookSignInController(
-        hostActivity,
         loginManager,
         firebaseAuth
     )
@@ -29,7 +28,7 @@ class FacebookSignInControllerTest {
     @Test
     fun `should sign in`() {
         // WHEN
-        facebookSignInController.signIn({}, {})
+        facebookSignInController.signIn({}, {}, hostActivity)
 
         // THEN
         verify {

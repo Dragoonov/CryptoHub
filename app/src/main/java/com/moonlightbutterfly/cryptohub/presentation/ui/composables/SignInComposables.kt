@@ -1,5 +1,6 @@
 package com.moonlightbutterfly.cryptohub.presentation.ui.composables
 
+import androidx.activity.ComponentActivity
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
@@ -23,6 +24,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -32,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.moonlightbutterfly.cryptohub.R
+import com.moonlightbutterfly.cryptohub.presentation.ui.LocalSignInIntentControllerProvider
 import com.moonlightbutterfly.cryptohub.presentation.ui.LocalViewModelFactory
 import com.moonlightbutterfly.cryptohub.presentation.viewmodels.SignInViewModel
 
@@ -48,6 +51,8 @@ fun SignInScreen(
         factory = LocalViewModelFactory.current
     )
     val isNightMode by viewModel.isNightModeEnabled.observeAsState(false)
+    val activity = LocalContext.current as ComponentActivity
+    val signInProvider = LocalSignInIntentControllerProvider.current
     Column(
         Modifier
             .fillMaxWidth()
@@ -61,7 +66,7 @@ fun SignInScreen(
             modifier = Modifier.height(SIGN_IN_CONTENT_UNDER_LOGO_HEIGHT)
         ) {
             ProviderSignInButton(
-                onClicked = { viewModel.signInThroughGoogle(onSignedIn, onSignInFailed) },
+                onClicked = { viewModel.signInThroughGoogle(onSignedIn, onSignInFailed, signInProvider) },
                 buttonBackgroundColor = if (isNightMode) {
                     MaterialTheme.colors.primary
                 } else {
@@ -83,13 +88,13 @@ fun SignInScreen(
                 buttonText = R.string.sign_in_phone
             )
             ProviderSignInButton(
-                onClicked = { viewModel.signInThroughFacebook(onSignedIn, onSignInFailed) },
+                onClicked = { viewModel.signInThroughFacebook(onSignedIn, onSignInFailed, activity) },
                 buttonBackgroundColor = colorResource(R.color.fui_bgFacebook),
                 buttonIcon = R.drawable.fui_ic_facebook_white_22dp,
                 buttonText = R.string.sign_in_facebook
             )
             ProviderSignInButton(
-                onClicked = { viewModel.signInThroughTwitter(onSignedIn, onSignInFailed) },
+                onClicked = { viewModel.signInThroughTwitter(onSignedIn, onSignInFailed, activity) },
                 buttonBackgroundColor = colorResource(R.color.fui_bgTwitter),
                 buttonIcon = R.drawable.fui_ic_twitter_bird_white_24dp,
                 buttonText = R.string.sign_in_twitter

@@ -1,5 +1,6 @@
 package com.moonlightbutterfly.cryptohub.presentation.ui.composables
 
+import androidx.activity.ComponentActivity
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -16,6 +17,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -33,7 +35,7 @@ fun PhoneSignInScreen(
         factory = LocalViewModelFactory.current
     )
     val isPhoneRequestInProgress by viewModel.isPhoneRequestInProcess.collectAsState(initial = false)
-
+    val activity = LocalContext.current as ComponentActivity
     Column(
         Modifier
             .fillMaxWidth()
@@ -47,16 +49,21 @@ fun PhoneSignInScreen(
             modifier = Modifier.height(SIGN_IN_CONTENT_UNDER_LOGO_HEIGHT)
         ) {
             if (!isPhoneRequestInProgress) {
-                PhoneNumberInputPanel(viewModel, onSignedIn, onSignInFailed)
+                PhoneNumberInputPanel(viewModel, onSignedIn, onSignInFailed, activity)
             } else {
-                PhoneCodeInputPanel(viewModel)
+                PhoneCodeInputPanel(viewModel, activity)
             }
         }
     }
 }
 
 @Composable
-fun PhoneNumberInputPanel(viewModel: SignInViewModel, onSignedInIn: () -> Unit, onSignInFailed: (String) -> Unit) {
+fun PhoneNumberInputPanel(
+    viewModel: SignInViewModel,
+    onSignedInIn: () -> Unit,
+    onSignInFailed: (String) -> Unit,
+    activity: ComponentActivity
+) {
     val (phoneNumber, onPhoneNumberChange) = remember { mutableStateOf("") }
     Text(
         text = stringResource(id = R.string.phone_sign_in_description),
@@ -71,7 +78,7 @@ fun PhoneNumberInputPanel(viewModel: SignInViewModel, onSignedInIn: () -> Unit, 
     )
     Button(
         onClick = {
-            viewModel.signInThroughPhone(phoneNumber, onSignedInIn, onSignInFailed)
+            viewModel.signInThroughPhone(phoneNumber, onSignedInIn, onSignInFailed, activity)
         }
     ) {
         Text(text = stringResource(id = R.string.continue_sign_in))
@@ -79,7 +86,7 @@ fun PhoneNumberInputPanel(viewModel: SignInViewModel, onSignedInIn: () -> Unit, 
 }
 
 @Composable
-fun PhoneCodeInputPanel(viewModel: SignInViewModel) {
+fun PhoneCodeInputPanel(viewModel: SignInViewModel, activity: ComponentActivity) {
     val (code, onCodeChange) = remember { mutableStateOf("") }
     Text(
         text = stringResource(id = R.string.code_description),
@@ -94,7 +101,7 @@ fun PhoneCodeInputPanel(viewModel: SignInViewModel) {
     )
     Button(
         onClick = {
-            viewModel.signInThroughPhoneWithCode(code)
+            viewModel.signInThroughPhoneWithCode(code, activity)
         }
     ) {
         Text(text = stringResource(id = R.string.continue_sign_in))

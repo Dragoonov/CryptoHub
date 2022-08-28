@@ -1,8 +1,10 @@
 package com.moonlightbutterfly.cryptohub.presentation.viewmodels
 
+import androidx.activity.ComponentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import com.moonlightbutterfly.cryptohub.domain.models.UserData
+import com.moonlightbutterfly.cryptohub.signincontrollers.GoogleSignInIntentController
 import com.moonlightbutterfly.cryptohub.signincontrollers.SignInManager
 import com.moonlightbutterfly.cryptohub.usecases.GetLocalPreferencesUseCase
 import com.moonlightbutterfly.cryptohub.usecases.SignInUserUseCase
@@ -28,11 +30,13 @@ class SignInViewModel @Inject constructor(
 
     fun signInThroughGoogle(
         onSignInSuccess: () -> Unit,
-        onSignInFailure: (message: String) -> Unit
+        onSignInFailure: (message: String) -> Unit,
+        googleSignInIntentController: GoogleSignInIntentController
     ) {
         signInManager.signInThroughGoogle(
             signInAction(onSignInSuccess),
-            onSignInFailure
+            onSignInFailure,
+            googleSignInIntentController
         )
     }
 
@@ -40,13 +44,15 @@ class SignInViewModel @Inject constructor(
         email: String,
         password: String,
         onSignInSuccess: () -> Unit,
-        onSignInFailure: (message: String) -> Unit
+        onSignInFailure: (message: String) -> Unit,
+        componentActivity: ComponentActivity
     ) {
         signInManager.signInThroughEmail(
             email,
             password,
             signInAction(onSignInSuccess),
-            onSignInFailure
+            onSignInFailure,
+            componentActivity
         )
     }
 
@@ -54,35 +60,41 @@ class SignInViewModel @Inject constructor(
         phoneNumber: String,
         onSignInSuccess: () -> Unit,
         onSignInFailure: (message: String) -> Unit,
+        componentActivity: ComponentActivity
     ) {
         signInManager.signInThroughPhone(
             phoneNumber,
             signInAction(onSignInSuccess),
-            onSignInFailure
+            onSignInFailure,
+            componentActivity
         )
     }
 
     fun signInThroughFacebook(
         onSignInSuccess: () -> Unit,
-        onSignInFailure: (message: String) -> Unit
+        onSignInFailure: (message: String) -> Unit,
+        componentActivity: ComponentActivity
     ) {
         signInManager.signInThroughFacebook(
             signInAction(onSignInSuccess),
-            onSignInFailure
+            onSignInFailure,
+            componentActivity
         )
     }
 
     fun signInThroughTwitter(
         onSignInSuccess: () -> Unit,
-        onSignInFailure: (message: String) -> Unit
+        onSignInFailure: (message: String) -> Unit,
+        componentActivity: ComponentActivity
     ) {
         signInManager.signInThroughTwitter(
             signInAction(onSignInSuccess),
-            onSignInFailure
+            onSignInFailure,
+            componentActivity
         )
     }
 
-    fun signInThroughPhoneWithCode(code: String) {
-        signInManager.signInThroughPhoneWithCode(code)
+    fun signInThroughPhoneWithCode(code: String, componentActivity: ComponentActivity) {
+        signInManager.signInThroughPhoneWithCode(code, componentActivity)
     }
 }

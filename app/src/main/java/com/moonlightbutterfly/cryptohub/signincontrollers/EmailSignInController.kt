@@ -8,11 +8,9 @@ import com.moonlightbutterfly.cryptohub.utils.toUserData
 
 /**
  * Controller that's responsible for the email sign in flow.
- * @param hostActivity Activity that hosts the flow
  * @param firebaseAuth [FirebaseAuth] instance that manages the flow
  */
 class EmailSignInController(
-    private val hostActivity: ComponentActivity,
     private val firebaseAuth: FirebaseAuth
 ) {
 
@@ -22,25 +20,27 @@ class EmailSignInController(
      * @param password Provided password
      * @param onSignInSuccess Callback to invoke if sign in flow ends successfully
      * @param onSignInFailure Callback to invoke if sign in flow ends with failure
+     * @param componentActivity Activity hosting the flow
      */
     fun signIn(
         email: String,
         password: String,
         onSignInSuccess: (user: UserData) -> Unit,
-        onSignInFailure: (message: String) -> Unit
+        onSignInFailure: (message: String) -> Unit,
+        componentActivity: ComponentActivity,
     ) {
         if (email.isEmpty() or password.isEmpty()) {
-            onSignInFailure(hostActivity.getString(R.string.fields_not_empty))
+            onSignInFailure(componentActivity.getString(R.string.fields_not_empty))
             return
         }
         firebaseAuth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener(hostActivity) { task ->
+            .addOnCompleteListener(componentActivity) { task ->
                 if (task.isSuccessful) {
                     val user = firebaseAuth.currentUser?.toUserData() ?: UserData()
                     onSignInSuccess(user)
                 } else {
                     onSignInFailure(
-                        task.exception?.message ?: hostActivity.getString(R.string.sign_in_failed)
+                        task.exception?.message ?: componentActivity.getString(R.string.sign_in_failed)
                     )
                 }
             }

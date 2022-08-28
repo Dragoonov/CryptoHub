@@ -7,7 +7,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.moonlightbutterfly.cryptohub.signincontrollers.EmailSignInController
 import com.moonlightbutterfly.cryptohub.signincontrollers.FacebookSignInController
 import com.moonlightbutterfly.cryptohub.signincontrollers.GoogleSignInController
-import com.moonlightbutterfly.cryptohub.signincontrollers.GoogleSignInIntentController
 import com.moonlightbutterfly.cryptohub.signincontrollers.PhoneSignInController
 import com.moonlightbutterfly.cryptohub.signincontrollers.SignInManager
 import com.moonlightbutterfly.cryptohub.signincontrollers.SignInManagerImpl
@@ -36,31 +35,35 @@ class SignInModule {
     }
 
     @Provides
-    fun provideEmailSignInController(context: Context): EmailSignInController {
-        return EmailSignInController(context as ComponentActivity, FirebaseAuth.getInstance())
+    fun provideEmailSignInController(): EmailSignInController {
+        return EmailSignInController(FirebaseAuth.getInstance())
     }
 
     @Provides
-    fun provideGoogleSignInController(googleSignInIntentController: GoogleSignInIntentController): GoogleSignInController {
-        return GoogleSignInController(googleSignInIntentController)
+    fun provideGoogleSignInController(): GoogleSignInController {
+        return GoogleSignInController()
     }
 
     @Provides
-    fun providePhoneSignInController(context: Context): PhoneSignInController {
-        return PhoneSignInController(context as ComponentActivity, FirebaseAuth.getInstance())
+    fun providePhoneSignInController(): PhoneSignInController {
+        return PhoneSignInController(FirebaseAuth.getInstance())
     }
 
     @Provides
-    fun provideTwitterSignInController(context: Context): TwitterSignInController {
-        return TwitterSignInController(context as ComponentActivity, FirebaseAuth.getInstance())
+    fun provideTwitterSignInController(): TwitterSignInController {
+        return TwitterSignInController(FirebaseAuth.getInstance())
     }
 
     @Provides
-    fun provideFacebookSignInController(context: Context): FacebookSignInController {
+    fun provideFacebookSignInController(): FacebookSignInController {
         return FacebookSignInController(
-            context as ComponentActivity,
             LoginManager.getInstance(),
             FirebaseAuth.getInstance()
         )
+    }
+
+    @Provides
+    fun provideComponentActivity(context: Context): ComponentActivity {
+        return context as ComponentActivity
     }
 }
