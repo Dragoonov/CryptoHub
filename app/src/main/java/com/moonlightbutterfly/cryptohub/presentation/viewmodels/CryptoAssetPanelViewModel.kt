@@ -23,11 +23,17 @@ class CryptoAssetPanelViewModel @Inject constructor(
 
     private lateinit var asset: LiveData<CryptoAssetMarketInfo>
 
-    fun getCryptoAssetMarketInfo(symbol: String): LiveData<CryptoAssetMarketInfo> {
+    fun getCryptoAssetMarketInfo(
+        symbol: String,
+        onActionFailed: () -> Unit
+    ): LiveData<CryptoAssetMarketInfo> {
         if (!this::asset.isInitialized) {
             asset = liveData {
-                val cryptoAsset = getCryptoAssetsMarketInfoUseCase(listOf(symbol)).first()
-                emit(cryptoAsset)
+                val cryptoAsset = getCryptoAssetsMarketInfoUseCase(listOf(symbol)).firstOrNull()
+                if (cryptoAsset == null) {
+                    onActionFailed()
+                }
+                emit(cryptoAsset ?: CryptoAssetMarketInfo.EMPTY)
             }
         }
         return asset

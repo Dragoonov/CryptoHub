@@ -27,6 +27,7 @@
     <string name="or">or</string>
     <string name="google_icon">Google icon</string>
     <string name="sign_in_failed">Sign in failed</string>
+    <string name="loading_data_failed">Loading data failed (probably because of API limit)</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="continue_sign_in">Continue</string>
