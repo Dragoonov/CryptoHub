@@ -81,7 +81,7 @@ class CryptoAssetPanelViewModelTest {
     fun `should be in favourites`() {
         // GIVEN
         coEvery { getCryptoAssetsMarketInfoUseCase(any()) } returns listOf(marketAsset2)
-        val assetLiveData2 = viewModel.getCryptoAssetMarketInfo(asset2.symbol)
+        val assetLiveData2 = viewModel.getCryptoAssetMarketInfo(asset2.symbol) {}
         assetLiveData2.observeForTesting {
             runBlockingTest {
                 // WHEN
@@ -96,7 +96,7 @@ class CryptoAssetPanelViewModelTest {
     fun `should not be in favourites`() {
         // GIVEN
         coEvery { getCryptoAssetsMarketInfoUseCase(any()) } returns listOf(marketAsset)
-        val assetLiveData = viewModel.getCryptoAssetMarketInfo(asset.symbol)
+        val assetLiveData = viewModel.getCryptoAssetMarketInfo(asset.symbol) {}
         assetLiveData.observeForTesting {
             runBlockingTest {
                 // WHEN
@@ -110,7 +110,7 @@ class CryptoAssetPanelViewModelTest {
     @Test
     fun `should add to favourites`() {
         // GIVEN
-        val assetLiveData = viewModel.getCryptoAssetMarketInfo(asset.symbol)
+        val assetLiveData = viewModel.getCryptoAssetMarketInfo(asset.symbol) {}
         assetLiveData.observeForTesting {
             // WHEN
             viewModel.addCryptoToFavourites()
@@ -125,7 +125,7 @@ class CryptoAssetPanelViewModelTest {
     @Test
     fun `should remove from favourites`() {
         // GIVEN
-        val assetLiveData = viewModel.getCryptoAssetMarketInfo(asset.symbol)
+        val assetLiveData = viewModel.getCryptoAssetMarketInfo(asset.symbol) {}
         assetLiveData.observeForTesting {
             // WHEN
             viewModel.removeCryptoFromFavourites()

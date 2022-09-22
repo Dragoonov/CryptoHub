@@ -1,6 +1,5 @@
 package com.moonlightbutterfly.cryptohub.presentation.ui.navigation
 
-import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
@@ -32,18 +31,24 @@ fun AppGraph(
     padding: PaddingValues
 ) {
     val context = LocalContext.current
+    val onActionFailed = { message: String ->
+        Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+    }
     NavHost(
         navController,
         startDestination = Screen.SIGN_IN_PANEL.route,
         modifier = Modifier.padding(padding)
     ) {
-        signInGraph(navController, context)
-        mainGraph(navController)
+        signInGraph(navController, onActionFailed)
+        mainGraph(navController, onActionFailed)
     }
 }
 
 @ExperimentalCoilApi
-private fun NavGraphBuilder.signInGraph(navController: NavHostController, context: Context) {
+private fun NavGraphBuilder.signInGraph(
+    navController: NavHostController,
+    onSignInFailed: (String) -> Unit
+) {
 
     val onSignedIn = {
         navController.navigate(HOME_ROUTE) {
@@ -52,9 +57,7 @@ private fun NavGraphBuilder.signInGraph(navController: NavHostController, contex
             }
         }
     }
-    val onSignInFailed = { message: String ->
-        Toast.makeText(context, message, Toast.LENGTH_LONG).show()
-    }
+
     composable(Screen.SIGN_IN_PANEL.route) {
         SignInScreen(
             onSignedIn,
@@ -77,7 +80,10 @@ private fun NavGraphBuilder.signInGraph(navController: NavHostController, contex
 
 @FlowPreview
 @ExperimentalCoilApi
-private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
+private fun NavGraphBuilder.mainGraph(
+    navController: NavHostController,
+    onActionFailed: (String) -> Unit
+) {
     val mainRoute = "main"
     navigation(startDestination = Screen.CRYPTO_ASSETS_LIST.route, route = mainRoute) {
         composable(Screen.CRYPTO_ASSETS_LIST.route) {
@@ -100,7 +106,7 @@ private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
             }
         }
         composable("${Screen.CRYPTO_ASSET_PANEL.route}/{cryptoSymbol}") {
-            CryptoAssetPanelScreen(it.arguments?.getString("cryptoSymbol")!!)
+            CryptoAssetPanelScreen(it.arguments?.getString("cryptoSymbol")!!, onActionFailed)
         }
         composable(Screen.SEARCH_PANEL.route) {
             SearchScreen(
