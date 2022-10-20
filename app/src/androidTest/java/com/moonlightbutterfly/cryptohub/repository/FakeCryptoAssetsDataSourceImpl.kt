@@ -1,8 +1,8 @@
 package com.moonlightbutterfly.cryptohub.repository
 
 import com.moonlightbutterfly.cryptohub.data.CryptoAssetsDataSource
-import com.moonlightbutterfly.cryptohub.domain.models.CryptoAsset
-import com.moonlightbutterfly.cryptohub.domain.models.CryptoAssetMarketInfo
+import com.moonlightbutterfly.cryptohub.models.CryptoAsset
+import com.moonlightbutterfly.cryptohub.models.CryptoAssetMarketInfo
 import javax.inject.Inject
 
 class FakeCryptoAssetsDataSourceImpl @Inject constructor() : CryptoAssetsDataSource {

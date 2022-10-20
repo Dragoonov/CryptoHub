@@ -1,4 +1,4 @@
-package com.moonlightbutterfly.cryptohub.domain.models
+package com.moonlightbutterfly.cryptohub.models
 
 data class CryptoAssetMarketInfo(
     val asset: CryptoAsset = CryptoAsset(),

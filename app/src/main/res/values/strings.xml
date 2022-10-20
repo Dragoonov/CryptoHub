@@ -39,4 +39,9 @@
     <string name="fb_app_client_token">f0a4d6359aeb3c2d52e242cb9495a2ef</string>
     <string name="fields_not_empty">Fields cannot be empty</string>
     <string name="field_not_empty">Field cannot be empty</string>
+    <string name="network_error">Network error occurred</string>
+    <string name="not_found_error">Not found error occurred</string>
+    <string name="access_denied_error">Access denied error occurred</string>
+    <string name="service_unavailable_error">Service unavailable error occurred</string>
+    <string name="unknown_error">Unknown error occurred</string>
 </resources>

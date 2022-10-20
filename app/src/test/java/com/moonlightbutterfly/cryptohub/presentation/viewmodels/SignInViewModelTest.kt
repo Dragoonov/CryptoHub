@@ -1,7 +1,8 @@
 package com.moonlightbutterfly.cryptohub.presentation.viewmodels
 
 import androidx.activity.ComponentActivity
-import com.moonlightbutterfly.cryptohub.domain.models.LocalPreferences
+import com.moonlightbutterfly.cryptohub.data.Result
+import com.moonlightbutterfly.cryptohub.models.LocalPreferences
 import com.moonlightbutterfly.cryptohub.signincontrollers.GoogleSignInIntentController
 import com.moonlightbutterfly.cryptohub.signincontrollers.SignInManager
 import com.moonlightbutterfly.cryptohub.usecases.GetLocalPreferencesUseCase
@@ -39,7 +40,7 @@ class SignInViewModelTest {
 
     @Before
     fun setup() {
-        every { getLocalPreferencesUseCase() } returns flowOf(LocalPreferences())
+        every { getLocalPreferencesUseCase() } returns flowOf(Result.Success(LocalPreferences()))
         viewModel = SignInViewModel(signInUserUseCase, signInManager, getLocalPreferencesUseCase)
     }
 

@@ -1,6 +1,6 @@
 package com.moonlightbutterfly.cryptohub.framework.datasources
 
-import com.moonlightbutterfly.cryptohub.domain.models.CryptoAsset
+import com.moonlightbutterfly.cryptohub.models.CryptoAsset
 import com.moonlightbutterfly.cryptohub.framework.database.daos.CryptoCollectionsDao
 import com.moonlightbutterfly.cryptohub.framework.database.entities.CryptoCollectionEntity
 import io.mockk.Runs

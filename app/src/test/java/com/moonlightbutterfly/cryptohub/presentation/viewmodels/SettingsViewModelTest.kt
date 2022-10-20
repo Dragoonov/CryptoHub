@@ -1,25 +1,26 @@
 package com.moonlightbutterfly.cryptohub.presentation.viewmodels
 
-import com.moonlightbutterfly.cryptohub.domain.models.LocalPreferences
-import com.moonlightbutterfly.cryptohub.domain.models.UserData
+import com.moonlightbutterfly.cryptohub.data.Result
+import com.moonlightbutterfly.cryptohub.models.LocalPreferences
 import com.moonlightbutterfly.cryptohub.usecases.GetLocalPreferencesUseCase
-import com.moonlightbutterfly.cryptohub.usecases.GetSignedInUserUseCase
+import com.moonlightbutterfly.cryptohub.usecases.IsUserSignedInUseCase
 import com.moonlightbutterfly.cryptohub.usecases.SignOutUserUseCase
 import com.moonlightbutterfly.cryptohub.usecases.UpdateLocalPreferencesUseCase
-import io.mockk.Runs
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
-import io.mockk.just
 import io.mockk.mockk
 import io.mockk.verify
 import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runBlockingTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
@@ -30,7 +31,7 @@ class SettingsViewModelTest {
     private val getLocalPreferencesUseCase: GetLocalPreferencesUseCase = mockk()
     private val updateLocalPreferencesUseCase: UpdateLocalPreferencesUseCase = mockk()
     private val signOutUserUseCase: SignOutUserUseCase = mockk()
-    private val getSignedInUserUseCase: GetSignedInUserUseCase = mockk()
+    private val getSignedInUserUseCase: IsUserSignedInUseCase = mockk()
 
     private lateinit var viewModel: SettingsViewModel
 
@@ -38,10 +39,10 @@ class SettingsViewModelTest {
 
     @Before
     fun setup() {
-        every { getLocalPreferencesUseCase() } returns flowOf(LocalPreferences.DEFAULT)
-        coEvery { updateLocalPreferencesUseCase(any()) } just Runs
-        every { signOutUserUseCase() } just Runs
-        every { getSignedInUserUseCase() } returns UserData("test") andThen null
+        every { getLocalPreferencesUseCase() } returns flowOf(Result.Success(LocalPreferences.DEFAULT))
+        coEvery { updateLocalPreferencesUseCase(any()) } returns Result.Success(Unit)
+        every { signOutUserUseCase() }  returns Result.Success(Unit)
+        every { getSignedInUserUseCase() } returns Result.Success(true) andThen Result.Success(false)
         Dispatchers.setMain(testDispatcher)
         viewModel = SettingsViewModel(
             getLocalPreferencesUseCase,
@@ -59,7 +60,7 @@ class SettingsViewModelTest {
     @Test
     fun `should update local preferences`() {
         // GIVEN
-        every { getLocalPreferencesUseCase() } answers { flowOf(LocalPreferences.DEFAULT) }
+        every { getLocalPreferencesUseCase() } answers { flowOf(Result.Success(LocalPreferences.DEFAULT)) }
         // WHEN
         viewModel.onNightModeChanged(true)
         // THEN
@@ -80,15 +81,15 @@ class SettingsViewModelTest {
     }
 
     @Test
-    fun `should check if user is signed in`() {
+    fun `should check if user is signed in`() = runBlockingTest {
         // WHEN
-        var signedIn = viewModel.isUserSignedIn()
+        var signedIn = viewModel.isUserSignedIn.first()
 
         // THEN
         assertTrue(signedIn)
 
         // WHEN
-        signedIn = viewModel.isUserSignedIn()
+        signedIn = viewModel.isUserSignedIn.last()
 
         // THEN
         assertFalse(signedIn)

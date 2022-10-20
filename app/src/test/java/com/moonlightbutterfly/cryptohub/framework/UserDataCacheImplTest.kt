@@ -1,6 +1,6 @@
 package com.moonlightbutterfly.cryptohub.framework
 
-import com.moonlightbutterfly.cryptohub.domain.models.UserData
+import com.moonlightbutterfly.cryptohub.models.UserData
 import junit.framework.TestCase.assertEquals
 import org.junit.Test
 

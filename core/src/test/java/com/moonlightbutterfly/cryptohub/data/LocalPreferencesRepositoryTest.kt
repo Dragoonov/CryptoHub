@@ -1,6 +1,6 @@
 package com.moonlightbutterfly.cryptohub.data
 
-import com.moonlightbutterfly.cryptohub.domain.models.LocalPreferences
+import com.moonlightbutterfly.cryptohub.models.LocalPreferences
 import io.mockk.Runs
 import io.mockk.coEvery
 import io.mockk.coVerify

@@ -18,6 +18,7 @@ import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -35,7 +36,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.annotation.ExperimentalCoilApi
 import com.moonlightbutterfly.cryptohub.R
-import com.moonlightbutterfly.cryptohub.domain.models.CryptoAsset
+import com.moonlightbutterfly.cryptohub.models.CryptoAsset
 import com.moonlightbutterfly.cryptohub.presentation.ui.LocalViewModelFactory
 import com.moonlightbutterfly.cryptohub.presentation.viewmodels.SearchViewModel
 
@@ -45,6 +46,10 @@ fun SearchScreen(onCancelSearch: () -> Unit, onItemClicked: (asset: String) -> U
     val viewModel = viewModel<SearchViewModel>(
         factory = LocalViewModelFactory.current
     )
+
+    val error by viewModel.errorMessageFlow.collectAsState(null)
+    error?.let { ErrorHandler(error) }
+
     val query by viewModel.currentSearchQuery.observeAsState(stringResource(id = R.string.search))
     val results by viewModel.cryptoAssetsResults.observeAsState(emptyList())
     val recents by viewModel.recents.observeAsState(emptyList())

@@ -1,14 +1,14 @@
 package com.moonlightbutterfly.cryptohub.presentation.viewmodels
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.moonlightbutterfly.cryptohub.domain.models.CryptoAsset
-import com.moonlightbutterfly.cryptohub.domain.models.CryptoAssetMarketInfo
-import com.moonlightbutterfly.cryptohub.domain.models.CryptoCollection
+import com.moonlightbutterfly.cryptohub.models.CryptoAsset
+import com.moonlightbutterfly.cryptohub.models.CryptoAssetMarketInfo
+import com.moonlightbutterfly.cryptohub.models.CryptoCollection
 import com.moonlightbutterfly.cryptohub.usecases.AddRecentUseCase
 import com.moonlightbutterfly.cryptohub.usecases.GetAllCryptoAssetsMarketInfoUseCase
 import com.moonlightbutterfly.cryptohub.usecases.GetRecentsUseCase
 import com.moonlightbutterfly.cryptohub.usecases.RemoveRecentUseCase
-import com.moonlightbutterfly.cryptohub.usecases.RemoveRecentsUseCase
+import com.moonlightbutterfly.cryptohub.usecases.ClearRecentsUseCase
 import com.moonlightbutterfly.cryptohub.utils.observeForTesting
 import io.mockk.Runs
 import io.mockk.coEvery
@@ -36,7 +36,7 @@ class SearchViewModelTest {
     private val getRecentsUseCase: GetRecentsUseCase = mockk()
     private val addRecentUseCase: AddRecentUseCase = mockk()
     private val removeRecentUseCase: RemoveRecentUseCase = mockk()
-    private val removeRecentsUseCase: RemoveRecentsUseCase = mockk()
+    private val clearRecentsUseCase: ClearRecentsUseCase = mockk()
     private val getAllCryptoAssetsMarketInfoUseCase: GetAllCryptoAssetsMarketInfoUseCase = mockk()
 
     private lateinit var viewModel: SearchViewModel
@@ -57,12 +57,12 @@ class SearchViewModelTest {
         coEvery { getAllCryptoAssetsMarketInfoUseCase(not(1)) } returns listOf()
         coEvery { addRecentUseCase(any()) } just Runs
         coEvery { removeRecentUseCase(any()) } just Runs
-        coEvery { removeRecentsUseCase() } just Runs
+        coEvery { clearRecentsUseCase() } just Runs
         Dispatchers.setMain(testDispatcher)
         viewModel = SearchViewModel(
             getRecentsUseCase,
             addRecentUseCase,
-            removeRecentsUseCase,
+            clearRecentsUseCase,
             getAllCryptoAssetsMarketInfoUseCase,
             removeRecentUseCase,
         )
@@ -184,7 +184,7 @@ class SearchViewModelTest {
 
         // THEN
         coVerify {
-            removeRecentsUseCase()
+            clearRecentsUseCase()
         }
     }
 }

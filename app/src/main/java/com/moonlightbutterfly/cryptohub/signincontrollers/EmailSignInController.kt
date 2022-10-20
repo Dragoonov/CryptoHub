@@ -3,7 +3,7 @@ package com.moonlightbutterfly.cryptohub.signincontrollers
 import androidx.activity.ComponentActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.moonlightbutterfly.cryptohub.R
-import com.moonlightbutterfly.cryptohub.domain.models.UserData
+import com.moonlightbutterfly.cryptohub.models.UserData
 import com.moonlightbutterfly.cryptohub.utils.toUserData
 
 /**

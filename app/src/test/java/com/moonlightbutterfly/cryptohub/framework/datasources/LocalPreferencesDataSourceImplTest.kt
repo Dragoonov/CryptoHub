@@ -1,6 +1,6 @@
 package com.moonlightbutterfly.cryptohub.framework.datasources
 
-import com.moonlightbutterfly.cryptohub.domain.models.LocalPreferences
+import com.moonlightbutterfly.cryptohub.models.LocalPreferences
 import com.moonlightbutterfly.cryptohub.framework.database.daos.LocalPreferencesDao
 import com.moonlightbutterfly.cryptohub.framework.database.entities.LocalPreferencesEntity
 import io.mockk.Runs

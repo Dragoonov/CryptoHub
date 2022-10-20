@@ -46,8 +46,8 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import coil.annotation.ExperimentalCoilApi
 import com.moonlightbutterfly.cryptohub.R
-import com.moonlightbutterfly.cryptohub.domain.models.CryptoAsset
-import com.moonlightbutterfly.cryptohub.domain.models.CryptoAssetMarketInfo
+import com.moonlightbutterfly.cryptohub.models.CryptoAsset
+import com.moonlightbutterfly.cryptohub.models.CryptoAssetMarketInfo
 import com.moonlightbutterfly.cryptohub.presentation.ui.LocalViewModelFactory
 import com.moonlightbutterfly.cryptohub.presentation.viewmodels.CryptoAssetsListViewModel
 import com.moonlightbutterfly.cryptohub.utils.round
@@ -69,6 +69,9 @@ fun CryptoAssetsListScreen(
     val favourites by viewModel.favourites.collectAsState(initial = emptyList())
 
     var isFavouritesSelected by remember { mutableStateOf(false) }
+
+    val error by viewModel.errorMessageFlow.collectAsState(null)
+    error?.let { ErrorHandler(error) }
 
     Scaffold(
         topBar = {

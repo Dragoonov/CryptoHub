@@ -3,7 +3,7 @@ package com.moonlightbutterfly.cryptohub.framework.database.converters
 import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.moonlightbutterfly.cryptohub.domain.models.CryptoAsset
+import com.moonlightbutterfly.cryptohub.models.CryptoAsset
 import java.lang.reflect.Type
 
 /**

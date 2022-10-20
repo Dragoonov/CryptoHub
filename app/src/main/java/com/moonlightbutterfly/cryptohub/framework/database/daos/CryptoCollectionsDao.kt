@@ -19,11 +19,11 @@ interface CryptoCollectionsDao {
     fun getCollectionByName(name: String): Flow<List<CryptoCollectionEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(cryptoCollection: CryptoCollectionEntity)
+    suspend fun insert(cryptoCollection: CryptoCollectionEntity): Long
 
     @Update
-    suspend fun update(cryptoCollection: CryptoCollectionEntity)
+    suspend fun update(cryptoCollection: CryptoCollectionEntity): Int
 
     @Query("DELETE from ${CryptoHubDatabase.CRYPTO_COLLECTIONS_TABLE_NAME} WHERE ${CryptoHubDatabase.CRYPTO_COLLECTIONS_NAME_COLUMN_NAME} = :name")
-    suspend fun remove(name: String)
+    suspend fun remove(name: String): Int
 }

@@ -1,7 +1,7 @@
 package com.moonlightbutterfly.cryptohub.usecases
 
 import com.moonlightbutterfly.cryptohub.data.LocalPreferencesRepository
-import com.moonlightbutterfly.cryptohub.domain.models.LocalPreferences
+import com.moonlightbutterfly.cryptohub.models.LocalPreferences
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify

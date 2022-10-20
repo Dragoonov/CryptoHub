@@ -1,10 +1,11 @@
 package com.moonlightbutterfly.cryptohub.data
 
-import com.moonlightbutterfly.cryptohub.domain.models.CryptoAssetMarketInfo
+import com.moonlightbutterfly.cryptohub.models.CryptoAssetMarketInfo
 import io.mockk.coEvery
 import io.mockk.mockk
 import junit.framework.TestCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Test
 
@@ -13,22 +14,22 @@ class CryptoAssetsRepositoryTest {
     private val requestedSymbols1 = listOf("BTC")
     private val requestedSymbols2 = listOf("ETH")
 
-    private val assets = listOf(
+    private val assets = Result.Success(listOf(
         CryptoAssetMarketInfo(price = 12.1),
         CryptoAssetMarketInfo(price = 12.2),
-        CryptoAssetMarketInfo(price = 12.3)
+        CryptoAssetMarketInfo(price = 12.3))
     )
 
-    private val assets2 = listOf(
+    private val assets2 = Result.Success(listOf(
         CryptoAssetMarketInfo(price = 10.1),
-        CryptoAssetMarketInfo(price = 10.2),
+        CryptoAssetMarketInfo(price = 10.2),)
     )
 
     private val mockDataSource = mockk<CryptoAssetsDataSource> {
         coEvery { getCryptoAssetsMarketInfo(eq(1)) } returns assets
         coEvery { getCryptoAssetsMarketInfo(eq(2)) } returns assets2
-        coEvery { getCryptoAssetsMarketInfo(eq(requestedSymbols1)) } returns assets
-        coEvery { getCryptoAssetsMarketInfo(eq(requestedSymbols2)) } returns assets2
+        coEvery { getCryptoAssetsMarketInfo(eq(requestedSymbols1)) } returns flow {assets}
+        coEvery { getCryptoAssetsMarketInfo(eq(requestedSymbols2)) } returns flow {assets2}
     }
 
     private val repository = CryptoAssetsRepository(mockDataSource)

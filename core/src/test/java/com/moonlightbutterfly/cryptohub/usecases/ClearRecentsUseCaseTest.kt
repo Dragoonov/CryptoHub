@@ -10,12 +10,12 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Test
 
-class RemoveRecentsUseCaseTest {
+class ClearRecentsUseCaseTest {
 
     private val repositoryMock: UserCollectionsRepository = mockk {
         coEvery { clearCollection(any()) } just Runs
     }
-    private val useCase = RemoveRecentsUseCase(repositoryMock)
+    private val useCase = ClearRecentsUseCase(repositoryMock)
 
     @ExperimentalCoroutinesApi
     @Test

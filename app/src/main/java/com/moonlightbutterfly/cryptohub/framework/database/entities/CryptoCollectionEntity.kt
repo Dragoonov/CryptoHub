@@ -3,8 +3,8 @@ package com.moonlightbutterfly.cryptohub.framework.database.entities
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.moonlightbutterfly.cryptohub.domain.models.CryptoAsset
 import com.moonlightbutterfly.cryptohub.framework.database.CryptoHubDatabase
+import com.moonlightbutterfly.cryptohub.models.CryptoAsset
 
 @Entity(tableName = CryptoHubDatabase.CRYPTO_COLLECTIONS_TABLE_NAME)
 data class CryptoCollectionEntity(

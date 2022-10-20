@@ -1,8 +1,6 @@
 package com.moonlightbutterfly.cryptohub.data
 
-import com.moonlightbutterfly.cryptohub.domain.models.CryptoAsset
-import com.moonlightbutterfly.cryptohub.domain.models.CryptoCollection
-import kotlinx.coroutines.flow.Flow
+import com.moonlightbutterfly.cryptohub.models.CryptoAsset
 
 /**
  * Repository class aggregating external data sources and providing coherent interface for application.
@@ -10,9 +8,9 @@ import kotlinx.coroutines.flow.Flow
 class UserCollectionsRepository(
     private val userCollectionsDataSource: UserCollectionsDataSource
 ) {
-    fun getCollection(name: String): Flow<CryptoCollection> = userCollectionsDataSource.getCollection(name)
+    fun getCollection(name: String) = userCollectionsDataSource.getCollection(name)
 
-    fun getAllCollectionNames(): Flow<List<String>> = userCollectionsDataSource.getAllCollectionNames()
+    fun getAllCollectionNames() = userCollectionsDataSource.getAllCollectionNames()
 
     suspend fun clearCollection(name: String) = userCollectionsDataSource.clearCollection(name)
 

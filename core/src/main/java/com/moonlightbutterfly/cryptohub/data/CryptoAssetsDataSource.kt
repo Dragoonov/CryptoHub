@@ -1,10 +1,11 @@
 package com.moonlightbutterfly.cryptohub.data
 
-import com.moonlightbutterfly.cryptohub.domain.models.CryptoAssetMarketInfo
+import com.moonlightbutterfly.cryptohub.models.CryptoAssetMarketInfo
+import kotlinx.coroutines.flow.Flow
 
 interface CryptoAssetsDataSource {
 
-    suspend fun getCryptoAssetsMarketInfo(symbols: List<String>): List<CryptoAssetMarketInfo>
+    fun getCryptoAssetsMarketInfo(symbols: List<String>): Flow<Result<List<CryptoAssetMarketInfo>>>
 
-    suspend fun getCryptoAssetsMarketInfo(page: Int): List<CryptoAssetMarketInfo>
+    suspend fun getCryptoAssetsMarketInfo(page: Int): Result<List<CryptoAssetMarketInfo>>
 }

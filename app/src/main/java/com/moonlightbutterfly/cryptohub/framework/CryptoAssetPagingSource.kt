@@ -2,7 +2,7 @@ package com.moonlightbutterfly.cryptohub.framework
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.moonlightbutterfly.cryptohub.domain.models.CryptoAssetMarketInfo
+import com.moonlightbutterfly.cryptohub.models.CryptoAssetMarketInfo
 
 /**
  * Used to load the crypto assets indefinitely

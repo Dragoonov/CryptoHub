@@ -1,7 +1,7 @@
 package com.moonlightbutterfly.cryptohub.repository
 
 import com.moonlightbutterfly.cryptohub.data.LocalPreferencesDataSource
-import com.moonlightbutterfly.cryptohub.domain.models.LocalPreferences
+import com.moonlightbutterfly.cryptohub.models.LocalPreferences
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 
