@@ -52,16 +52,18 @@ class CryptoAssetPanelViewModelTest {
     @Before
     fun setup() {
         Dispatchers.setMain(testDispatcher)
-        every { getFavouritesUseCase() } returns flowOf(Result.Success(
-            CryptoCollection(
-                cryptoAssets =
-                listOf(
-                    CryptoAsset(symbol = "BTC"),
-                    CryptoAsset(symbol = "ETH"),
-                    CryptoAsset(symbol = "XRP"),
-                    CryptoAsset(symbol = "ADA")
+        every { getFavouritesUseCase() } returns flowOf(
+            Result.Success(
+                CryptoCollection(
+                    cryptoAssets =
+                    listOf(
+                        CryptoAsset(symbol = "BTC"),
+                        CryptoAsset(symbol = "ETH"),
+                        CryptoAsset(symbol = "XRP"),
+                        CryptoAsset(symbol = "ADA")
+                    )
                 )
-            ))
+            )
         )
         coEvery { getCryptoAssetsMarketInfoUseCase(any()) } returns flowOf(Result.Success(listOf(marketAsset)))
 

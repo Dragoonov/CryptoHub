@@ -41,7 +41,7 @@ class SettingsViewModelTest {
     fun setup() {
         every { getLocalPreferencesUseCase() } returns flowOf(Result.Success(LocalPreferences.DEFAULT))
         coEvery { updateLocalPreferencesUseCase(any()) } returns Result.Success(Unit)
-        every { signOutUserUseCase() }  returns Result.Success(Unit)
+        every { signOutUserUseCase() } returns Result.Success(Unit)
         every { getSignedInUserUseCase() } returns Result.Success(true) andThen Result.Success(false)
         Dispatchers.setMain(testDispatcher)
         viewModel = SettingsViewModel(

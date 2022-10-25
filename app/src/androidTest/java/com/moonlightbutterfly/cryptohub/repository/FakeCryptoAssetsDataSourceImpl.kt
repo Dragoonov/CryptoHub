@@ -15,14 +15,15 @@ class FakeCryptoAssetsDataSourceImpl @Inject constructor() : CryptoAssetsDataSou
     }
 
     override suspend fun getCryptoAssetsMarketInfo(page: Int): Result<List<CryptoAssetMarketInfo>> {
-        return Result.Success(if (page == 1) {
-            listOf(
-                CryptoAssetMarketInfo(asset = CryptoAsset(name = "Bitcoin", symbol = "BTC")),
-                CryptoAssetMarketInfo(asset = CryptoAsset(name = "Ethereum", symbol = "ETH"))
-            )
-        } else {
-            listOf()
-        }
+        return Result.Success(
+            if (page == 1) {
+                listOf(
+                    CryptoAssetMarketInfo(asset = CryptoAsset(name = "Bitcoin", symbol = "BTC")),
+                    CryptoAssetMarketInfo(asset = CryptoAsset(name = "Ethereum", symbol = "ETH"))
+                )
+            } else {
+                listOf()
+            }
         )
     }
 }

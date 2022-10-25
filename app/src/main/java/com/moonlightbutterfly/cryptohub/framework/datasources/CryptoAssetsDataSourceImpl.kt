@@ -17,7 +17,6 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 
-
 /**
  * Data source interacting with CoinMarketCap service for info.
  */
@@ -42,7 +41,7 @@ class CryptoAssetsDataSourceImpl(
             ).let { emit(it) }
         }
 
-    return metaDataFlow.combine(marketInfoFlow) { metadata, marketInfos ->
+        return metaDataFlow.combine(marketInfoFlow) { metadata, marketInfos ->
             val metadatas = metadata.data.values.sortedBy { it.symbol }
             val infos = marketInfos.data.values.sortedBy { it.symbol }
             val resultData = metadatas.zip(infos) { data, info ->
@@ -65,12 +64,12 @@ class CryptoAssetsDataSourceImpl(
         val assetAmountPerCall = CRYPTO_ASSETS_LOAD_NUMBER_PER_PAGE
         try {
             val listing = flow {
-            service.getListings(
-                apiKey = BuildConfig.API_KEY,
-                start = firstIndex,
-                limit = assetAmountPerCall
-            ).let { emit(it) }
-        }.first().data.sortedBy { it.symbol }
+                service.getListings(
+                    apiKey = BuildConfig.API_KEY,
+                    start = firstIndex,
+                    limit = assetAmountPerCall
+                ).let { emit(it) }
+            }.first().data.sortedBy { it.symbol }
 
             val metadataList = flow {
                 service.getMetadata(

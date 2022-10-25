@@ -48,11 +48,13 @@ class SearchViewModelTest {
     @Before
     fun setup() {
         every { getRecentsUseCase() } returns recentsFlow
-        coEvery { getAllCryptoAssetsMarketInfoUseCase(1) } returns Result.Success(listOf(
-            CryptoAssetMarketInfo(asset = CryptoAsset(symbol = "ada")),
-            CryptoAssetMarketInfo(asset = CryptoAsset(name = "cadard")),
-            CryptoAssetMarketInfo(asset = CryptoAsset(name = "polkadot")),
-        ))
+        coEvery { getAllCryptoAssetsMarketInfoUseCase(1) } returns Result.Success(
+            listOf(
+                CryptoAssetMarketInfo(asset = CryptoAsset(symbol = "ada")),
+                CryptoAssetMarketInfo(asset = CryptoAsset(name = "cadard")),
+                CryptoAssetMarketInfo(asset = CryptoAsset(name = "polkadot")),
+            )
+        )
         coEvery { getAllCryptoAssetsMarketInfoUseCase(not(1)) } returns Result.Success(listOf())
         coEvery { addRecentUseCase(any()) } returns Result.Success(Unit)
         coEvery { removeRecentUseCase(any()) } returns Result.Success(Unit)
@@ -147,23 +149,25 @@ class SearchViewModelTest {
                 // GIVEN
                 val asset = CryptoAsset(name = "test")
                 val asset2 = CryptoAsset(name = "test2")
-                recentsFlow.emit(Result.Success(
-                    CryptoCollection(
-                        cryptoAssets =
-                        listOf(
-                            asset,
-                            CryptoAsset.EMPTY,
-                            CryptoAsset.EMPTY,
-                            CryptoAsset.EMPTY,
-                            CryptoAsset.EMPTY,
-                            CryptoAsset.EMPTY,
-                            CryptoAsset.EMPTY,
-                            CryptoAsset.EMPTY,
-                            CryptoAsset.EMPTY,
-                            CryptoAsset.EMPTY,
+                recentsFlow.emit(
+                    Result.Success(
+                        CryptoCollection(
+                            cryptoAssets =
+                            listOf(
+                                asset,
+                                CryptoAsset.EMPTY,
+                                CryptoAsset.EMPTY,
+                                CryptoAsset.EMPTY,
+                                CryptoAsset.EMPTY,
+                                CryptoAsset.EMPTY,
+                                CryptoAsset.EMPTY,
+                                CryptoAsset.EMPTY,
+                                CryptoAsset.EMPTY,
+                                CryptoAsset.EMPTY,
+                            )
                         )
                     )
-                ))
+                )
 
                 // WHEN
                 viewModel.onResultClicked(asset2)

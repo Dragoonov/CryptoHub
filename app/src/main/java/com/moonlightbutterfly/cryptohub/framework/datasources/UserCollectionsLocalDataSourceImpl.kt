@@ -69,9 +69,9 @@ class UserCollectionsLocalDataSourceImpl(
         return cryptoCollectionsDao
             .remove(name)
             .getResult()
-        }
+    }
 
-     override suspend fun addToCollection(asset: CryptoAsset, collectionName: String): Result<Unit> {
+    override suspend fun addToCollection(asset: CryptoAsset, collectionName: String): Result<Unit> {
         val collection = getCollectionEntity(collectionName)
         if (collection == null) {
             createCollection(collectionName)

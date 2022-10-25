@@ -48,7 +48,7 @@ class FakeUserCollectionsDataSourceImpl : UserCollectionsDataSource {
         return Result.Success(Unit)
     }
 
-    override suspend fun removeFromCollection(asset: CryptoAsset, collectionName: String): Result<Unit>  {
+    override suspend fun removeFromCollection(asset: CryptoAsset, collectionName: String): Result<Unit> {
         val collection = collections[collectionName]!!.value
         collections[collectionName]!!.value = Result.Success(CryptoCollection(collectionName, collection.data.cryptoAssets - asset))
         return Result.Success(Unit)

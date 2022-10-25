@@ -115,6 +115,5 @@ abstract class RepositoryModule {
         @Provides
         @ActivityScope
         fun provideUserDataCache(): UserDataCache = UserDataCacheImpl
-
     }
 }

@@ -3,8 +3,8 @@ package com.moonlightbutterfly.cryptohub.framework.database.entities
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.moonlightbutterfly.cryptohub.models.LocalPreferences
 import com.moonlightbutterfly.cryptohub.framework.database.CryptoHubDatabase
+import com.moonlightbutterfly.cryptohub.models.LocalPreferences
 
 @Entity(tableName = CryptoHubDatabase.LOCAL_PREFERENCES_TABLE_NAME)
 data class LocalPreferencesEntity(

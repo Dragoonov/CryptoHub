@@ -13,16 +13,20 @@ import org.junit.Test
 
 class GetAllCryptoAssetsMarketInfoUseCaseTest {
 
-    private val assets = Result.Success(listOf(
-        CryptoAssetMarketInfo(price = 12.1),
-        CryptoAssetMarketInfo(price = 12.2),
-        CryptoAssetMarketInfo(price = 12.3))
+    private val assets = Result.Success(
+        listOf(
+            CryptoAssetMarketInfo(price = 12.1),
+            CryptoAssetMarketInfo(price = 12.2),
+            CryptoAssetMarketInfo(price = 12.3)
+        )
     )
 
-    private val assets2 = Result.Success(listOf(
-        CryptoAssetMarketInfo(price = 10.1),
-        CryptoAssetMarketInfo(price = 10.2),
-    ))
+    private val assets2 = Result.Success(
+        listOf(
+            CryptoAssetMarketInfo(price = 10.1),
+            CryptoAssetMarketInfo(price = 10.2),
+        )
+    )
 
     private val repositoryMock: CryptoAssetsRepository = mockk {
         coEvery { getCryptoAssetsMarketInfo(eq(1)) } returns assets

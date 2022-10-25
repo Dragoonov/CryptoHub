@@ -62,7 +62,7 @@ fun RowScope.Favourite(isInFavourites: Boolean, onSelectionChanged: (changed: Bo
 @Composable
 fun ErrorHandler(error: Error?) {
     val context = LocalContext.current
-    val errorMessage = when(error) {
+    val errorMessage = when (error) {
         is Error.AccessDenied -> stringResource(R.string.access_denied_error)
         is Error.Network -> stringResource(R.string.network_error)
         is Error.NotFound -> stringResource(R.string.not_found_error)

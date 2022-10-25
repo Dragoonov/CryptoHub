@@ -70,4 +70,3 @@ class RemoveAssetFromCollectionUseCase(private val userCollectionsRepository: Us
     suspend operator fun invoke(asset: CryptoAsset, collectionName: String) =
         userCollectionsRepository.removeFromCollection(asset, collectionName)
 }
-

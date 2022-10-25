@@ -18,16 +18,24 @@ class GetCryptoAssetsMarketInfoUseCaseTest {
     private val requestedSymbols1 = listOf("BTC")
     private val requestedSymbols2 = listOf("ETH")
 
-    private val assets = flowOf(Result.Success(listOf(
-        CryptoAssetMarketInfo(price = 12.1),
-        CryptoAssetMarketInfo(price = 12.2),
-        CryptoAssetMarketInfo(price = 12.3)
-    )))
+    private val assets = flowOf(
+        Result.Success(
+            listOf(
+                CryptoAssetMarketInfo(price = 12.1),
+                CryptoAssetMarketInfo(price = 12.2),
+                CryptoAssetMarketInfo(price = 12.3)
+            )
+        )
+    )
 
-    private val assets2 = flowOf(Result.Success(listOf(
-        CryptoAssetMarketInfo(price = 10.1),
-        CryptoAssetMarketInfo(price = 10.2),
-    )))
+    private val assets2 = flowOf(
+        Result.Success(
+            listOf(
+                CryptoAssetMarketInfo(price = 10.1),
+                CryptoAssetMarketInfo(price = 10.2),
+            )
+        )
+    )
 
     private val repositoryMock: CryptoAssetsRepository = mockk {
         coEvery { getCryptoAssetsMarketInfo(eq(requestedSymbols1)) } returns assets
