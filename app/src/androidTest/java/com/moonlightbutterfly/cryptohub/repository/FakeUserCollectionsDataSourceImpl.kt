@@ -1,5 +1,6 @@
 package com.moonlightbutterfly.cryptohub.repository
 
+import com.moonlightbutterfly.cryptohub.data.Result
 import com.moonlightbutterfly.cryptohub.data.UserCollectionsDataSource
 import com.moonlightbutterfly.cryptohub.models.CryptoAsset
 import com.moonlightbutterfly.cryptohub.models.CryptoCollection
@@ -10,41 +11,46 @@ import kotlinx.coroutines.flow.flowOf
 class FakeUserCollectionsDataSourceImpl : UserCollectionsDataSource {
 
     private val collections = mutableMapOf(
-        "favourites" to MutableStateFlow(CryptoCollection.EMPTY),
-        "recents" to MutableStateFlow(CryptoCollection.EMPTY)
+        "favourites" to MutableStateFlow(Result.Success(CryptoCollection.EMPTY)),
+        "recents" to MutableStateFlow(Result.Success(CryptoCollection.EMPTY))
     )
 
-    override suspend fun clearCollection(name: String) {
-        collections[name]?.value = CryptoCollection(name, emptyList())
+    override suspend fun clearCollection(name: String): Result<Unit> {
+        collections[name]?.value = Result.Success(CryptoCollection(name, emptyList()))
+        return Result.Success(Unit)
     }
 
-    override fun getCollection(name: String): Flow<CryptoCollection> {
-        return collections[name] as Flow<CryptoCollection>
+    override fun getCollection(name: String): Flow<Result<CryptoCollection>> {
+        return collections[name] as Flow<Result<CryptoCollection>>
     }
 
-    override fun getAllCollectionNames(): Flow<List<String>> {
-        return flowOf(collections.keys.toList())
+    override fun getAllCollectionNames(): Flow<Result<List<String>>> {
+        return flowOf(Result.Success(collections.keys.toList()))
     }
 
-    override suspend fun createCollection(name: String) {
-        collections[name] = MutableStateFlow(CryptoCollection(name, emptyList()))
+    override suspend fun createCollection(name: String): Result<Unit> {
+        collections[name] = MutableStateFlow(Result.Success(CryptoCollection(name, emptyList())))
+        return Result.Success(Unit)
     }
 
-    override suspend fun removeCollection(name: String) {
+    override suspend fun removeCollection(name: String): Result<Unit> {
         collections.remove(name)
+        return Result.Success(Unit)
     }
 
-    override suspend fun addToCollection(asset: CryptoAsset, collectionName: String) {
+    override suspend fun addToCollection(asset: CryptoAsset, collectionName: String): Result<Unit> {
         var collection = collections[collectionName]?.value
         if (collection == null) {
             createCollection(collectionName)
         }
         collection = collections[collectionName]!!.value
-        collections[collectionName]!!.value = CryptoCollection(collectionName, collection.cryptoAssets + asset)
+        collections[collectionName]!!.value = Result.Success(CryptoCollection(collectionName, collection.data.cryptoAssets + asset))
+        return Result.Success(Unit)
     }
 
-    override suspend fun removeFromCollection(asset: CryptoAsset, collectionName: String) {
+    override suspend fun removeFromCollection(asset: CryptoAsset, collectionName: String): Result<Unit>  {
         val collection = collections[collectionName]!!.value
-        collections[collectionName]!!.value = CryptoCollection(collectionName, collection.cryptoAssets - asset)
+        collections[collectionName]!!.value = Result.Success(CryptoCollection(collectionName, collection.data.cryptoAssets - asset))
+        return Result.Success(Unit)
     }
 }

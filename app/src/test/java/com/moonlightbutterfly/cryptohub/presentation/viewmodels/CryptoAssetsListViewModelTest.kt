@@ -1,6 +1,7 @@
 package com.moonlightbutterfly.cryptohub.presentation.viewmodels
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.moonlightbutterfly.cryptohub.data.Result
 import com.moonlightbutterfly.cryptohub.models.CryptoAsset
 import com.moonlightbutterfly.cryptohub.models.CryptoCollection
 import com.moonlightbutterfly.cryptohub.usecases.AddFavouriteUseCase
@@ -44,7 +45,7 @@ class CryptoAssetsListViewModelTest {
     @Before
     fun setup() {
         Dispatchers.setMain(testDispatcher)
-        every { getFavouritesUseCase() } returns flowOf(
+        every { getFavouritesUseCase() } returns flowOf( Result.Success(
             CryptoCollection(
                 cryptoAssets =
                 listOf(
@@ -53,9 +54,9 @@ class CryptoAssetsListViewModelTest {
                     CryptoAsset(symbol = "XRP"),
                     CryptoAsset(symbol = "ADA")
                 )
-            )
+            ))
         )
-        coEvery { getCryptoAssetsMarketInfoUseCase(any()) } returns listOf()
+        coEvery { getCryptoAssetsMarketInfoUseCase(any()) } returns flowOf(Result.Success(listOf()))
 
         viewModel = CryptoAssetsListViewModel(
             getAllCryptoAssetsMarketInfoUseCase,

@@ -1,6 +1,8 @@
 package com.moonlightbutterfly.cryptohub.usecases
 
 import com.moonlightbutterfly.cryptohub.data.LocalPreferencesRepository
+import com.moonlightbutterfly.cryptohub.data.Result
+import com.moonlightbutterfly.cryptohub.data.getOrThrow
 import com.moonlightbutterfly.cryptohub.models.LocalPreferences
 import io.mockk.every
 import io.mockk.mockk
@@ -14,7 +16,7 @@ import org.junit.Test
 
 class GetLocalPreferencesUseCaseTest {
 
-    private val localPreferences = flowOf(LocalPreferences.DEFAULT)
+    private val localPreferences = flowOf(Result.Success(LocalPreferences.DEFAULT))
 
     private val repositoryMock: LocalPreferencesRepository = mockk {
         every { getLocalPreferences() } returns localPreferences
@@ -31,6 +33,6 @@ class GetLocalPreferencesUseCaseTest {
         verify {
             repositoryMock.getLocalPreferences()
         }
-        assertEquals(LocalPreferences.DEFAULT, preferences)
+        assertEquals(LocalPreferences.DEFAULT, preferences.getOrThrow())
     }
 }

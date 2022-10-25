@@ -1,6 +1,7 @@
 package com.moonlightbutterfly.cryptohub.presentation.viewmodels
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.moonlightbutterfly.cryptohub.data.Result
 import com.moonlightbutterfly.cryptohub.models.CryptoAsset
 import com.moonlightbutterfly.cryptohub.models.CryptoAssetMarketInfo
 import com.moonlightbutterfly.cryptohub.models.CryptoCollection
@@ -51,7 +52,7 @@ class CryptoAssetPanelViewModelTest {
     @Before
     fun setup() {
         Dispatchers.setMain(testDispatcher)
-        every { getFavouritesUseCase() } returns flowOf(
+        every { getFavouritesUseCase() } returns flowOf(Result.Success(
             CryptoCollection(
                 cryptoAssets =
                 listOf(
@@ -60,9 +61,9 @@ class CryptoAssetPanelViewModelTest {
                     CryptoAsset(symbol = "XRP"),
                     CryptoAsset(symbol = "ADA")
                 )
-            )
+            ))
         )
-        coEvery { getCryptoAssetsMarketInfoUseCase(any()) } returns listOf(marketAsset)
+        coEvery { getCryptoAssetsMarketInfoUseCase(any()) } returns flowOf(Result.Success(listOf(marketAsset)))
 
         viewModel = CryptoAssetPanelViewModel(
             getCryptoAssetsMarketInfoUseCase,
@@ -80,7 +81,7 @@ class CryptoAssetPanelViewModelTest {
     @Test
     fun `should be in favourites`() {
         // GIVEN
-        coEvery { getCryptoAssetsMarketInfoUseCase(any()) } returns listOf(marketAsset2)
+        coEvery { getCryptoAssetsMarketInfoUseCase(any()) } returns flowOf(Result.Success(listOf(marketAsset2)))
         val assetLiveData2 = viewModel.getCryptoAssetMarketInfo(asset2.symbol)
         assetLiveData2.observeForTesting {
             runBlockingTest {
@@ -95,7 +96,7 @@ class CryptoAssetPanelViewModelTest {
     @Test
     fun `should not be in favourites`() {
         // GIVEN
-        coEvery { getCryptoAssetsMarketInfoUseCase(any()) } returns listOf(marketAsset)
+        coEvery { getCryptoAssetsMarketInfoUseCase(any()) } returns flowOf(Result.Success(listOf(marketAsset)))
         val assetLiveData = viewModel.getCryptoAssetMarketInfo(asset.symbol)
         assetLiveData.observeForTesting {
             runBlockingTest {

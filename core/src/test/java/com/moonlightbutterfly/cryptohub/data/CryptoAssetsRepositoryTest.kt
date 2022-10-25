@@ -5,7 +5,8 @@ import io.mockk.coEvery
 import io.mockk.mockk
 import junit.framework.TestCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Test
 
@@ -28,8 +29,8 @@ class CryptoAssetsRepositoryTest {
     private val mockDataSource = mockk<CryptoAssetsDataSource> {
         coEvery { getCryptoAssetsMarketInfo(eq(1)) } returns assets
         coEvery { getCryptoAssetsMarketInfo(eq(2)) } returns assets2
-        coEvery { getCryptoAssetsMarketInfo(eq(requestedSymbols1)) } returns flow {assets}
-        coEvery { getCryptoAssetsMarketInfo(eq(requestedSymbols2)) } returns flow {assets2}
+        coEvery { getCryptoAssetsMarketInfo(eq(requestedSymbols1)) } returns flowOf(assets)
+        coEvery { getCryptoAssetsMarketInfo(eq(requestedSymbols2)) } returns flowOf(assets2)
     }
 
     private val repository = CryptoAssetsRepository(mockDataSource)
@@ -49,8 +50,8 @@ class CryptoAssetsRepositoryTest {
     @Test
     fun `should get assets per symbols`() = runBlockingTest {
         // GIVEN // WHEN
-        val assetList = repository.getCryptoAssetsMarketInfo(requestedSymbols1)
-        val assetList2 = repository.getCryptoAssetsMarketInfo(requestedSymbols2)
+        val assetList = repository.getCryptoAssetsMarketInfo(requestedSymbols1).first()
+        val assetList2 = repository.getCryptoAssetsMarketInfo(requestedSymbols2).first()
         // THEN
         TestCase.assertEquals(assets, assetList)
         TestCase.assertEquals(assets2, assetList2)

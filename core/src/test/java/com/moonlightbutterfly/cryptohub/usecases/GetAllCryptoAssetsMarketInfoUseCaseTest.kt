@@ -1,6 +1,7 @@
 package com.moonlightbutterfly.cryptohub.usecases
 
 import com.moonlightbutterfly.cryptohub.data.CryptoAssetsRepository
+import com.moonlightbutterfly.cryptohub.data.Result
 import com.moonlightbutterfly.cryptohub.models.CryptoAssetMarketInfo
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -12,16 +13,16 @@ import org.junit.Test
 
 class GetAllCryptoAssetsMarketInfoUseCaseTest {
 
-    private val assets = listOf(
+    private val assets = Result.Success(listOf(
         CryptoAssetMarketInfo(price = 12.1),
         CryptoAssetMarketInfo(price = 12.2),
-        CryptoAssetMarketInfo(price = 12.3)
+        CryptoAssetMarketInfo(price = 12.3))
     )
 
-    private val assets2 = listOf(
+    private val assets2 = Result.Success(listOf(
         CryptoAssetMarketInfo(price = 10.1),
         CryptoAssetMarketInfo(price = 10.2),
-    )
+    ))
 
     private val repositoryMock: CryptoAssetsRepository = mockk {
         coEvery { getCryptoAssetsMarketInfo(eq(1)) } returns assets

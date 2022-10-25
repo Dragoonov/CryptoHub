@@ -1,20 +1,19 @@
 package com.moonlightbutterfly.cryptohub.presentation.viewmodels
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.moonlightbutterfly.cryptohub.data.Result
 import com.moonlightbutterfly.cryptohub.models.CryptoAsset
 import com.moonlightbutterfly.cryptohub.models.CryptoAssetMarketInfo
 import com.moonlightbutterfly.cryptohub.models.CryptoCollection
 import com.moonlightbutterfly.cryptohub.usecases.AddRecentUseCase
+import com.moonlightbutterfly.cryptohub.usecases.ClearRecentsUseCase
 import com.moonlightbutterfly.cryptohub.usecases.GetAllCryptoAssetsMarketInfoUseCase
 import com.moonlightbutterfly.cryptohub.usecases.GetRecentsUseCase
 import com.moonlightbutterfly.cryptohub.usecases.RemoveRecentUseCase
-import com.moonlightbutterfly.cryptohub.usecases.ClearRecentsUseCase
 import com.moonlightbutterfly.cryptohub.utils.observeForTesting
-import io.mockk.Runs
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
-import io.mockk.just
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.Dispatchers
@@ -32,7 +31,7 @@ import org.junit.Test
 @ExperimentalCoroutinesApi
 class SearchViewModelTest {
 
-    private val recentsFlow = MutableStateFlow(CryptoCollection.EMPTY)
+    private val recentsFlow = MutableStateFlow(Result.Success(CryptoCollection.EMPTY))
     private val getRecentsUseCase: GetRecentsUseCase = mockk()
     private val addRecentUseCase: AddRecentUseCase = mockk()
     private val removeRecentUseCase: RemoveRecentUseCase = mockk()
@@ -49,15 +48,15 @@ class SearchViewModelTest {
     @Before
     fun setup() {
         every { getRecentsUseCase() } returns recentsFlow
-        coEvery { getAllCryptoAssetsMarketInfoUseCase(1) } returns listOf(
+        coEvery { getAllCryptoAssetsMarketInfoUseCase(1) } returns Result.Success(listOf(
             CryptoAssetMarketInfo(asset = CryptoAsset(symbol = "ada")),
             CryptoAssetMarketInfo(asset = CryptoAsset(name = "cadard")),
             CryptoAssetMarketInfo(asset = CryptoAsset(name = "polkadot")),
-        )
-        coEvery { getAllCryptoAssetsMarketInfoUseCase(not(1)) } returns listOf()
-        coEvery { addRecentUseCase(any()) } just Runs
-        coEvery { removeRecentUseCase(any()) } just Runs
-        coEvery { clearRecentsUseCase() } just Runs
+        ))
+        coEvery { getAllCryptoAssetsMarketInfoUseCase(not(1)) } returns Result.Success(listOf())
+        coEvery { addRecentUseCase(any()) } returns Result.Success(Unit)
+        coEvery { removeRecentUseCase(any()) } returns Result.Success(Unit)
+        coEvery { clearRecentsUseCase() } returns Result.Success(Unit)
         Dispatchers.setMain(testDispatcher)
         viewModel = SearchViewModel(
             getRecentsUseCase,
@@ -107,7 +106,7 @@ class SearchViewModelTest {
     fun `should just add crypto asset to recents`() = viewModel.recents.observeForTesting {
         runBlockingTest {
             // GIVEN
-            recentsFlow.emit(CryptoCollection.EMPTY)
+            recentsFlow.emit(Result.Success(CryptoCollection.EMPTY))
 
             // WHEN
             viewModel.onResultClicked(CryptoAsset.EMPTY)
@@ -128,7 +127,7 @@ class SearchViewModelTest {
             runBlockingTest {
                 // GIVEN
                 val asset = CryptoAsset(name = "test")
-                recentsFlow.emit(CryptoCollection(cryptoAssets = listOf(asset)))
+                recentsFlow.emit(Result.Success(CryptoCollection(cryptoAssets = listOf(asset))))
 
                 // WHEN
                 viewModel.onResultClicked(asset)
@@ -148,7 +147,7 @@ class SearchViewModelTest {
                 // GIVEN
                 val asset = CryptoAsset(name = "test")
                 val asset2 = CryptoAsset(name = "test2")
-                recentsFlow.emit(
+                recentsFlow.emit(Result.Success(
                     CryptoCollection(
                         cryptoAssets =
                         listOf(
@@ -164,7 +163,7 @@ class SearchViewModelTest {
                             CryptoAsset.EMPTY,
                         )
                     )
-                )
+                ))
 
                 // WHEN
                 viewModel.onResultClicked(asset2)

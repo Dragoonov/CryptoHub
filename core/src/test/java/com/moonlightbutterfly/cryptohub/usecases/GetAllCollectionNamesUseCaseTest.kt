@@ -1,5 +1,6 @@
 package com.moonlightbutterfly.cryptohub.usecases
 
+import com.moonlightbutterfly.cryptohub.data.Result
 import com.moonlightbutterfly.cryptohub.data.UserCollectionsRepository
 import io.mockk.every
 import io.mockk.mockk
@@ -12,7 +13,7 @@ import org.junit.Test
 
 class GetAllCollectionNamesUseCaseTest {
 
-    private val names = flowOf(listOf("test", "test2"))
+    private val names = flowOf(Result.Success(listOf("test", "test2")))
     private val userCollectionsRepository: UserCollectionsRepository = mockk {
         every { getAllCollectionNames() } returns names
     }

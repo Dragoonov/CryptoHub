@@ -6,7 +6,7 @@ import com.moonlightbutterfly.cryptohub.signincontrollers.GoogleSignInIntentCont
 import dagger.BindsInstance
 import dagger.Component
 
-@Component(modules = [TestRepositoryModule::class, UseCasesFactoryModule::class, SignInModule::class])
+@Component(modules = [TestRepositoryModule::class, UseCasesModule::class, SignInModule::class])
 @ActivityScope
 interface TestAppComponent {
 

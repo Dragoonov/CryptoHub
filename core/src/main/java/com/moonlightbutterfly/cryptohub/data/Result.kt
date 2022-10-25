@@ -15,3 +15,7 @@ fun<T> Result<T>.unpack(defaultValue: T): T {
         defaultValue
     }
 }
+
+fun<T> Result<T>.getOrThrow(): T {
+    return (this as Result.Success<T>).data
+}
