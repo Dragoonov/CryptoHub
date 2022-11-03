@@ -19,6 +19,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -53,6 +54,10 @@ fun SignInScreen(
     val isNightMode by viewModel.isNightModeEnabled.observeAsState(false)
     val activity = LocalContext.current as ComponentActivity
     val signInProvider = LocalSignInIntentControllerProvider.current
+
+    val error by viewModel.errorMessageFlow.collectAsState(null)
+    error?.let { ErrorHandler(error) }
+
     Column(
         Modifier
             .fillMaxWidth()

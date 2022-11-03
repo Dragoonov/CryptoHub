@@ -7,7 +7,7 @@ import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
 import com.moonlightbutterfly.cryptohub.R
-import com.moonlightbutterfly.cryptohub.domain.models.UserData
+import com.moonlightbutterfly.cryptohub.models.UserData
 import com.moonlightbutterfly.cryptohub.utils.toUserData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

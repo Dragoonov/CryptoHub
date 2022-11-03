@@ -26,8 +26,8 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.annotation.ExperimentalCoilApi
 import com.moonlightbutterfly.cryptohub.R
-import com.moonlightbutterfly.cryptohub.domain.models.CryptoAsset
-import com.moonlightbutterfly.cryptohub.domain.models.CryptoAssetMarketInfo
+import com.moonlightbutterfly.cryptohub.models.CryptoAsset
+import com.moonlightbutterfly.cryptohub.models.CryptoAssetMarketInfo
 import com.moonlightbutterfly.cryptohub.presentation.ui.LocalViewModelFactory
 import com.moonlightbutterfly.cryptohub.presentation.viewmodels.CryptoAssetPanelViewModel
 import com.moonlightbutterfly.cryptohub.utils.round
@@ -46,6 +46,9 @@ fun CryptoAssetPanelScreen(cryptoAssetSymbol: String, onActionFailed: (String) -
         .observeAsState(CryptoAssetMarketInfo.EMPTY)
 
     val isLiked by viewModel.isCryptoInFavourites().collectAsState(false)
+
+    val error by viewModel.errorMessageFlow.collectAsState(null)
+    error?.let { ErrorHandler(error) }
 
     Column(
         Modifier

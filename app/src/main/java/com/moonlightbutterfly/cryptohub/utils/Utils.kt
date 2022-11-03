@@ -1,8 +1,7 @@
 package com.moonlightbutterfly.cryptohub.utils
 
-import android.util.Log
 import com.google.firebase.auth.FirebaseUser
-import com.moonlightbutterfly.cryptohub.domain.models.UserData
+import com.moonlightbutterfly.cryptohub.models.UserData
 
 fun Double.round(decimals: Int): Double {
     var multiplier = 1.0
@@ -18,13 +17,4 @@ fun Double.toStringAbbr(): String = when {
 
 fun FirebaseUser.toUserData(): UserData {
     return UserData(userId = this.uid, name = this.displayName ?: "", email = this.email ?: "")
-}
-
-suspend fun <R> Any.tryBlock(fallbackReturn: R, block: suspend () -> R): R {
-    try {
-        return block()
-    } catch (e: Exception) {
-        Log.e(this::class.simpleName, e.message ?: "")
-    }
-    return fallbackReturn
 }

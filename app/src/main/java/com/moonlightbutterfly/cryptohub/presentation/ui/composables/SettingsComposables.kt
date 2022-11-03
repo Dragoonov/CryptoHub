@@ -12,6 +12,7 @@ import androidx.compose.material.Switch
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -33,6 +34,12 @@ fun SettingsScreen(onSignOutClicked: () -> Unit) {
         factory = LocalViewModelFactory.current
     )
     val nightModeEnabled by viewModel.isNightModeEnabled.observeAsState(false)
+
+    val error by viewModel.errorMessageFlow.collectAsState(null)
+    error?.let { ErrorHandler(error) }
+
+    val isUserSignedIn by viewModel.isUserSignedIn.collectAsState(false)
+
     val onSignedOut = {
         viewModel.onSignedOut()
         onSignOutClicked()
@@ -42,7 +49,7 @@ fun SettingsScreen(onSignOutClicked: () -> Unit) {
             nightModeEnabled = nightModeEnabled,
             onNightModeChanged = viewModel::onNightModeChanged
         )
-        if (viewModel.isUserSignedIn()) {
+        if (isUserSignedIn) {
             SignOutButton(onSignedOut)
         }
     }

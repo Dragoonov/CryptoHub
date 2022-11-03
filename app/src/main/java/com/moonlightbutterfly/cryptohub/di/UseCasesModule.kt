@@ -7,6 +7,7 @@ import com.moonlightbutterfly.cryptohub.data.UserDataCache
 import com.moonlightbutterfly.cryptohub.usecases.AddAssetToCollectionUseCase
 import com.moonlightbutterfly.cryptohub.usecases.AddFavouriteUseCase
 import com.moonlightbutterfly.cryptohub.usecases.AddRecentUseCase
+import com.moonlightbutterfly.cryptohub.usecases.ClearRecentsUseCase
 import com.moonlightbutterfly.cryptohub.usecases.CreateCollectionUseCase
 import com.moonlightbutterfly.cryptohub.usecases.GetAllCryptoAssetsMarketInfoUseCase
 import com.moonlightbutterfly.cryptohub.usecases.GetCollectionUseCase
@@ -15,11 +16,11 @@ import com.moonlightbutterfly.cryptohub.usecases.GetFavouritesUseCase
 import com.moonlightbutterfly.cryptohub.usecases.GetLocalPreferencesUseCase
 import com.moonlightbutterfly.cryptohub.usecases.GetRecentsUseCase
 import com.moonlightbutterfly.cryptohub.usecases.GetSignedInUserUseCase
+import com.moonlightbutterfly.cryptohub.usecases.IsUserSignedInUseCase
 import com.moonlightbutterfly.cryptohub.usecases.RemoveAssetFromCollectionUseCase
 import com.moonlightbutterfly.cryptohub.usecases.RemoveCollectionUseCase
 import com.moonlightbutterfly.cryptohub.usecases.RemoveFavouriteUseCase
 import com.moonlightbutterfly.cryptohub.usecases.RemoveRecentUseCase
-import com.moonlightbutterfly.cryptohub.usecases.RemoveRecentsUseCase
 import com.moonlightbutterfly.cryptohub.usecases.SignInUserUseCase
 import com.moonlightbutterfly.cryptohub.usecases.SignOutUserUseCase
 import com.moonlightbutterfly.cryptohub.usecases.UpdateLocalPreferencesUseCase
@@ -46,8 +47,8 @@ class UseCasesModule {
     @Provides
     fun provideRemoveRecentsUseCase(
         userCollectionsRepository: UserCollectionsRepository
-    ): RemoveRecentsUseCase {
-        return RemoveRecentsUseCase(userCollectionsRepository)
+    ): ClearRecentsUseCase {
+        return ClearRecentsUseCase(userCollectionsRepository)
     }
 
     @Provides
@@ -160,5 +161,12 @@ class UseCasesModule {
         userCollectionsRepository: UserCollectionsRepository
     ): RemoveCollectionUseCase {
         return RemoveCollectionUseCase(userCollectionsRepository)
+    }
+
+    @Provides
+    fun provideIsUserSignedInUseCase(
+        userDataCache: UserDataCache
+    ): IsUserSignedInUseCase {
+        return IsUserSignedInUseCase(userDataCache)
     }
 }

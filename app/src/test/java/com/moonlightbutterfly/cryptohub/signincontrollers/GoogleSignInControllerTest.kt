@@ -3,7 +3,7 @@ package com.moonlightbutterfly.cryptohub.signincontrollers
 import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
 import com.firebase.ui.auth.AuthUI
-import com.moonlightbutterfly.cryptohub.domain.models.UserData
+import com.moonlightbutterfly.cryptohub.models.UserData
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just

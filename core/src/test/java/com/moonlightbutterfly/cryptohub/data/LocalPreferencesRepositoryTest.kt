@@ -1,11 +1,9 @@
 package com.moonlightbutterfly.cryptohub.data
 
-import com.moonlightbutterfly.cryptohub.domain.models.LocalPreferences
-import io.mockk.Runs
+import com.moonlightbutterfly.cryptohub.models.LocalPreferences
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
-import io.mockk.just
 import io.mockk.mockk
 import io.mockk.verify
 import junit.framework.TestCase.assertEquals
@@ -18,9 +16,9 @@ import org.junit.Test
 @ExperimentalCoroutinesApi
 class LocalPreferencesRepositoryTest {
 
-    private val localPreferencesFlow = MutableStateFlow(LocalPreferences.DEFAULT)
+    private val localPreferencesFlow = MutableStateFlow(Result.Success(LocalPreferences.DEFAULT))
     private val localPreferencesDataSource: LocalPreferencesDataSource = mockk {
-        coEvery { updateLocalPreferences(any()) } just Runs
+        coEvery { updateLocalPreferences(any()) } returns Result.Success(Unit)
         every { getLocalPreferences() } returns localPreferencesFlow
     }
     private val repository = LocalPreferencesRepository(localPreferencesDataSource)
@@ -47,6 +45,6 @@ class LocalPreferencesRepositoryTest {
         verify {
             localPreferencesDataSource.getLocalPreferences()
         }
-        assertEquals(LocalPreferences.DEFAULT, preferences)
+        assertEquals(LocalPreferences.DEFAULT, preferences.getOrThrow())
     }
 }

@@ -1,7 +1,7 @@
 package com.moonlightbutterfly.cryptohub.signincontrollers
 
 import androidx.activity.ComponentActivity
-import com.moonlightbutterfly.cryptohub.domain.models.UserData
+import com.moonlightbutterfly.cryptohub.models.UserData
 
 class SignInManagerImpl(
     private val googleSignInController: GoogleSignInController,

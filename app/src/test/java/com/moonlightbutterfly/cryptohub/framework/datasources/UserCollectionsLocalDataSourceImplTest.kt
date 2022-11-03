@@ -1,13 +1,12 @@
 package com.moonlightbutterfly.cryptohub.framework.datasources
 
-import com.moonlightbutterfly.cryptohub.domain.models.CryptoAsset
+import com.moonlightbutterfly.cryptohub.data.getOrThrow
 import com.moonlightbutterfly.cryptohub.framework.database.daos.CryptoCollectionsDao
 import com.moonlightbutterfly.cryptohub.framework.database.entities.CryptoCollectionEntity
-import io.mockk.Runs
+import com.moonlightbutterfly.cryptohub.models.CryptoAsset
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
-import io.mockk.just
 import io.mockk.mockk
 import io.mockk.verify
 import junit.framework.TestCase.assertEquals
@@ -46,19 +45,19 @@ class UserCollectionsLocalDataSourceImplTest {
     private val cryptoCollectionsDao = mockk<CryptoCollectionsDao> {
         every { getCollectionByName(any()) } returns collectionFlow
         every { getAllCollectionNames() } returns namesFlow
-        coEvery { update(any()) } just Runs
-        coEvery { insert(any()) } just Runs
-        coEvery { remove(any()) } just Runs
+        coEvery { update(any()) } returns 1
+        coEvery { insert(any()) } returns 1
+        coEvery { remove(any()) } returns 1
     }
 
     private val userConfigurationLocalDataSourceImpl =
-        UserCollectionsLocalDataSourceImpl(cryptoCollectionsDao)
+        UserCollectionsLocalDataSourceImpl(cryptoCollectionsDao, mockk())
 
     @Test
     fun `should get collection`() = runBlockingTest {
         // WHEN
         val list = userConfigurationLocalDataSourceImpl
-            .getCollection("").first().cryptoAssets
+            .getCollection("").first().getOrThrow().cryptoAssets
 
         // THEN
         verify {
@@ -70,7 +69,7 @@ class UserCollectionsLocalDataSourceImplTest {
     @Test
     fun `should get collection names`() = runBlockingTest {
         // WHEN
-        val list = userConfigurationLocalDataSourceImpl.getAllCollectionNames().first()
+        val list = userConfigurationLocalDataSourceImpl.getAllCollectionNames().first().getOrThrow()
 
         // THEN
         verify {

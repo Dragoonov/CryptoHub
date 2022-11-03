@@ -15,5 +15,5 @@ interface LocalPreferencesDao {
     fun getAll(): Flow<List<LocalPreferencesEntity>>
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun update(config: LocalPreferencesEntity)
+    suspend fun update(config: LocalPreferencesEntity): Int
 }

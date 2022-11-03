@@ -1,12 +1,10 @@
 package com.moonlightbutterfly.cryptohub.data
 
-import com.moonlightbutterfly.cryptohub.domain.models.CryptoAsset
-import com.moonlightbutterfly.cryptohub.domain.models.CryptoCollection
-import io.mockk.Runs
+import com.moonlightbutterfly.cryptohub.models.CryptoAsset
+import com.moonlightbutterfly.cryptohub.models.CryptoCollection
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
-import io.mockk.just
 import io.mockk.mockk
 import io.mockk.verify
 import junit.framework.TestCase.assertEquals
@@ -19,17 +17,17 @@ import org.junit.Test
 @ExperimentalCoroutinesApi
 class UserCollectionsRepositoryTest {
 
-    private val collection = flowOf(CryptoCollection(cryptoAssets = listOf(CryptoAsset.EMPTY, CryptoAsset.EMPTY)))
-    private val collectionNames = flowOf(listOf("Test", "test2"))
+    private val collection = flowOf(Result.Success(CryptoCollection(cryptoAssets = listOf(CryptoAsset.EMPTY, CryptoAsset.EMPTY))))
+    private val collectionNames = flowOf(Result.Success(listOf("Test", "test2")))
 
     private val userConfigurationDataSource = mockk<UserCollectionsDataSource> {
         every { getCollection(any()) } returns collection
         every { getAllCollectionNames() } returns collectionNames
-        coEvery { createCollection(any()) } just Runs
-        coEvery { addToCollection(any(), any()) } just Runs
-        coEvery { removeCollection(any()) } just Runs
-        coEvery { clearCollection(any()) } just Runs
-        coEvery { removeFromCollection(any(), any()) } just Runs
+        coEvery { createCollection(any()) } returns Result.Success(Unit)
+        coEvery { addToCollection(any(), any()) } returns Result.Success(Unit)
+        coEvery { removeCollection(any()) } returns Result.Success(Unit)
+        coEvery { clearCollection(any()) } returns Result.Success(Unit)
+        coEvery { removeFromCollection(any(), any()) } returns Result.Success(Unit)
     }
 
     private val repository = UserCollectionsRepository(userConfigurationDataSource)

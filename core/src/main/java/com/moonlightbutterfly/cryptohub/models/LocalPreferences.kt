@@ -1,4 +1,4 @@
-package com.moonlightbutterfly.cryptohub.domain.models
+package com.moonlightbutterfly.cryptohub.models
 
 data class LocalPreferences(
     val nightModeEnabled: Boolean = DEFAULT_NIGHT_MODE

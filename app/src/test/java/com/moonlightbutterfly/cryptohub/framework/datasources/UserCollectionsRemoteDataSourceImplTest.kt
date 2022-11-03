@@ -4,7 +4,8 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
-import com.moonlightbutterfly.cryptohub.domain.models.CryptoAsset
+import com.moonlightbutterfly.cryptohub.data.getOrThrow
+import com.moonlightbutterfly.cryptohub.models.CryptoAsset
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -17,9 +18,22 @@ import org.junit.Test
 @ExperimentalCoroutinesApi
 class UserCollectionsRemoteDataSourceImplTest {
 
-    private val task = mockk<Task<DocumentSnapshot>>(relaxed = true)
+    private val task = mockk<Task<DocumentSnapshot>>(relaxed = true) {
+        every { isComplete } returns true
+        every { exception } returns null
+        every { result } returns mockk()
+        every { isSuccessful } returns true
+    }
+    private val updateTask = mockk<Task<Void>>(relaxed = true) {
+        every { isComplete } returns true
+        every { exception } returns null
+        every { result } returns mockk()
+        every { isSuccessful } returns true
+    }
+
     private val documentReference = mockk<DocumentReference>(relaxed = true) {
         every { get() } returns task
+        every { update(any<String>(), any()) } returns updateTask
         every { addSnapshotListener(any()) } returns mockk()
     }
     private val db = mockk<FirebaseFirestore>(relaxed = true) {
@@ -32,6 +46,7 @@ class UserCollectionsRemoteDataSourceImplTest {
     private val userConfigurationRemoteDataSourceImpl = UserCollectionsRemoteDataSourceImpl(
         db,
         userId,
+        mockk()
     )
 
     @ExperimentalCoroutinesApi
@@ -41,7 +56,7 @@ class UserCollectionsRemoteDataSourceImplTest {
         val result = userConfigurationRemoteDataSourceImpl.getAllCollectionNames()
 
         // THEN
-        assertEquals(0, result.first().size)
+        assertEquals(0, result.first().getOrThrow().size)
     }
 
     @ExperimentalCoroutinesApi
@@ -51,7 +66,7 @@ class UserCollectionsRemoteDataSourceImplTest {
         val result = userConfigurationRemoteDataSourceImpl.getCollection("")
 
         // THEN
-        assertEquals(0, result.first().cryptoAssets.size)
+        assertEquals(0, result.first().getOrThrow().cryptoAssets.size)
     }
 
     @ExperimentalCoroutinesApi

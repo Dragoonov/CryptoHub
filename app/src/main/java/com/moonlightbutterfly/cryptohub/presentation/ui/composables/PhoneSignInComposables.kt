@@ -34,6 +34,10 @@ fun PhoneSignInScreen(
     val viewModel: SignInViewModel = viewModel(
         factory = LocalViewModelFactory.current
     )
+
+    val error by viewModel.errorMessageFlow.collectAsState(null)
+    error?.let { ErrorHandler(error) }
+
     val isPhoneRequestInProgress by viewModel.isPhoneRequestInProcess.collectAsState(initial = false)
     val activity = LocalContext.current as ComponentActivity
     Column(

@@ -1,5 +1,6 @@
 package com.moonlightbutterfly.cryptohub.framework.datasources
 
+import com.moonlightbutterfly.cryptohub.data.getOrThrow
 import com.moonlightbutterfly.cryptohub.framework.CoinMarketCapService
 import com.moonlightbutterfly.cryptohub.framework.dtos.CryptoAssetMarketQuoteDto
 import com.moonlightbutterfly.cryptohub.framework.dtos.CryptoAssetMetadataDto
@@ -10,8 +11,8 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
-import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Test
 
@@ -54,21 +55,15 @@ class CryptoAssetsDataSourceImplTest {
         coEvery { getListings(any(), any(), any()) } returns generalMarketListingDto
     }
 
-    private val cryptoAssetsDataSourceImpl = CryptoAssetsDataSourceImpl(coinMarketCapService)
-
-    @Test
-    fun `should return empty market info list`() = runBlockingTest {
-        // WHEN
-        val list = cryptoAssetsDataSourceImpl.getCryptoAssetsMarketInfo(listOf())
-
-        // THEN
-        assertTrue(list.isEmpty())
-    }
+    private val cryptoAssetsDataSourceImpl = CryptoAssetsDataSourceImpl(
+        coinMarketCapService,
+        mockk()
+    )
 
     @Test
     fun `should return proper market info`() = runBlockingTest {
         // WHEN
-        val list = cryptoAssetsDataSourceImpl.getCryptoAssetsMarketInfo(listOf("test"))
+        val list = cryptoAssetsDataSourceImpl.getCryptoAssetsMarketInfo(listOf("test")).first().getOrThrow()
 
         // THEN
         coVerify {
@@ -83,7 +78,7 @@ class CryptoAssetsDataSourceImplTest {
     @Test
     fun `should return proper market info by page`() = runBlockingTest {
         // WHEN
-        val list = cryptoAssetsDataSourceImpl.getCryptoAssetsMarketInfo(1)
+        val list = cryptoAssetsDataSourceImpl.getCryptoAssetsMarketInfo(1).getOrThrow()
 
         // THEN
         coVerify {

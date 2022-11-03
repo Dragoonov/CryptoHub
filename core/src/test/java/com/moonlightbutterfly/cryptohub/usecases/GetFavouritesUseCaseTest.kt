@@ -1,8 +1,9 @@
 package com.moonlightbutterfly.cryptohub.usecases
 
+import com.moonlightbutterfly.cryptohub.data.Result
 import com.moonlightbutterfly.cryptohub.data.UserCollectionsRepository
-import com.moonlightbutterfly.cryptohub.domain.models.CryptoAsset
-import com.moonlightbutterfly.cryptohub.domain.models.CryptoCollection
+import com.moonlightbutterfly.cryptohub.models.CryptoAsset
+import com.moonlightbutterfly.cryptohub.models.CryptoCollection
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -19,7 +20,7 @@ class GetFavouritesUseCaseTest {
     private val item1 = CryptoAsset("test1", "ts1", "test1")
     private val item2 = CryptoAsset("test2", "ts2", "test2")
 
-    private val collection = flowOf(CryptoCollection(cryptoAssets = listOf(item1, item2)))
+    private val collection = flowOf(Result.Success(CryptoCollection(cryptoAssets = listOf(item1, item2))))
 
     private val getCollectionUseCase: GetCollectionUseCase = mockk()
 

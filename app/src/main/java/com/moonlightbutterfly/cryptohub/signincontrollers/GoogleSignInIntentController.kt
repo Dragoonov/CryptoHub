@@ -11,7 +11,7 @@ import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.moonlightbutterfly.cryptohub.R
-import com.moonlightbutterfly.cryptohub.domain.models.UserData
+import com.moonlightbutterfly.cryptohub.models.UserData
 import com.moonlightbutterfly.cryptohub.utils.toUserData
 import javax.inject.Inject
 

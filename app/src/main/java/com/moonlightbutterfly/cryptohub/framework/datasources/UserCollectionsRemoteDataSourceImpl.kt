@@ -1,12 +1,18 @@
 package com.moonlightbutterfly.cryptohub.framework.datasources
 
+import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.moonlightbutterfly.cryptohub.data.Error
+import com.moonlightbutterfly.cryptohub.data.ErrorMapper
+import com.moonlightbutterfly.cryptohub.data.Result
 import com.moonlightbutterfly.cryptohub.data.UserCollectionsDataSource
-import com.moonlightbutterfly.cryptohub.domain.models.CryptoAsset
-import com.moonlightbutterfly.cryptohub.domain.models.CryptoCollection
+import com.moonlightbutterfly.cryptohub.data.unpack
+import com.moonlightbutterfly.cryptohub.models.CryptoAsset
+import com.moonlightbutterfly.cryptohub.models.CryptoCollection
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.tasks.await
 
 /**
  * Data source using the Firestore database. It registers to the database and converts the
@@ -14,18 +20,19 @@ import kotlinx.coroutines.flow.MutableStateFlow
  */
 class UserCollectionsRemoteDataSourceImpl(
     db: FirebaseFirestore,
-    userId: String
+    userId: String,
+    private val errorMapper: ErrorMapper
 ) : UserCollectionsDataSource {
 
-    private val subscribedUserCollections = mutableMapOf<String, MutableStateFlow<CryptoCollection>>()
+    private val subscribedUserCollections = mutableMapOf<String, MutableStateFlow<Result<CryptoCollection>>>()
     private val userDocument = db.collection(USERS_COLLECTION).document(userId)
-    private val allCollectionNames = MutableStateFlow<List<String>>(emptyList())
+    private val allCollectionNames = MutableStateFlow<Result<List<String>>>(Result.Success(emptyList()))
 
     init {
         userDocument.addSnapshotListener { value, _ ->
             value?.data?.keys?.toList()?.let {
                 if (allCollectionNames.value != it) {
-                    allCollectionNames.value = it
+                    allCollectionNames.value = Result.Success(it)
                 }
             }
             subscribedUserCollections.keys.forEach { key ->
@@ -38,43 +45,53 @@ class UserCollectionsRemoteDataSourceImpl(
                 }
                 if (assets != null) {
                     val collection = CryptoCollection(name = key, assets)
-                    if (subscribedUserCollections[key]?.value != collection) {
-                        subscribedUserCollections[key]?.value = collection
+                    if (subscribedUserCollections[key]?.value?.unpack(CryptoCollection.EMPTY) != collection) {
+                        subscribedUserCollections[key]?.value = Result.Success(collection)
                     }
                 }
             }
         }
     }
 
-    override fun getAllCollectionNames(): Flow<List<String>> {
+    override fun getAllCollectionNames(): Flow<Result<List<String>>> {
         return allCollectionNames
     }
 
-    override fun getCollection(name: String): Flow<CryptoCollection> {
-        if (subscribedUserCollections[name] == null) {
-            subscribedUserCollections[name] = MutableStateFlow(CryptoCollection.EMPTY)
+    override fun getCollection(name: String): Flow<Result<CryptoCollection>> {
+        return subscribedUserCollections.getOrPut(name) {
+            MutableStateFlow(Result.Success(CryptoCollection.EMPTY))
         }
-        return subscribedUserCollections[name] as Flow<CryptoCollection>
     }
 
-    override suspend fun clearCollection(name: String) {
-        userDocument.update(name, emptyList<CryptoAsset>())
+    override suspend fun clearCollection(name: String): Result<Unit> {
+        return userDocument.update(name, emptyList<CryptoAsset>()).getTaskResult()
     }
 
-    override suspend fun createCollection(name: String) {
-        userDocument.update(name, emptyList<List<CryptoAsset>>())
+    override suspend fun createCollection(name: String): Result<Unit> {
+        return userDocument.update(name, emptyList<List<CryptoAsset>>()).getTaskResult()
     }
 
-    override suspend fun removeCollection(name: String) {
-        userDocument.update(name, FieldValue.delete())
+    override suspend fun removeCollection(name: String): Result<Unit> {
+        return userDocument.update(name, FieldValue.delete()).getTaskResult()
     }
 
-    override suspend fun addToCollection(asset: CryptoAsset, collectionName: String) {
-        userDocument.update(collectionName, FieldValue.arrayUnion(asset))
+    override suspend fun addToCollection(asset: CryptoAsset, collectionName: String): Result<Unit> {
+        return userDocument.update(collectionName, FieldValue.arrayUnion(asset)).getTaskResult()
     }
 
-    override suspend fun removeFromCollection(asset: CryptoAsset, collectionName: String) {
-        userDocument.update(collectionName, FieldValue.arrayRemove(asset))
+    override suspend fun removeFromCollection(asset: CryptoAsset, collectionName: String): Result<Unit> {
+        return userDocument.update(collectionName, FieldValue.arrayRemove(asset)).getTaskResult()
+    }
+
+    private suspend fun Task<Void>.getTaskResult(): Result<Unit> {
+        await()
+        return if (isSuccessful) {
+            Result.Success(Unit)
+        } else {
+            exception?.let {
+                Result.Failure(errorMapper.mapError(it))
+            } ?: Result.Failure(Error.Unknown("Unknown error getting task"))
+        }
     }
 
     companion object {

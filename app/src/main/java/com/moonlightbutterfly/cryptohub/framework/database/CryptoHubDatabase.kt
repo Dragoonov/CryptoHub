@@ -10,13 +10,13 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.google.gson.Gson
-import com.moonlightbutterfly.cryptohub.domain.models.LocalPreferences
 import com.moonlightbutterfly.cryptohub.framework.database.converters.CryptoAssetConverter
 import com.moonlightbutterfly.cryptohub.framework.database.converters.LocalPreferencesConverter
 import com.moonlightbutterfly.cryptohub.framework.database.daos.CryptoCollectionsDao
 import com.moonlightbutterfly.cryptohub.framework.database.daos.LocalPreferencesDao
 import com.moonlightbutterfly.cryptohub.framework.database.entities.CryptoCollectionEntity
 import com.moonlightbutterfly.cryptohub.framework.database.entities.LocalPreferencesEntity
+import com.moonlightbutterfly.cryptohub.models.LocalPreferences
 
 @Database(entities = [LocalPreferencesEntity::class, CryptoCollectionEntity::class], version = 1)
 @TypeConverters(LocalPreferencesConverter::class, CryptoAssetConverter::class)

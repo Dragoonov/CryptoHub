@@ -1,12 +1,15 @@
 package com.moonlightbutterfly.cryptohub.usecases
 
 import com.moonlightbutterfly.cryptohub.data.CryptoAssetsRepository
-import com.moonlightbutterfly.cryptohub.domain.models.CryptoAssetMarketInfo
+import com.moonlightbutterfly.cryptohub.data.Result
+import com.moonlightbutterfly.cryptohub.models.CryptoAssetMarketInfo
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Test
 
@@ -15,15 +18,23 @@ class GetCryptoAssetsMarketInfoUseCaseTest {
     private val requestedSymbols1 = listOf("BTC")
     private val requestedSymbols2 = listOf("ETH")
 
-    private val assets = listOf(
-        CryptoAssetMarketInfo(price = 12.1),
-        CryptoAssetMarketInfo(price = 12.2),
-        CryptoAssetMarketInfo(price = 12.3)
+    private val assets = flowOf(
+        Result.Success(
+            listOf(
+                CryptoAssetMarketInfo(price = 12.1),
+                CryptoAssetMarketInfo(price = 12.2),
+                CryptoAssetMarketInfo(price = 12.3)
+            )
+        )
     )
 
-    private val assets2 = listOf(
-        CryptoAssetMarketInfo(price = 10.1),
-        CryptoAssetMarketInfo(price = 10.2),
+    private val assets2 = flowOf(
+        Result.Success(
+            listOf(
+                CryptoAssetMarketInfo(price = 10.1),
+                CryptoAssetMarketInfo(price = 10.2),
+            )
+        )
     )
 
     private val repositoryMock: CryptoAssetsRepository = mockk {
@@ -36,14 +47,14 @@ class GetCryptoAssetsMarketInfoUseCaseTest {
     @Test
     fun `should get assets`() = runBlockingTest {
         // GIVEN // WHEN
-        val assetList = useCase(requestedSymbols1)
-        val assetList2 = useCase(requestedSymbols2)
+        val assetList = useCase(requestedSymbols1).first()
+        val assetList2 = useCase(requestedSymbols2).first()
         // THEN
         coVerify {
             repositoryMock.getCryptoAssetsMarketInfo(requestedSymbols1)
             repositoryMock.getCryptoAssetsMarketInfo(requestedSymbols2)
         }
-        assertEquals(assets, assetList)
-        assertEquals(assets2, assetList2)
+        assertEquals(assets.first(), assetList)
+        assertEquals(assets2.first(), assetList2)
     }
 }

@@ -1,9 +1,10 @@
 package com.moonlightbutterfly.cryptohub.presentation.viewmodels
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.moonlightbutterfly.cryptohub.domain.models.CryptoAsset
-import com.moonlightbutterfly.cryptohub.domain.models.CryptoAssetMarketInfo
-import com.moonlightbutterfly.cryptohub.domain.models.CryptoCollection
+import com.moonlightbutterfly.cryptohub.data.Result
+import com.moonlightbutterfly.cryptohub.models.CryptoAsset
+import com.moonlightbutterfly.cryptohub.models.CryptoAssetMarketInfo
+import com.moonlightbutterfly.cryptohub.models.CryptoCollection
 import com.moonlightbutterfly.cryptohub.usecases.AddFavouriteUseCase
 import com.moonlightbutterfly.cryptohub.usecases.GetCryptoAssetsMarketInfoUseCase
 import com.moonlightbutterfly.cryptohub.usecases.GetFavouritesUseCase
@@ -52,17 +53,19 @@ class CryptoAssetPanelViewModelTest {
     fun setup() {
         Dispatchers.setMain(testDispatcher)
         every { getFavouritesUseCase() } returns flowOf(
-            CryptoCollection(
-                cryptoAssets =
-                listOf(
-                    CryptoAsset(symbol = "BTC"),
-                    CryptoAsset(symbol = "ETH"),
-                    CryptoAsset(symbol = "XRP"),
-                    CryptoAsset(symbol = "ADA")
+            Result.Success(
+                CryptoCollection(
+                    cryptoAssets =
+                    listOf(
+                        CryptoAsset(symbol = "BTC"),
+                        CryptoAsset(symbol = "ETH"),
+                        CryptoAsset(symbol = "XRP"),
+                        CryptoAsset(symbol = "ADA")
+                    )
                 )
             )
         )
-        coEvery { getCryptoAssetsMarketInfoUseCase(any()) } returns listOf(marketAsset)
+        coEvery { getCryptoAssetsMarketInfoUseCase(any()) } returns flowOf(Result.Success(listOf(marketAsset)))
 
         viewModel = CryptoAssetPanelViewModel(
             getCryptoAssetsMarketInfoUseCase,
@@ -80,8 +83,8 @@ class CryptoAssetPanelViewModelTest {
     @Test
     fun `should be in favourites`() {
         // GIVEN
-        coEvery { getCryptoAssetsMarketInfoUseCase(any()) } returns listOf(marketAsset2)
-        val assetLiveData2 = viewModel.getCryptoAssetMarketInfo(asset2.symbol) {}
+        coEvery { getCryptoAssetsMarketInfoUseCase(any()) } returns flowOf(Result.Success(listOf(marketAsset2)))
+        val assetLiveData2 = viewModel.getCryptoAssetMarketInfo(asset2.symbol)
         assetLiveData2.observeForTesting {
             runBlockingTest {
                 // WHEN
@@ -95,8 +98,8 @@ class CryptoAssetPanelViewModelTest {
     @Test
     fun `should not be in favourites`() {
         // GIVEN
-        coEvery { getCryptoAssetsMarketInfoUseCase(any()) } returns listOf(marketAsset)
-        val assetLiveData = viewModel.getCryptoAssetMarketInfo(asset.symbol) {}
+        coEvery { getCryptoAssetsMarketInfoUseCase(any()) } returns flowOf(Result.Success(listOf(marketAsset)))
+        val assetLiveData = viewModel.getCryptoAssetMarketInfo(asset.symbol)
         assetLiveData.observeForTesting {
             runBlockingTest {
                 // WHEN
@@ -110,7 +113,7 @@ class CryptoAssetPanelViewModelTest {
     @Test
     fun `should add to favourites`() {
         // GIVEN
-        val assetLiveData = viewModel.getCryptoAssetMarketInfo(asset.symbol) {}
+        val assetLiveData = viewModel.getCryptoAssetMarketInfo(asset.symbol)
         assetLiveData.observeForTesting {
             // WHEN
             viewModel.addCryptoToFavourites()
@@ -125,7 +128,7 @@ class CryptoAssetPanelViewModelTest {
     @Test
     fun `should remove from favourites`() {
         // GIVEN
-        val assetLiveData = viewModel.getCryptoAssetMarketInfo(asset.symbol) {}
+        val assetLiveData = viewModel.getCryptoAssetMarketInfo(asset.symbol)
         assetLiveData.observeForTesting {
             // WHEN
             viewModel.removeCryptoFromFavourites()

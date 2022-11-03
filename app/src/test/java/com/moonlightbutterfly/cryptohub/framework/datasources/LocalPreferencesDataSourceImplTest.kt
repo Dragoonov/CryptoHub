@@ -1,13 +1,12 @@
 package com.moonlightbutterfly.cryptohub.framework.datasources
 
-import com.moonlightbutterfly.cryptohub.domain.models.LocalPreferences
+import com.moonlightbutterfly.cryptohub.data.getOrThrow
 import com.moonlightbutterfly.cryptohub.framework.database.daos.LocalPreferencesDao
 import com.moonlightbutterfly.cryptohub.framework.database.entities.LocalPreferencesEntity
-import io.mockk.Runs
+import com.moonlightbutterfly.cryptohub.models.LocalPreferences
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
-import io.mockk.just
 import io.mockk.mockk
 import io.mockk.verify
 import junit.framework.TestCase.assertTrue
@@ -28,10 +27,13 @@ class LocalPreferencesDataSourceImplTest {
     )
     private val localPreferencesDao = mockk<LocalPreferencesDao> {
         every { getAll() } returns flow
-        coEvery { update(any()) } just Runs
+        coEvery { update(any()) } returns 1
     }
 
-    private val localPreferencesDataSourceImpl = LocalPreferencesDataSourceImpl(localPreferencesDao)
+    private val localPreferencesDataSourceImpl = LocalPreferencesDataSourceImpl(
+        localPreferencesDao,
+        mockk()
+    )
 
     @Test
     fun `should get local preferences`() = runBlockingTest {
@@ -42,7 +44,7 @@ class LocalPreferencesDataSourceImplTest {
         verify {
             localPreferencesDao.getAll()
         }
-        assertTrue(preferences.first().nightModeEnabled)
+        assertTrue(preferences.first().getOrThrow().nightModeEnabled)
     }
 
     @Test

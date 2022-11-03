@@ -2,7 +2,7 @@ package com.moonlightbutterfly.cryptohub.signincontrollers
 
 import android.content.Intent
 import com.firebase.ui.auth.AuthUI
-import com.moonlightbutterfly.cryptohub.domain.models.UserData
+import com.moonlightbutterfly.cryptohub.models.UserData
 
 /**
  * Controller that's responsible for the Google sign in flow.

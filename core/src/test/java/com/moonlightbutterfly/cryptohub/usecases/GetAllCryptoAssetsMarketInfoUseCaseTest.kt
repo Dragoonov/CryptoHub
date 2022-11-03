@@ -1,7 +1,8 @@
 package com.moonlightbutterfly.cryptohub.usecases
 
 import com.moonlightbutterfly.cryptohub.data.CryptoAssetsRepository
-import com.moonlightbutterfly.cryptohub.domain.models.CryptoAssetMarketInfo
+import com.moonlightbutterfly.cryptohub.data.Result
+import com.moonlightbutterfly.cryptohub.models.CryptoAssetMarketInfo
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -12,15 +13,19 @@ import org.junit.Test
 
 class GetAllCryptoAssetsMarketInfoUseCaseTest {
 
-    private val assets = listOf(
-        CryptoAssetMarketInfo(price = 12.1),
-        CryptoAssetMarketInfo(price = 12.2),
-        CryptoAssetMarketInfo(price = 12.3)
+    private val assets = Result.Success(
+        listOf(
+            CryptoAssetMarketInfo(price = 12.1),
+            CryptoAssetMarketInfo(price = 12.2),
+            CryptoAssetMarketInfo(price = 12.3)
+        )
     )
 
-    private val assets2 = listOf(
-        CryptoAssetMarketInfo(price = 10.1),
-        CryptoAssetMarketInfo(price = 10.2),
+    private val assets2 = Result.Success(
+        listOf(
+            CryptoAssetMarketInfo(price = 10.1),
+            CryptoAssetMarketInfo(price = 10.2),
+        )
     )
 
     private val repositoryMock: CryptoAssetsRepository = mockk {

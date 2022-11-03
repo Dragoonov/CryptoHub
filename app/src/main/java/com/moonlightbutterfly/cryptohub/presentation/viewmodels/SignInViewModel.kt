@@ -1,29 +1,35 @@
 package com.moonlightbutterfly.cryptohub.presentation.viewmodels
 
 import androidx.activity.ComponentActivity
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
-import com.moonlightbutterfly.cryptohub.domain.models.UserData
+import androidx.lifecycle.viewModelScope
+import com.moonlightbutterfly.cryptohub.data.unpack
+import com.moonlightbutterfly.cryptohub.models.LocalPreferences
+import com.moonlightbutterfly.cryptohub.models.UserData
 import com.moonlightbutterfly.cryptohub.signincontrollers.GoogleSignInIntentController
 import com.moonlightbutterfly.cryptohub.signincontrollers.SignInManager
 import com.moonlightbutterfly.cryptohub.usecases.GetLocalPreferencesUseCase
 import com.moonlightbutterfly.cryptohub.usecases.SignInUserUseCase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class SignInViewModel @Inject constructor(
     private val signInUserUseCase: SignInUserUseCase,
     private val signInManager: SignInManager,
     getLocalPreferencesUseCase: GetLocalPreferencesUseCase
-) : ViewModel() {
+) : BaseViewModel() {
 
     val isPhoneRequestInProcess: Flow<Boolean> = signInManager.isPhoneRequestInProcess
-    val isNightModeEnabled = getLocalPreferencesUseCase().map { it.nightModeEnabled }.asLiveData()
+    val isNightModeEnabled = getLocalPreferencesUseCase().propagateErrors()
+        .map { it.unpack(LocalPreferences.DEFAULT).nightModeEnabled }.asLiveData()
 
     private val signInAction: (() -> Unit) -> (userData: UserData) -> Unit = { function ->
         { userData ->
-            signInUserUseCase(userData)
+            viewModelScope.launch {
+                signInUserUseCase(userData).propagateErrors()
+            }
             function()
         }
     }
