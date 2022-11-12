@@ -1,7 +1,8 @@
-1. Rework sign in providers to work as use cases (multiple sign in methods as business logic)
-2. Rework the way app decides if it should work on local/remote data source (now it's dagger logic) - introduce local/remote interfaces etc.
-3. Rework interface CryptoAssetsDataSource - methods have different api because of presentation demands - fix it.
-4. Think about introducing error handling layer specifically
-5. Think about using fun interfaces as use cases
-6. Think about unifying suspend/flow returns
-7. Think about improving pagingdata
+- Rework sign in providers to work as use cases (multiple sign in methods as business logic)
+- Revise files hierarchy
+- Rework the way app decides if it should work on local/remote data source (now it's dagger logic) - introduce local/remote interfaces etc.
+- Rework interface CryptoAssetsDataSource - methods have different api because of presentation demands - fix it.
+- Think about introducing error handling layer specifically
+- Think about using fun interfaces as use cases
+- Think about unifying suspend/flow returns
+- Think about improving pagingdata

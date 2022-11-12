@@ -7,7 +7,7 @@ import com.moonlightbutterfly.cryptohub.data.unpack
 import com.moonlightbutterfly.cryptohub.models.LocalPreferences
 import com.moonlightbutterfly.cryptohub.usecases.GetLocalPreferencesUseCase
 import com.moonlightbutterfly.cryptohub.usecases.IsUserSignedInUseCase
-import com.moonlightbutterfly.cryptohub.usecases.SignOutUserUseCase
+import com.moonlightbutterfly.cryptohub.usecases.SignOutUseCase
 import com.moonlightbutterfly.cryptohub.usecases.UpdateLocalPreferencesUseCase
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
@@ -18,7 +18,7 @@ import javax.inject.Inject
 class SettingsViewModel @Inject constructor(
     private val getLocalPreferencesUseCase: GetLocalPreferencesUseCase,
     private val updateLocalPreferencesUseCase: UpdateLocalPreferencesUseCase,
-    private val signOutUserUseCase: SignOutUserUseCase,
+    private val signOutUserUseCase: SignOutUseCase,
     private val isUserSignedInUseCase: IsUserSignedInUseCase
 ) : BaseViewModel() {
 

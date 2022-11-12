@@ -1,4 +1,4 @@
-package com.moonlightbutterfly.cryptohub.framework.datasources
+package com.moonlightbutterfly.cryptohub.framework.data
 
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.FieldValue

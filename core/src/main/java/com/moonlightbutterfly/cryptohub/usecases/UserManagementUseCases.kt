@@ -1,20 +1,40 @@
 package com.moonlightbutterfly.cryptohub.usecases
 
-import com.moonlightbutterfly.cryptohub.data.UserDataCache
-import com.moonlightbutterfly.cryptohub.models.UserData
+import com.moonlightbutterfly.cryptohub.data.UserRepository
 
-class SignInUserUseCase(private val userDataCache: UserDataCache) {
-    operator fun invoke(userData: UserData) = userDataCache.signInUser(userData)
+class GoogleSignInUseCase(private val userRepository: UserRepository) {
+    operator fun invoke() = userRepository.googleSignIn()
 }
 
-class SignOutUserUseCase(private val userDataCache: UserDataCache) {
-    operator fun invoke() = userDataCache.signOutUser()
+class EmailSignInUseCase(private val userRepository: UserRepository) {
+    operator fun invoke(email: String, password: String) = userRepository.emailSignIn(email, password)
 }
 
-class GetSignedInUserUseCase(private val userDataCache: UserDataCache) {
-    operator fun invoke() = userDataCache.getUserData()
+class FacebookSignInUseCase(private val userRepository: UserRepository) {
+    operator fun invoke() = userRepository.facebookSignIn()
 }
 
-class IsUserSignedInUseCase(private val userDataCache: UserDataCache) {
-    operator fun invoke() = userDataCache.isUserSignedIn()
+class PhoneSignInUseCase(private val userRepository: UserRepository) {
+    operator fun invoke() = userRepository.phoneSignIn()
+}
+
+class TwitterSignInUseCase(private val userRepository: UserRepository) {
+    operator fun invoke() = userRepository.twitterSignIn()
+}
+
+class AnonymousSignInUseCase(private val userRepository: UserRepository) {
+    operator fun invoke() = userRepository.anonymousSignIn()
+}
+
+
+class SignOutUseCase(private val userRepository: UserRepository) {
+    operator fun invoke() = userRepository.signOut()
+}
+
+class GetSignedInUserUseCase(private val userRepository: UserRepository) {
+    operator fun invoke() = userRepository.getUser()
+}
+
+class IsUserSignedInUseCase(private val userRepository: UserRepository) {
+    operator fun invoke() = userRepository.isUserSignedIn()
 }

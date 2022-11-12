@@ -7,7 +7,7 @@ import com.moonlightbutterfly.cryptohub.data.LocalPreferencesRepository
 import com.moonlightbutterfly.cryptohub.data.UserCollectionsDataSource
 import com.moonlightbutterfly.cryptohub.data.UserCollectionsRepository
 import com.moonlightbutterfly.cryptohub.data.UserDataCache
-import com.moonlightbutterfly.cryptohub.framework.UserDataCacheImpl
+import com.moonlightbutterfly.cryptohub.framework.data.UserDataSourceImpl
 import com.moonlightbutterfly.cryptohub.repository.FakeCryptoAssetsDataSourceImpl
 import com.moonlightbutterfly.cryptohub.repository.FakeLocalPreferencesDataSourceImpl
 import com.moonlightbutterfly.cryptohub.repository.FakeUserCollectionsDataSourceImpl
@@ -56,5 +56,5 @@ class TestRepositoryModule {
 
     @Provides
     @ActivityScope
-    fun provideUserDataCache(): UserDataCache = UserDataCacheImpl
+    fun provideUserDataCache(): UserDataCache = UserDataSourceImpl
 }

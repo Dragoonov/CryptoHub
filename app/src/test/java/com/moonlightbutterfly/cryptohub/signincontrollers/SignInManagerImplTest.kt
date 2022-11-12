@@ -1,7 +1,7 @@
 package com.moonlightbutterfly.cryptohub.signincontrollers
 
 import androidx.activity.ComponentActivity
-import com.moonlightbutterfly.cryptohub.models.UserData
+import com.moonlightbutterfly.cryptohub.models.User
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
@@ -33,7 +33,7 @@ class SignInManagerImplTest {
         every { signIn(any(), any(), any()) } just Runs
     }
 
-    private val onSignedIn: (UserData) -> Unit = {}
+    private val onSignedIn: (User) -> Unit = {}
     private val onSignInFailed: (String) -> Unit = {}
 
     private val signInManager = SignInManagerImpl(

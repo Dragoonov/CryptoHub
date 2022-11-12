@@ -2,7 +2,7 @@ package com.moonlightbutterfly.cryptohub.signincontrollers
 
 import androidx.activity.ComponentActivity
 import com.google.firebase.auth.FirebaseAuth
-import com.moonlightbutterfly.cryptohub.models.UserData
+import com.moonlightbutterfly.cryptohub.models.User
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
@@ -21,7 +21,7 @@ class EmailSignInControllerTest {
         every { createUserWithEmailAndPassword(any(), any()) } returns mockk(relaxed = true)
     }
 
-    private val onSignInSuccess: (UserData) -> Unit = mockk()
+    private val onSignInSuccess: (User) -> Unit = mockk()
     private val onSignInFailure: (String) -> Unit = mockk()
 
     private val emailSignInController = EmailSignInController(

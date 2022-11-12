@@ -1,7 +1,7 @@
 package com.moonlightbutterfly.cryptohub.utils
 
 import com.google.firebase.auth.FirebaseUser
-import com.moonlightbutterfly.cryptohub.models.UserData
+import com.moonlightbutterfly.cryptohub.models.User
 
 fun Double.round(decimals: Int): Double {
     var multiplier = 1.0
@@ -15,6 +15,6 @@ fun Double.toStringAbbr(): String = when {
     else -> this.round(2).toString()
 }
 
-fun FirebaseUser.toUserData(): UserData {
-    return UserData(userId = this.uid, name = this.displayName ?: "", email = this.email ?: "")
+fun FirebaseUser.toUser(): User {
+    return User(userId = this.uid, name = this.displayName ?: "", email = this.email ?: "")
 }

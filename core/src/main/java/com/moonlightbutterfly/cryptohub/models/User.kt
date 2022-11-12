@@ -1,6 +1,6 @@
 package com.moonlightbutterfly.cryptohub.models
 
-data class UserData(
+data class User(
     val userId: String = "",
     val name: String = "",
     val email: String = ""

@@ -3,7 +3,7 @@ package com.moonlightbutterfly.cryptohub.signincontrollers
 import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
 import com.firebase.ui.auth.AuthUI
-import com.moonlightbutterfly.cryptohub.models.UserData
+import com.moonlightbutterfly.cryptohub.models.User
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
@@ -39,7 +39,7 @@ class GoogleSignInControllerTest {
     @Test
     fun `should sign in`() {
         // GIVEN
-        val onSignInSuccess: (UserData) -> Unit = {}
+        val onSignInSuccess: (User) -> Unit = {}
         val onSignInFailure: (String) -> Unit = {}
         val googleSignInIntentController: GoogleSignInIntentController = mockk {
             every { getLauncher(any(), any()) } returns launcher

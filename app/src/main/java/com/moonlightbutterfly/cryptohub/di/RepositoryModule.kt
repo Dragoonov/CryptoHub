@@ -13,17 +13,17 @@ import com.moonlightbutterfly.cryptohub.data.LocalPreferencesRepository
 import com.moonlightbutterfly.cryptohub.data.Result
 import com.moonlightbutterfly.cryptohub.data.UserCollectionsDataSource
 import com.moonlightbutterfly.cryptohub.data.UserCollectionsRepository
-import com.moonlightbutterfly.cryptohub.data.UserDataCache
+import com.moonlightbutterfly.cryptohub.data.UserDataSource
 import com.moonlightbutterfly.cryptohub.framework.CoinMarketCapService
-import com.moonlightbutterfly.cryptohub.framework.UserDataCacheImpl
+import com.moonlightbutterfly.cryptohub.framework.data.CryptoAssetsDataSourceImpl
+import com.moonlightbutterfly.cryptohub.framework.data.ErrorMapperImpl
+import com.moonlightbutterfly.cryptohub.framework.data.LocalPreferencesDataSourceImpl
+import com.moonlightbutterfly.cryptohub.framework.data.UserCollectionsLocalDataSourceImpl
+import com.moonlightbutterfly.cryptohub.framework.data.UserCollectionsRemoteDataSourceImpl
+import com.moonlightbutterfly.cryptohub.framework.data.UserDataSourceImpl
 import com.moonlightbutterfly.cryptohub.framework.database.CryptoHubDatabase
 import com.moonlightbutterfly.cryptohub.framework.database.daos.CryptoCollectionsDao
 import com.moonlightbutterfly.cryptohub.framework.database.daos.LocalPreferencesDao
-import com.moonlightbutterfly.cryptohub.framework.datasources.CryptoAssetsDataSourceImpl
-import com.moonlightbutterfly.cryptohub.framework.datasources.ErrorMapperImpl
-import com.moonlightbutterfly.cryptohub.framework.datasources.LocalPreferencesDataSourceImpl
-import com.moonlightbutterfly.cryptohub.framework.datasources.UserCollectionsLocalDataSourceImpl
-import com.moonlightbutterfly.cryptohub.framework.datasources.UserCollectionsRemoteDataSourceImpl
 import com.moonlightbutterfly.cryptohub.usecases.GetSignedInUserUseCase
 import dagger.Binds
 import dagger.Module
@@ -114,6 +114,6 @@ abstract class RepositoryModule {
 
         @Provides
         @ActivityScope
-        fun provideUserDataCache(): UserDataCache = UserDataCacheImpl
+        fun provideUserDataSource(): UserDataSource = UserDataSourceImpl
     }
 }

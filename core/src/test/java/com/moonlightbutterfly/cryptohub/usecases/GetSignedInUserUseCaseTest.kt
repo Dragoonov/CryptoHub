@@ -3,7 +3,6 @@ package com.moonlightbutterfly.cryptohub.usecases
 import com.moonlightbutterfly.cryptohub.data.Result
 import com.moonlightbutterfly.cryptohub.data.UserDataCache
 import com.moonlightbutterfly.cryptohub.data.getOrThrow
-import com.moonlightbutterfly.cryptohub.models.UserData
 import io.mockk.every
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals

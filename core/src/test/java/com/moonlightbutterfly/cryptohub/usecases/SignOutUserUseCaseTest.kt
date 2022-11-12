@@ -13,7 +13,7 @@ class SignOutUserUseCaseTest {
         every { signOutUser() } returns Result.Success(Unit)
     }
 
-    private val useCase = SignOutUserUseCase(userDataCache)
+    private val useCase = SignOutUseCase(userDataCache)
 
     @Test
     fun `should sign out user`() {

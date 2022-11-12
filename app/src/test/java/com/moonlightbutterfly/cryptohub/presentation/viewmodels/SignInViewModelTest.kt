@@ -3,8 +3,6 @@ package com.moonlightbutterfly.cryptohub.presentation.viewmodels
 import androidx.activity.ComponentActivity
 import com.moonlightbutterfly.cryptohub.data.Result
 import com.moonlightbutterfly.cryptohub.models.LocalPreferences
-import com.moonlightbutterfly.cryptohub.signincontrollers.GoogleSignInIntentController
-import com.moonlightbutterfly.cryptohub.signincontrollers.SignInManager
 import com.moonlightbutterfly.cryptohub.usecases.GetLocalPreferencesUseCase
 import com.moonlightbutterfly.cryptohub.usecases.SignInUserUseCase
 import io.mockk.Runs

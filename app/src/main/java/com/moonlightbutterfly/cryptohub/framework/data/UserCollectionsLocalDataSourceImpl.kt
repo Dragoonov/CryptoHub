@@ -1,4 +1,4 @@
-package com.moonlightbutterfly.cryptohub.framework.datasources
+package com.moonlightbutterfly.cryptohub.framework.data
 
 import com.moonlightbutterfly.cryptohub.data.Error
 import com.moonlightbutterfly.cryptohub.data.ErrorMapper

@@ -22,7 +22,7 @@ import com.moonlightbutterfly.cryptohub.usecases.RemoveCollectionUseCase
 import com.moonlightbutterfly.cryptohub.usecases.RemoveFavouriteUseCase
 import com.moonlightbutterfly.cryptohub.usecases.RemoveRecentUseCase
 import com.moonlightbutterfly.cryptohub.usecases.SignInUserUseCase
-import com.moonlightbutterfly.cryptohub.usecases.SignOutUserUseCase
+import com.moonlightbutterfly.cryptohub.usecases.SignOutUseCase
 import com.moonlightbutterfly.cryptohub.usecases.UpdateLocalPreferencesUseCase
 import dagger.Module
 import dagger.Provides
@@ -124,8 +124,8 @@ class UseCasesModule {
     @Provides
     fun provideSignOutUserUseCase(
         userDataCache: UserDataCache
-    ): SignOutUserUseCase {
-        return SignOutUserUseCase(userDataCache)
+    ): SignOutUseCase {
+        return SignOutUseCase(userDataCache)
     }
 
     @Provides

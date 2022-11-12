@@ -1,4 +1,4 @@
-package com.moonlightbutterfly.cryptohub.framework.datasources
+package com.moonlightbutterfly.cryptohub.framework.data
 
 import com.moonlightbutterfly.cryptohub.BuildConfig
 import com.moonlightbutterfly.cryptohub.CRYPTO_ASSETS_LOAD_NUMBER_PER_PAGE

@@ -16,6 +16,14 @@ fun <T> Result<T>.unpack(defaultValue: T): T {
     }
 }
 
+fun <T> Result<T>.getOrNull(): T? {
+    return if (this is Result.Success) {
+        this.data
+    } else {
+        null
+    }
+}
+
 fun <T> Result<T>.getOrThrow(): T {
     return (this as Result.Success<T>).data
 }
