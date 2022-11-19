@@ -19,11 +19,13 @@ class SignInFacadeTest {
     private val emailSignInUseCase: EmailSignInUseCase = mockk()
     private val phoneSignInUseCase: PhoneSignInUseCase = mockk()
 
-    private val signInFacade = SignInFacade(googleSignInUseCase,
+    private val signInFacade = SignInFacade(
+        googleSignInUseCase,
         emailSignInUseCase,
         phoneSignInUseCase,
         facebookSignInUseCase,
-        twitterSignInUseCase)
+        twitterSignInUseCase
+    )
 
     @Before
     fun setup() {

@@ -79,9 +79,11 @@ abstract class RepositoryModule {
         ): UserCollectionsDataSource {
             val userSignedIn = getSignedInUserUseCase()
             return if (userSignedIn is Result.Success) {
-                UserCollectionsRemoteDataSourceImpl(firebaseFirestore,
+                UserCollectionsRemoteDataSourceImpl(
+                    firebaseFirestore,
                     userSignedIn.data.userId,
-                    errorMapper)
+                    errorMapper
+                )
             } else {
                 UserCollectionsLocalDataSourceImpl(cryptoCollectionsDao, errorMapper)
             }

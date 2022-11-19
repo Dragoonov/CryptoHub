@@ -123,5 +123,4 @@ class UserRepositoryTest {
         }
         assertEquals("test", result.getOrThrow().userId)
     }
-
 }

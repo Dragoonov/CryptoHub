@@ -12,5 +12,4 @@ class UserRepository(
     fun signOut() = userDataSource.signOut()
     fun isUserSignedIn() = userDataSource.isUserSignedIn()
     fun getUser() = userDataSource.getUser()
-
 }

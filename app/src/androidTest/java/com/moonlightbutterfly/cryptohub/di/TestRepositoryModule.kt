@@ -60,8 +60,7 @@ class TestRepositoryModule {
 
     @Provides
     @ActivityScope
-    fun provideUserDataSource(
-    ): UserDataSource = UserDataSourceImpl(
+    fun provideUserDataSource(): UserDataSource = UserDataSourceImpl(
         FakeFirebaseSignInHandler(), FirebaseAuth.getInstance()
     )
 

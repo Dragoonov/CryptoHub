@@ -23,11 +23,11 @@ class UserDataSourceImplTest {
     }
     private val firebaseAuth: FirebaseAuth = mockk {
         every { currentUser } returns
-                mockk {
-                    every { uid } returns "test"
-                    every { displayName } returns "test"
-                    every { email } returns "test"
-                } andThen null
+            mockk {
+                every { uid } returns "test"
+                every { displayName } returns "test"
+                every { email } returns "test"
+            } andThen null
         every { signOut() } just Runs
     }
 

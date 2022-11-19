@@ -7,15 +7,15 @@ interface UserDataSource {
 
     fun getUser(): Result<User>
 
-    fun googleSignIn():  Flow<Result<User>>
+    fun googleSignIn(): Flow<Result<User>>
 
-    fun facebookSignIn():  Flow<Result<User>>
+    fun facebookSignIn(): Flow<Result<User>>
 
-    fun twitterSignIn():  Flow<Result<User>>
+    fun twitterSignIn(): Flow<Result<User>>
 
-    fun emailSignIn():  Flow<Result<User>>
+    fun emailSignIn(): Flow<Result<User>>
 
-    fun phoneSignIn():  Flow<Result<User>>
+    fun phoneSignIn(): Flow<Result<User>>
 
     fun signOut(): Result<Unit>
 

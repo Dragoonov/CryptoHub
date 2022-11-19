@@ -18,7 +18,7 @@ class FirebaseSignInHandlerImpl @Inject constructor(
     private val firebaseAuthDataProvider: FirebaseAuthDataProvider,
     private val firebaseAuth: FirebaseAuth,
     private val authProviders: List<AuthUI.IdpConfig>
-): FirebaseSignInHandler {
+) : FirebaseSignInHandler {
     private val signInChannel = Channel<Result<User>>()
 
     private fun createSignInIntent(): Intent {
@@ -45,8 +45,14 @@ class FirebaseSignInHandlerImpl @Inject constructor(
                     } ?: Result.Failure(Error.NotFound("Received null user"))
                 )
             } else {
-                signInChannel.trySend(Result.Failure(Error.Unknown(result.idpResponse?.error?.localizedMessage
-                    ?: "Something went wrong")))
+                signInChannel.trySend(
+                    Result.Failure(
+                        Error.Unknown(
+                            result.idpResponse?.error?.localizedMessage
+                                ?: "Something went wrong"
+                        )
+                    )
+                )
             }
         }
     }

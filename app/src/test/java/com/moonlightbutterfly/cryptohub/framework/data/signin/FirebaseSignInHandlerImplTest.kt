@@ -21,8 +21,10 @@ class FirebaseSignInHandlerImplTest {
     }
     private val firebaseAuthDataProvider: FirebaseAuthDataProvider = mockk {
         every { setActionOnResult(any()) } just Runs
-        every { getConfigurationData() } returns FirebaseAuthDataProvider.ConfigurationData(launcher,
-            0)
+        every { getConfigurationData() } returns FirebaseAuthDataProvider.ConfigurationData(
+            launcher,
+            0
+        )
     }
     private val firebaseAuth: FirebaseAuth = mockk {
         every { currentUser } returns null
