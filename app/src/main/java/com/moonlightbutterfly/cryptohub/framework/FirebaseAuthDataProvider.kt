@@ -5,6 +5,10 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.annotation.StyleRes
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 
+/**
+ * Interface for communication between Firebase authentication framework and android classes:
+ * ie. registering contracts and launching intents.
+ */
 interface FirebaseAuthDataProvider {
     fun getConfigurationData(): ConfigurationData
     fun setActionOnResult(action: (FirebaseAuthUIAuthenticationResult) -> Unit)

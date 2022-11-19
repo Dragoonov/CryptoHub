@@ -4,14 +4,12 @@ import com.google.firebase.auth.FirebaseAuth
 import com.moonlightbutterfly.cryptohub.data.Error
 import com.moonlightbutterfly.cryptohub.data.Result
 import com.moonlightbutterfly.cryptohub.data.UserDataSource
-import com.moonlightbutterfly.cryptohub.di.ActivityScope
 import com.moonlightbutterfly.cryptohub.framework.data.signin.FirebaseSignInHandler
 import com.moonlightbutterfly.cryptohub.models.User
 import com.moonlightbutterfly.cryptohub.utils.toUser
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-@ActivityScope
 class UserDataSourceImpl @Inject constructor(
     private val firebaseSignInHandler: FirebaseSignInHandler,
     private val firebaseAuth: FirebaseAuth

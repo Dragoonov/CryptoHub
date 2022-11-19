@@ -1,4 +1,3 @@
-- Rework sign in providers to work as use cases (multiple sign in methods as business logic)
 - Revise files hierarchy
 - Rework the way app decides if it should work on local/remote data source (now it's dagger logic) - introduce local/remote interfaces etc.
 - Rework interface CryptoAssetsDataSource - methods have different api because of presentation demands - fix it.

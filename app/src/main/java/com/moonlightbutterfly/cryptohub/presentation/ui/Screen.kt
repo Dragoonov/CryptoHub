@@ -36,20 +36,12 @@ enum class Screen(
     ),
     SIGN_IN_PANEL(
         Routes.SIGN_IN_PANEL
-    ),
-    EMAIL_SIGN_IN_PANEL(
-        Routes.EMAIL_SIGN_IN_PANEL
-    ),
-    PHONE_SIGN_IN_PANEL(
-        Routes.PHONE_SIGN_IN_PANEL
     );
 
     companion object {
         fun bottomNavigationScreens(): List<Screen> = listOf(CRYPTO_ASSETS_LIST, SETTINGS)
         fun String.isSignInScreen(): Boolean = listOf(
             SIGN_IN_PANEL,
-            EMAIL_SIGN_IN_PANEL,
-            PHONE_SIGN_IN_PANEL
         ).map { it.route }.contains(this)
     }
 }
