@@ -1,17 +1,12 @@
 package com.moonlightbutterfly.cryptohub.presentation.ui.composables
 
-import androidx.activity.ComponentActivity
-import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
@@ -25,9 +20,6 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -35,7 +27,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.moonlightbutterfly.cryptohub.R
-import com.moonlightbutterfly.cryptohub.presentation.ui.LocalSignInIntentControllerProvider
 import com.moonlightbutterfly.cryptohub.presentation.ui.LocalViewModelFactory
 import com.moonlightbutterfly.cryptohub.presentation.viewmodels.SignInViewModel
 
@@ -44,16 +35,13 @@ val SIGN_IN_CONTENT_UNDER_LOGO_HEIGHT = 400.dp
 @Composable
 fun SignInScreen(
     onSignedIn: () -> Unit,
-    onSignInFailed: (String) -> Unit,
-    onEmailButtonClicked: () -> Unit,
-    onPhoneButtonClicked: () -> Unit
 ) {
     val viewModel: SignInViewModel = viewModel(
         factory = LocalViewModelFactory.current
     )
-    val isNightMode by viewModel.isNightModeEnabled.observeAsState(false)
-    val activity = LocalContext.current as ComponentActivity
-    val signInProvider = LocalSignInIntentControllerProvider.current
+
+    val user by viewModel.user.observeAsState()
+    user?.let { onSignedIn() }
 
     val error by viewModel.errorMessageFlow.collectAsState(null)
     error?.let { ErrorHandler(error) }
@@ -71,38 +59,9 @@ fun SignInScreen(
             modifier = Modifier.height(SIGN_IN_CONTENT_UNDER_LOGO_HEIGHT)
         ) {
             ProviderSignInButton(
-                onClicked = { viewModel.signInThroughGoogle(onSignedIn, onSignInFailed, signInProvider) },
-                buttonBackgroundColor = if (isNightMode) {
-                    MaterialTheme.colors.primary
-                } else {
-                    colorResource(R.color.fui_bgGoogle)
-                },
-                buttonIcon = R.drawable.fui_ic_googleg_color_24dp,
-                buttonText = R.string.sign_in_google
-            )
-            ProviderSignInButton(
-                onClicked = onEmailButtonClicked,
-                buttonBackgroundColor = colorResource(R.color.fui_bgEmail),
-                buttonIcon = R.drawable.fui_ic_mail_white_24dp,
-                buttonText = R.string.sign_in_email
-            )
-            ProviderSignInButton(
-                onClicked = onPhoneButtonClicked,
-                buttonBackgroundColor = colorResource(R.color.fui_bgPhone),
-                buttonIcon = R.drawable.fui_ic_phone_white_24dp,
-                buttonText = R.string.sign_in_phone
-            )
-            ProviderSignInButton(
-                onClicked = { viewModel.signInThroughFacebook(onSignedIn, onSignInFailed, activity) },
-                buttonBackgroundColor = colorResource(R.color.fui_bgFacebook),
-                buttonIcon = R.drawable.fui_ic_facebook_white_22dp,
-                buttonText = R.string.sign_in_facebook
-            )
-            ProviderSignInButton(
-                onClicked = { viewModel.signInThroughTwitter(onSignedIn, onSignInFailed, activity) },
-                buttonBackgroundColor = colorResource(R.color.fui_bgTwitter),
-                buttonIcon = R.drawable.fui_ic_twitter_bird_white_24dp,
-                buttonText = R.string.sign_in_twitter
+                onClicked = { viewModel.signIn() },
+                buttonBackgroundColor = MaterialTheme.colors.primary,
+                buttonText = R.string.sign_in
             )
             Text(text = stringResource(id = R.string.or), modifier = Modifier.padding(5.dp))
             AnonymousSignInButton(onSignedInIn = onSignedIn)
@@ -125,37 +84,20 @@ fun Logo() {
 fun ProviderSignInButton(
     onClicked: () -> Unit = {},
     buttonBackgroundColor: Color,
-    @DrawableRes buttonIcon: Int,
     @StringRes buttonText: Int,
 ) {
     Button(
         onClick = onClicked,
         modifier = Modifier
             .padding(bottom = 10.dp)
-            .width(230.dp)
+            .width(120.dp)
             .height(50.dp),
         colors = ButtonDefaults.buttonColors(
             backgroundColor = buttonBackgroundColor
         )
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            ProviderIcon(buttonIcon)
-            Text(text = stringResource(id = buttonText), modifier = Modifier.fillMaxWidth())
-        }
+        Text(text = stringResource(id = buttonText))
     }
-}
-
-@Composable
-fun ProviderIcon(@DrawableRes drawableId: Int, contentDescription: String? = null) {
-    Image(
-        painterResource(id = drawableId),
-        contentDescription = contentDescription,
-        modifier = Modifier
-            .size(30.dp)
-            .padding(end = 10.dp)
-    )
 }
 
 @Composable

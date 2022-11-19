@@ -1,14 +1,18 @@
 package com.moonlightbutterfly.cryptohub.di
 
+import com.firebase.ui.auth.AuthUI
+import com.google.firebase.auth.FirebaseAuth
 import com.moonlightbutterfly.cryptohub.data.CryptoAssetsDataSource
 import com.moonlightbutterfly.cryptohub.data.CryptoAssetsRepository
 import com.moonlightbutterfly.cryptohub.data.LocalPreferencesDataSource
 import com.moonlightbutterfly.cryptohub.data.LocalPreferencesRepository
 import com.moonlightbutterfly.cryptohub.data.UserCollectionsDataSource
 import com.moonlightbutterfly.cryptohub.data.UserCollectionsRepository
-import com.moonlightbutterfly.cryptohub.data.UserDataCache
-import com.moonlightbutterfly.cryptohub.framework.UserDataCacheImpl
+import com.moonlightbutterfly.cryptohub.data.UserDataSource
+import com.moonlightbutterfly.cryptohub.data.UserRepository
+import com.moonlightbutterfly.cryptohub.framework.data.UserDataSourceImpl
 import com.moonlightbutterfly.cryptohub.repository.FakeCryptoAssetsDataSourceImpl
+import com.moonlightbutterfly.cryptohub.repository.FakeFirebaseSignInHandler
 import com.moonlightbutterfly.cryptohub.repository.FakeLocalPreferencesDataSourceImpl
 import com.moonlightbutterfly.cryptohub.repository.FakeUserCollectionsDataSourceImpl
 import dagger.Module
@@ -56,5 +60,19 @@ class TestRepositoryModule {
 
     @Provides
     @ActivityScope
-    fun provideUserDataCache(): UserDataCache = UserDataCacheImpl
+    fun provideUserDataSource(): UserDataSource = UserDataSourceImpl(
+        FakeFirebaseSignInHandler(), FirebaseAuth.getInstance()
+    )
+
+    @Provides
+    fun provideUserRepository(
+        userDataSource: UserDataSource
+    ): UserRepository {
+        return UserRepository(userDataSource)
+    }
+
+    @Provides
+    fun provideAuthProviders(): List<AuthUI.IdpConfig> {
+        return listOf()
+    }
 }

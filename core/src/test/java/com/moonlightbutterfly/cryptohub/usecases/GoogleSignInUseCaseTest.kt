@@ -2,27 +2,28 @@ package com.moonlightbutterfly.cryptohub.usecases
 
 import com.moonlightbutterfly.cryptohub.data.Result
 import com.moonlightbutterfly.cryptohub.data.UserRepository
-import com.moonlightbutterfly.cryptohub.data.getOrThrow
 import com.moonlightbutterfly.cryptohub.models.User
 import io.mockk.every
 import io.mockk.mockk
-import junit.framework.TestCase.assertEquals
+import junit.framework.TestCase
+import kotlinx.coroutines.flow.MutableSharedFlow
 import org.junit.Test
 
-class GetSignedInUserUseCaseTest {
+class GoogleSignInUseCaseTest {
 
+    private val userFlow = MutableSharedFlow<Result<User>>()
     private val userRepository: UserRepository = mockk {
-        every { getUser() } returns Result.Success(User("test"))
+        every { googleSignIn() } returns userFlow
     }
 
-    private val useCase = GetSignedInUserUseCase(userRepository)
+    private val useCase = GoogleSignInUseCase(userRepository)
 
     @Test
-    fun `should return user data`() {
+    fun `should sign in through google`() {
         // WHEN
         val result = useCase()
 
         // THEN
-        assertEquals("test", result.getOrThrow().userId)
+        TestCase.assertEquals(userFlow, result)
     }
 }

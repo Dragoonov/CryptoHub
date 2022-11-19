@@ -2,11 +2,10 @@ package com.moonlightbutterfly.cryptohub.di
 
 import android.content.Context
 import com.moonlightbutterfly.cryptohub.presentation.ViewModelFactory
-import com.moonlightbutterfly.cryptohub.signincontrollers.GoogleSignInIntentController
 import dagger.BindsInstance
 import dagger.Component
 
-@Component(modules = [TestRepositoryModule::class, UseCasesModule::class, SignInModule::class])
+@Component(modules = [TestRepositoryModule::class, UseCasesModule::class])
 @ActivityScope
 interface TestAppComponent {
 
@@ -19,5 +18,4 @@ interface TestAppComponent {
     }
 
     fun viewModelFactory(): ViewModelFactory
-    fun googleSignInIntentController(): GoogleSignInIntentController
 }

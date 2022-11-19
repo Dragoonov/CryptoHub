@@ -4,7 +4,7 @@ import com.moonlightbutterfly.cryptohub.data.Result
 import com.moonlightbutterfly.cryptohub.models.LocalPreferences
 import com.moonlightbutterfly.cryptohub.usecases.GetLocalPreferencesUseCase
 import com.moonlightbutterfly.cryptohub.usecases.IsUserSignedInUseCase
-import com.moonlightbutterfly.cryptohub.usecases.SignOutUserUseCase
+import com.moonlightbutterfly.cryptohub.usecases.SignOutUseCase
 import com.moonlightbutterfly.cryptohub.usecases.UpdateLocalPreferencesUseCase
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -30,7 +30,7 @@ import org.junit.Test
 class SettingsViewModelTest {
     private val getLocalPreferencesUseCase: GetLocalPreferencesUseCase = mockk()
     private val updateLocalPreferencesUseCase: UpdateLocalPreferencesUseCase = mockk()
-    private val signOutUserUseCase: SignOutUserUseCase = mockk()
+    private val signOutUserUseCase: SignOutUseCase = mockk()
     private val getSignedInUserUseCase: IsUserSignedInUseCase = mockk()
 
     private lateinit var viewModel: SettingsViewModel

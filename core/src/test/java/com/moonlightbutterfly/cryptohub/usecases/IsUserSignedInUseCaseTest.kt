@@ -3,26 +3,25 @@ package com.moonlightbutterfly.cryptohub.usecases
 import com.moonlightbutterfly.cryptohub.data.Result
 import com.moonlightbutterfly.cryptohub.data.UserRepository
 import com.moonlightbutterfly.cryptohub.data.getOrThrow
-import com.moonlightbutterfly.cryptohub.models.User
 import io.mockk.every
 import io.mockk.mockk
-import junit.framework.TestCase.assertEquals
+import junit.framework.TestCase
 import org.junit.Test
 
-class GetSignedInUserUseCaseTest {
+class IsUserSignedInUseCaseTest {
 
     private val userRepository: UserRepository = mockk {
-        every { getUser() } returns Result.Success(User("test"))
+        every { isUserSignedIn() } returns Result.Success(true)
     }
 
-    private val useCase = GetSignedInUserUseCase(userRepository)
+    private val useCase = IsUserSignedInUseCase(userRepository)
 
     @Test
-    fun `should return user data`() {
+    fun `should check if user is logged in`() {
         // WHEN
         val result = useCase()
 
         // THEN
-        assertEquals("test", result.getOrThrow().userId)
+        TestCase.assertEquals(true, result.getOrThrow())
     }
 }

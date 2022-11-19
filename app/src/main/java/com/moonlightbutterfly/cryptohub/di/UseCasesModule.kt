@@ -3,12 +3,14 @@ package com.moonlightbutterfly.cryptohub.di
 import com.moonlightbutterfly.cryptohub.data.CryptoAssetsRepository
 import com.moonlightbutterfly.cryptohub.data.LocalPreferencesRepository
 import com.moonlightbutterfly.cryptohub.data.UserCollectionsRepository
-import com.moonlightbutterfly.cryptohub.data.UserDataCache
+import com.moonlightbutterfly.cryptohub.data.UserRepository
 import com.moonlightbutterfly.cryptohub.usecases.AddAssetToCollectionUseCase
 import com.moonlightbutterfly.cryptohub.usecases.AddFavouriteUseCase
 import com.moonlightbutterfly.cryptohub.usecases.AddRecentUseCase
 import com.moonlightbutterfly.cryptohub.usecases.ClearRecentsUseCase
 import com.moonlightbutterfly.cryptohub.usecases.CreateCollectionUseCase
+import com.moonlightbutterfly.cryptohub.usecases.EmailSignInUseCase
+import com.moonlightbutterfly.cryptohub.usecases.FacebookSignInUseCase
 import com.moonlightbutterfly.cryptohub.usecases.GetAllCryptoAssetsMarketInfoUseCase
 import com.moonlightbutterfly.cryptohub.usecases.GetCollectionUseCase
 import com.moonlightbutterfly.cryptohub.usecases.GetCryptoAssetsMarketInfoUseCase
@@ -16,13 +18,15 @@ import com.moonlightbutterfly.cryptohub.usecases.GetFavouritesUseCase
 import com.moonlightbutterfly.cryptohub.usecases.GetLocalPreferencesUseCase
 import com.moonlightbutterfly.cryptohub.usecases.GetRecentsUseCase
 import com.moonlightbutterfly.cryptohub.usecases.GetSignedInUserUseCase
+import com.moonlightbutterfly.cryptohub.usecases.GoogleSignInUseCase
 import com.moonlightbutterfly.cryptohub.usecases.IsUserSignedInUseCase
+import com.moonlightbutterfly.cryptohub.usecases.PhoneSignInUseCase
 import com.moonlightbutterfly.cryptohub.usecases.RemoveAssetFromCollectionUseCase
 import com.moonlightbutterfly.cryptohub.usecases.RemoveCollectionUseCase
 import com.moonlightbutterfly.cryptohub.usecases.RemoveFavouriteUseCase
 import com.moonlightbutterfly.cryptohub.usecases.RemoveRecentUseCase
-import com.moonlightbutterfly.cryptohub.usecases.SignInUserUseCase
-import com.moonlightbutterfly.cryptohub.usecases.SignOutUserUseCase
+import com.moonlightbutterfly.cryptohub.usecases.SignOutUseCase
+import com.moonlightbutterfly.cryptohub.usecases.TwitterSignInUseCase
 import com.moonlightbutterfly.cryptohub.usecases.UpdateLocalPreferencesUseCase
 import dagger.Module
 import dagger.Provides
@@ -109,23 +113,41 @@ class UseCasesModule {
 
     @Provides
     fun provideGetSignedInUserUseCase(
-        userDataCache: UserDataCache
+        userRepository: UserRepository
     ): GetSignedInUserUseCase {
-        return GetSignedInUserUseCase(userDataCache)
+        return GetSignedInUserUseCase(userRepository)
     }
 
     @Provides
-    fun provideSignInUserUseCase(
-        userDataCache: UserDataCache
-    ): SignInUserUseCase {
-        return SignInUserUseCase(userDataCache)
+    fun provideGoogleSignInUseCase(userRepository: UserRepository): GoogleSignInUseCase {
+        return GoogleSignInUseCase(userRepository)
+    }
+
+    @Provides
+    fun provideEmailSignInUseCase(userRepository: UserRepository): EmailSignInUseCase {
+        return EmailSignInUseCase(userRepository)
+    }
+
+    @Provides
+    fun provideFacebookSignInUseCase(userRepository: UserRepository): FacebookSignInUseCase {
+        return FacebookSignInUseCase(userRepository)
+    }
+
+    @Provides
+    fun providePhoneSignInUseCase(userRepository: UserRepository): PhoneSignInUseCase {
+        return PhoneSignInUseCase(userRepository)
+    }
+
+    @Provides
+    fun provideTwitterSignInUseCase(userRepository: UserRepository): TwitterSignInUseCase {
+        return TwitterSignInUseCase(userRepository)
     }
 
     @Provides
     fun provideSignOutUserUseCase(
-        userDataCache: UserDataCache
-    ): SignOutUserUseCase {
-        return SignOutUserUseCase(userDataCache)
+        userRepository: UserRepository
+    ): SignOutUseCase {
+        return SignOutUseCase(userRepository)
     }
 
     @Provides
@@ -165,8 +187,8 @@ class UseCasesModule {
 
     @Provides
     fun provideIsUserSignedInUseCase(
-        userDataCache: UserDataCache
+        userRepository: UserRepository
     ): IsUserSignedInUseCase {
-        return IsUserSignedInUseCase(userDataCache)
+        return IsUserSignedInUseCase(userRepository)
     }
 }
