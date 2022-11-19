@@ -1,11 +1,9 @@
 package com.moonlightbutterfly.cryptohub.presentation.ui.navigation
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -15,9 +13,7 @@ import coil.annotation.ExperimentalCoilApi
 import com.moonlightbutterfly.cryptohub.presentation.ui.Screen
 import com.moonlightbutterfly.cryptohub.presentation.ui.composables.CryptoAssetPanelScreen
 import com.moonlightbutterfly.cryptohub.presentation.ui.composables.CryptoAssetsListScreen
-import com.moonlightbutterfly.cryptohub.presentation.ui.composables.EmailSignInScreen
 import com.moonlightbutterfly.cryptohub.presentation.ui.composables.HOME_ROUTE
-import com.moonlightbutterfly.cryptohub.presentation.ui.composables.PhoneSignInScreen
 import com.moonlightbutterfly.cryptohub.presentation.ui.composables.SearchScreen
 import com.moonlightbutterfly.cryptohub.presentation.ui.composables.SettingsScreen
 import com.moonlightbutterfly.cryptohub.presentation.ui.composables.SignInScreen
@@ -30,24 +26,19 @@ fun AppGraph(
     navController: NavHostController,
     padding: PaddingValues
 ) {
-    val context = LocalContext.current
-    val onActionFailed = { message: String ->
-        Toast.makeText(context, message, Toast.LENGTH_LONG).show()
-    }
     NavHost(
         navController,
         startDestination = Screen.SIGN_IN_PANEL.route,
         modifier = Modifier.padding(padding)
     ) {
-        signInGraph(navController, onActionFailed)
-        mainGraph(navController, onActionFailed)
+        signInGraph(navController)
+        mainGraph(navController)
     }
 }
 
 @ExperimentalCoilApi
 private fun NavGraphBuilder.signInGraph(
     navController: NavHostController,
-    onSignInFailed: (String) -> Unit
 ) {
 
     val onSignedIn = {
@@ -59,22 +50,7 @@ private fun NavGraphBuilder.signInGraph(
     }
 
     composable(Screen.SIGN_IN_PANEL.route) {
-        SignInScreen(
-            onSignedIn,
-            onSignInFailed,
-            {
-                navController navigateTo Screen.EMAIL_SIGN_IN_PANEL.route
-            },
-            {
-                navController navigateTo Screen.PHONE_SIGN_IN_PANEL.route
-            },
-        )
-    }
-    composable(Screen.EMAIL_SIGN_IN_PANEL.route) {
-        EmailSignInScreen(onSignedIn, onSignInFailed)
-    }
-    composable(Screen.PHONE_SIGN_IN_PANEL.route) {
-        PhoneSignInScreen(onSignedIn, onSignInFailed)
+        SignInScreen(onSignedIn)
     }
 }
 
@@ -82,7 +58,6 @@ private fun NavGraphBuilder.signInGraph(
 @ExperimentalCoilApi
 private fun NavGraphBuilder.mainGraph(
     navController: NavHostController,
-    onActionFailed: (String) -> Unit
 ) {
     val mainRoute = "main"
     navigation(startDestination = Screen.CRYPTO_ASSETS_LIST.route, route = mainRoute) {
@@ -106,7 +81,7 @@ private fun NavGraphBuilder.mainGraph(
             }
         }
         composable("${Screen.CRYPTO_ASSET_PANEL.route}/{cryptoSymbol}") {
-            CryptoAssetPanelScreen(it.arguments?.getString("cryptoSymbol")!!, onActionFailed)
+            CryptoAssetPanelScreen(it.arguments?.getString("cryptoSymbol")!!)
         }
         composable(Screen.SEARCH_PANEL.route) {
             SearchScreen(

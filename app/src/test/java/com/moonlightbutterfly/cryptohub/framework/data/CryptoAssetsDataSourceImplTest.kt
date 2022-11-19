@@ -1,8 +1,7 @@
-package com.moonlightbutterfly.cryptohub.framework.datasources
+package com.moonlightbutterfly.cryptohub.framework.data
 
 import com.moonlightbutterfly.cryptohub.data.getOrThrow
 import com.moonlightbutterfly.cryptohub.framework.CoinMarketCapService
-import com.moonlightbutterfly.cryptohub.framework.data.CryptoAssetsDataSourceImpl
 import com.moonlightbutterfly.cryptohub.framework.dtos.CryptoAssetMarketQuoteDto
 import com.moonlightbutterfly.cryptohub.framework.dtos.CryptoAssetMetadataDto
 import com.moonlightbutterfly.cryptohub.framework.dtos.GeneralListingDto

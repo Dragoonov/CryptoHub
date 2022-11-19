@@ -1,117 +1,50 @@
 package com.moonlightbutterfly.cryptohub.presentation.viewmodels
 
-import androidx.activity.ComponentActivity
 import com.moonlightbutterfly.cryptohub.data.Result
-import com.moonlightbutterfly.cryptohub.models.LocalPreferences
-import com.moonlightbutterfly.cryptohub.usecases.GetLocalPreferencesUseCase
-import com.moonlightbutterfly.cryptohub.usecases.SignInUserUseCase
-import io.mockk.Runs
+import com.moonlightbutterfly.cryptohub.models.User
+import com.moonlightbutterfly.cryptohub.presentation.SignInFacade
 import io.mockk.every
-import io.mockk.just
 import io.mockk.mockk
 import io.mockk.verify
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.setMain
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
+@ExperimentalCoroutinesApi
 class SignInViewModelTest {
 
-    private val signInUserUseCase: SignInUserUseCase = mockk()
-
-    private val signInManager: SignInManager = mockk {
-        every { isPhoneRequestInProcess } returns MutableStateFlow(false)
-        every { signInThroughFacebook(any(), any(), any()) } just Runs
-        every { signInThroughPhoneWithCode(any(), any()) } just Runs
-        every { signInThroughPhone(any(), any(), any(), any()) } just Runs
-        every { signInThroughEmail(any(), any(), any(), any(), any()) } just Runs
-        every { signInThroughGoogle(any(), any(), any()) } just Runs
-        every { signInThroughTwitter(any(), any(), any()) } just Runs
+    private val flow = MutableSharedFlow<Result<User>>()
+    private val signInFacade: SignInFacade = mockk {
+        every { signIn() } returns flow
     }
-    private val getLocalPreferencesUseCase: GetLocalPreferencesUseCase = mockk()
-    private lateinit var viewModel: SignInViewModel
+    private val viewModel = SignInViewModel(signInFacade)
 
-    private val onSignedIn: () -> Unit = {}
-    private val onSignInFailed: (String) -> Unit = {}
-    private val googleSignInIntentController: GoogleSignInIntentController = mockk()
-    private val componentActivity: ComponentActivity = mockk()
+    private val testDispatcher = TestCoroutineDispatcher()
 
     @Before
     fun setup() {
-        every { getLocalPreferencesUseCase() } returns flowOf(Result.Success(LocalPreferences()))
-        viewModel = SignInViewModel(signInUserUseCase, signInManager, getLocalPreferencesUseCase)
+        Dispatchers.setMain(testDispatcher)
+    }
+
+    @After
+    fun tearDown() {
+        Dispatchers.resetMain()
     }
 
     @Test
-    fun `should sign in through Google`() {
+    fun `should sign in`() {
         // WHEN
-        viewModel.signInThroughGoogle(onSignedIn, onSignInFailed, googleSignInIntentController)
-        // THEN
-        verify {
-            signInManager.signInThroughGoogle(any(), onSignInFailed, googleSignInIntentController)
-        }
-    }
-
-    @Test
-    fun `should sign in through Facebook`() {
-        // WHEN
-        viewModel.signInThroughFacebook(onSignedIn, onSignInFailed, componentActivity)
-        // THEN
-        verify {
-            signInManager.signInThroughFacebook(any(), onSignInFailed, componentActivity)
-        }
-    }
-
-    @Test
-    fun `should sign in through Twitter`() {
-        // WHEN
-        viewModel.signInThroughTwitter(onSignedIn, onSignInFailed, componentActivity)
-        // THEN
-        verify {
-            signInManager.signInThroughTwitter(any(), onSignInFailed, componentActivity)
-        }
-    }
-
-    @Test
-    fun `should sign in through Email`() {
-        // GIVEN
-        val email = "test"
-        val password = "pass_test"
-
-        // WHEN
-        viewModel.signInThroughEmail(email, password, onSignedIn, onSignInFailed, componentActivity)
+        viewModel.signIn()
 
         // THEN
         verify {
-            signInManager.signInThroughEmail(email, password, any(), onSignInFailed, componentActivity)
-        }
-    }
-
-    @Test
-    fun `should sign in through Phone`() {
-        // GIVEN
-        val phone = "09"
-
-        // WHEN
-        viewModel.signInThroughPhone(phone, onSignedIn, onSignInFailed, componentActivity)
-
-        // THEN
-        verify {
-            signInManager.signInThroughPhone(phone, any(), onSignInFailed, componentActivity)
-        }
-    }
-
-    @Test
-    fun `should sign in through Phone with code`() {
-        // GIVEN
-        val code = "09"
-
-        // WHEN
-        viewModel.signInThroughPhoneWithCode(code, componentActivity)
-
-        // THEN
-        verify {
-            signInManager.signInThroughPhoneWithCode(code, componentActivity)
+            signInFacade.signIn()
         }
     }
 }

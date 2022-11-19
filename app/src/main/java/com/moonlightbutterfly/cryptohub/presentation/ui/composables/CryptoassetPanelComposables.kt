@@ -35,14 +35,11 @@ import com.moonlightbutterfly.cryptohub.utils.toStringAbbr
 
 @ExperimentalCoilApi
 @Composable
-fun CryptoAssetPanelScreen(cryptoAssetSymbol: String, onActionFailed: (String) -> Unit) {
-    val failedMessage = stringResource(id = R.string.loading_data_failed)
+fun CryptoAssetPanelScreen(cryptoAssetSymbol: String) {
     val viewModel: CryptoAssetPanelViewModel = viewModel(
         factory = LocalViewModelFactory.current
     )
-    val asset by viewModel.getCryptoAssetMarketInfo(cryptoAssetSymbol) {
-        onActionFailed(failedMessage)
-    }
+    val asset by viewModel.getCryptoAssetMarketInfo(cryptoAssetSymbol)
         .observeAsState(CryptoAssetMarketInfo.EMPTY)
 
     val isLiked by viewModel.isCryptoInFavourites().collectAsState(false)

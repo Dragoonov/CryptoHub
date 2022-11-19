@@ -5,18 +5,16 @@ import com.moonlightbutterfly.cryptohub.presentation.ViewModelFactory
 import dagger.BindsInstance
 import dagger.Component
 
-@Component(modules = [UseCasesModule::class, RepositoryModule::class, SignInModule::class])
+@Component(modules = [UseCasesModule::class, RepositoryModule::class])
 @ActivityScope
 interface AppComponent {
 
     @Component.Factory
     interface Factory {
-
         fun create(
             @BindsInstance context: Context
         ): AppComponent
     }
 
     fun viewModelFactory(): ViewModelFactory
-    fun googleSignInIntentController(): GoogleSignInIntentController
 }

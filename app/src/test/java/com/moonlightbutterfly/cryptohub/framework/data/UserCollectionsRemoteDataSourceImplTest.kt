@@ -1,11 +1,10 @@
-package com.moonlightbutterfly.cryptohub.framework.datasources
+package com.moonlightbutterfly.cryptohub.framework.data
 
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.moonlightbutterfly.cryptohub.data.getOrThrow
-import com.moonlightbutterfly.cryptohub.framework.data.UserCollectionsRemoteDataSourceImpl
 import com.moonlightbutterfly.cryptohub.models.CryptoAsset
 import io.mockk.every
 import io.mockk.mockk

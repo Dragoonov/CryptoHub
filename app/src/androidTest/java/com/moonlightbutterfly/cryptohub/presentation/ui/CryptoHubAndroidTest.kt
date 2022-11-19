@@ -27,10 +27,8 @@ open class CryptoHubAndroidTest {
         composeTestRule.setContent {
             val appComponent = DaggerTestAppComponent.factory().create(LocalContext.current)
             val viewModelFactory = appComponent.viewModelFactory()
-            val googleSignInIntentController = appComponent.googleSignInIntentController()
             CompositionLocalProvider(
                 LocalViewModelFactory provides viewModelFactory,
-                LocalSignInIntentControllerProvider provides googleSignInIntentController
             ) {
                 navController = rememberNavController()
                 val backStackEntry by navController.currentBackStackEntryAsState()

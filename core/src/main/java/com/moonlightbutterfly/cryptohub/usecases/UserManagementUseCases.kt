@@ -7,7 +7,7 @@ class GoogleSignInUseCase(private val userRepository: UserRepository) {
 }
 
 class EmailSignInUseCase(private val userRepository: UserRepository) {
-    operator fun invoke(email: String, password: String) = userRepository.emailSignIn(email, password)
+    operator fun invoke() = userRepository.emailSignIn()
 }
 
 class FacebookSignInUseCase(private val userRepository: UserRepository) {
@@ -21,11 +21,6 @@ class PhoneSignInUseCase(private val userRepository: UserRepository) {
 class TwitterSignInUseCase(private val userRepository: UserRepository) {
     operator fun invoke() = userRepository.twitterSignIn()
 }
-
-class AnonymousSignInUseCase(private val userRepository: UserRepository) {
-    operator fun invoke() = userRepository.anonymousSignIn()
-}
-
 
 class SignOutUseCase(private val userRepository: UserRepository) {
     operator fun invoke() = userRepository.signOut()

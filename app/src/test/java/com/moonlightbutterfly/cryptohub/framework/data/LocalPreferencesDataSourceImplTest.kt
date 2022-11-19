@@ -1,4 +1,4 @@
-package com.moonlightbutterfly.cryptohub.framework.datasources
+package com.moonlightbutterfly.cryptohub.framework.data
 
 import com.moonlightbutterfly.cryptohub.data.getOrThrow
 import com.moonlightbutterfly.cryptohub.framework.data.LocalPreferencesDataSourceImpl
