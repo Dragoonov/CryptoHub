@@ -4,7 +4,7 @@ import com.moonlightbutterfly.cryptohub.models.CryptoAsset
 import com.moonlightbutterfly.cryptohub.models.CryptoCollection
 import kotlinx.coroutines.flow.Flow
 
-interface UserCollectionsDataSource {
+interface UserCollectionsLocalDataSource {
 
     suspend fun clearCollection(name: String): Result<Unit>
 

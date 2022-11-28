@@ -1,14 +1,14 @@
 package com.moonlightbutterfly.cryptohub.repository
 
 import com.moonlightbutterfly.cryptohub.data.Result
-import com.moonlightbutterfly.cryptohub.data.UserCollectionsDataSource
+import com.moonlightbutterfly.cryptohub.data.UserCollectionsLocalDataSource
 import com.moonlightbutterfly.cryptohub.models.CryptoAsset
 import com.moonlightbutterfly.cryptohub.models.CryptoCollection
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flowOf
 
-class FakeUserCollectionsDataSourceImpl : UserCollectionsDataSource {
+class FakeUserCollectionsLocalDataSourceImpl : UserCollectionsLocalDataSource {
 
     private val collections = mutableMapOf(
         "favourites" to MutableStateFlow(Result.Success(CryptoCollection.EMPTY)),

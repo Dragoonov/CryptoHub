@@ -3,7 +3,7 @@ package com.moonlightbutterfly.cryptohub.framework.data
 import com.moonlightbutterfly.cryptohub.data.Error
 import com.moonlightbutterfly.cryptohub.data.ErrorMapper
 import com.moonlightbutterfly.cryptohub.data.Result
-import com.moonlightbutterfly.cryptohub.data.UserCollectionsDataSource
+import com.moonlightbutterfly.cryptohub.data.UserCollectionsLocalDataSource
 import com.moonlightbutterfly.cryptohub.framework.database.daos.CryptoCollectionsDao
 import com.moonlightbutterfly.cryptohub.framework.database.entities.CryptoCollectionEntity
 import com.moonlightbutterfly.cryptohub.models.CryptoAsset
@@ -19,7 +19,7 @@ import kotlinx.coroutines.flow.map
 class UserCollectionsLocalDataSourceImpl(
     private val cryptoCollectionsDao: CryptoCollectionsDao,
     private val errorMapper: ErrorMapper,
-) : UserCollectionsDataSource {
+) : UserCollectionsLocalDataSource {
 
     override fun getCollection(name: String): Flow<Result<CryptoCollection>> =
         cryptoCollectionsDao.getCollectionByName(name)

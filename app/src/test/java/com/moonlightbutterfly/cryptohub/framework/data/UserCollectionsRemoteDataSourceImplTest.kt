@@ -45,7 +45,6 @@ class UserCollectionsRemoteDataSourceImplTest {
 
     private val userConfigurationRemoteDataSourceImpl = UserCollectionsRemoteDataSourceImpl(
         db,
-        userId,
         mockk()
     )
 
@@ -53,7 +52,7 @@ class UserCollectionsRemoteDataSourceImplTest {
     @Test
     fun `should get collection names flow`() = runBlockingTest {
         // WHEN
-        val result = userConfigurationRemoteDataSourceImpl.getAllCollectionNames()
+        val result = userConfigurationRemoteDataSourceImpl.getAllCollectionNames(userId)
 
         // THEN
         assertEquals(0, result.first().getOrThrow().size)
@@ -63,7 +62,7 @@ class UserCollectionsRemoteDataSourceImplTest {
     @Test
     fun `should get collection`() = runBlockingTest {
         // WHEN
-        val result = userConfigurationRemoteDataSourceImpl.getCollection("")
+        val result = userConfigurationRemoteDataSourceImpl.getCollection(userId, "")
 
         // THEN
         assertEquals(0, result.first().getOrThrow().cryptoAssets.size)
@@ -73,7 +72,7 @@ class UserCollectionsRemoteDataSourceImplTest {
     @Test
     fun `should clear collection`() = runBlockingTest {
         // WHEN
-        userConfigurationRemoteDataSourceImpl.clearCollection("")
+        userConfigurationRemoteDataSourceImpl.clearCollection(userId, "")
 
         // THEN
         verify {
@@ -85,7 +84,7 @@ class UserCollectionsRemoteDataSourceImplTest {
     @Test
     fun `should create collection`() = runBlockingTest {
         // WHEN
-        userConfigurationRemoteDataSourceImpl.createCollection("")
+        userConfigurationRemoteDataSourceImpl.createCollection(userId, "")
 
         // THEN
         verify {
@@ -97,7 +96,7 @@ class UserCollectionsRemoteDataSourceImplTest {
     @Test
     fun `should remove collection`() = runBlockingTest {
         // WHEN
-        userConfigurationRemoteDataSourceImpl.removeCollection("")
+        userConfigurationRemoteDataSourceImpl.removeCollection(userId, "")
 
         // THEN
         verify {
@@ -109,7 +108,7 @@ class UserCollectionsRemoteDataSourceImplTest {
     @Test
     fun `should add to collection`() = runBlockingTest {
         // WHEN
-        userConfigurationRemoteDataSourceImpl.addToCollection(mockk(), "")
+        userConfigurationRemoteDataSourceImpl.addToCollection(userId, mockk(), "")
 
         // THEN
         verify {
@@ -121,11 +120,24 @@ class UserCollectionsRemoteDataSourceImplTest {
     @Test
     fun `should remove from collection`() = runBlockingTest {
         // WHEN
-        userConfigurationRemoteDataSourceImpl.removeFromCollection(mockk(), "")
+        userConfigurationRemoteDataSourceImpl.removeFromCollection(userId, mockk(), "")
 
         // THEN
         verify {
             documentReference.update("", any(), *arrayOf())
+        }
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `should initialize for user only once`() = runBlockingTest {
+        // WHEN
+        userConfigurationRemoteDataSourceImpl.removeFromCollection(userId, mockk(), "")
+        userConfigurationRemoteDataSourceImpl.removeFromCollection(userId, mockk(), "")
+
+        // THEN
+        verify(exactly = 1) {
+            db.collection(any())
         }
     }
 }

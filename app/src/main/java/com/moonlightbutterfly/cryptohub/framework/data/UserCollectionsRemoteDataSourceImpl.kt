@@ -1,12 +1,13 @@
 package com.moonlightbutterfly.cryptohub.framework.data
 
 import com.google.android.gms.tasks.Task
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.moonlightbutterfly.cryptohub.data.Error
 import com.moonlightbutterfly.cryptohub.data.ErrorMapper
 import com.moonlightbutterfly.cryptohub.data.Result
-import com.moonlightbutterfly.cryptohub.data.UserCollectionsDataSource
+import com.moonlightbutterfly.cryptohub.data.UserCollectionsRemoteDataSource
 import com.moonlightbutterfly.cryptohub.data.unpack
 import com.moonlightbutterfly.cryptohub.models.CryptoAsset
 import com.moonlightbutterfly.cryptohub.models.CryptoCollection
@@ -19,68 +20,89 @@ import kotlinx.coroutines.tasks.await
  * incoming data into flows.
  */
 class UserCollectionsRemoteDataSourceImpl(
-    db: FirebaseFirestore,
-    userId: String,
+    private val db: FirebaseFirestore,
     private val errorMapper: ErrorMapper
-) : UserCollectionsDataSource {
+) : UserCollectionsRemoteDataSource {
 
-    private val subscribedUserCollections = mutableMapOf<String, MutableStateFlow<Result<CryptoCollection>>>()
-    private val userDocument = db.collection(USERS_COLLECTION).document(userId)
-    private val allCollectionNames = MutableStateFlow<Result<List<String>>>(Result.Success(emptyList()))
+    private val subscribedUsersCollections = mutableMapOf<String, MutableMap<String, MutableStateFlow<Result<CryptoCollection>>>>()
+    private val usersDocuments = mutableMapOf<String, DocumentReference>()
+    private val allUsersCollectionNames = mutableMapOf<String, MutableStateFlow<Result<List<String>>>>()
+    private val trackedUserIds = mutableListOf<String>()
 
-    init {
-        userDocument.addSnapshotListener { value, _ ->
-            value?.data?.keys?.toList()?.let {
-                if (allCollectionNames.value != it) {
-                    allCollectionNames.value = Result.Success(it)
-                }
+    private fun initializeForUser(userId: String) {
+        if (!trackedUserIds.contains(userId)) {
+            trackedUserIds.add(userId)
+
+            val userCollections = subscribedUsersCollections.getOrPut(userId) {
+                mutableMapOf()
             }
-            subscribedUserCollections.keys.forEach { key ->
-                val assets = (value?.get(key) as List<Map<String, String>>?)?.map {
-                    CryptoAsset(
-                        name = it["name"] as String,
-                        symbol = it["symbol"] as String,
-                        logoUrl = it["logoUrl"] as String
-                    )
+            val userDocument = usersDocuments.getOrPut(userId) {
+                db.collection(USERS_COLLECTION).document(userId)
+            }
+            val collections = allUsersCollectionNames.getOrPut(userId) {
+                MutableStateFlow(Result.Success(emptyList()))
+            }
+
+            userDocument.addSnapshotListener { value, _ ->
+                value?.data?.keys?.toList()?.let {
+                    if (collections.value != it) {
+                        collections.value = Result.Success(it)
+                    }
                 }
-                if (assets != null) {
-                    val collection = CryptoCollection(name = key, assets)
-                    if (subscribedUserCollections[key]?.value?.unpack(CryptoCollection.EMPTY) != collection) {
-                        subscribedUserCollections[key]?.value = Result.Success(collection)
+                userCollections.keys.forEach { key ->
+                    val assets = (value?.get(key) as List<Map<String, String>>?)?.map {
+                        CryptoAsset(
+                            name = it["name"] as String,
+                            symbol = it["symbol"] as String,
+                            logoUrl = it["logoUrl"] as String
+                        )
+                    }
+                    if (assets != null) {
+                        val collection = CryptoCollection(name = key, assets)
+                        if (userCollections[key]?.value?.unpack(CryptoCollection.EMPTY) != collection) {
+                            userCollections[key]?.value = Result.Success(collection)
+                        }
                     }
                 }
             }
         }
     }
 
-    override fun getAllCollectionNames(): Flow<Result<List<String>>> {
-        return allCollectionNames
+    override fun getAllCollectionNames(userId: String): Flow<Result<List<String>>> {
+        initializeForUser(userId)
+        return allUsersCollectionNames.getValue(userId)
     }
 
-    override fun getCollection(name: String): Flow<Result<CryptoCollection>> {
-        return subscribedUserCollections.getOrPut(name) {
+    override fun getCollection(userId: String, name: String): Flow<Result<CryptoCollection>> {
+        initializeForUser(userId)
+        return subscribedUsersCollections.getValue(userId).getOrPut(name) {
             MutableStateFlow(Result.Success(CryptoCollection.EMPTY))
         }
     }
 
-    override suspend fun clearCollection(name: String): Result<Unit> {
-        return userDocument.update(name, emptyList<CryptoAsset>()).getTaskResult()
+    override suspend fun clearCollection(userId: String, name: String): Result<Unit> {
+        initializeForUser(userId)
+        return usersDocuments.getValue(userId).update(name, emptyList<CryptoAsset>()).getTaskResult()
     }
 
-    override suspend fun createCollection(name: String): Result<Unit> {
-        return userDocument.update(name, emptyList<List<CryptoAsset>>()).getTaskResult()
+    override suspend fun createCollection(userId: String, name: String): Result<Unit> {
+        initializeForUser(userId)
+        return usersDocuments.getValue(userId).update(name, emptyList<List<CryptoAsset>>()).getTaskResult()
     }
 
-    override suspend fun removeCollection(name: String): Result<Unit> {
-        return userDocument.update(name, FieldValue.delete()).getTaskResult()
+    override suspend fun removeCollection(userId: String, name: String): Result<Unit> {
+        initializeForUser(userId)
+        return usersDocuments.getValue(userId).update(name, FieldValue.delete()).getTaskResult()
     }
 
-    override suspend fun addToCollection(asset: CryptoAsset, collectionName: String): Result<Unit> {
-        return userDocument.update(collectionName, FieldValue.arrayUnion(asset)).getTaskResult()
+    override suspend fun addToCollection(userId: String, asset: CryptoAsset, collectionName: String): Result<Unit> {
+        initializeForUser(userId)
+        return usersDocuments.getValue(userId).update(collectionName, FieldValue.arrayUnion(asset)).getTaskResult()
     }
 
-    override suspend fun removeFromCollection(asset: CryptoAsset, collectionName: String): Result<Unit> {
-        return userDocument.update(collectionName, FieldValue.arrayRemove(asset)).getTaskResult()
+    override suspend fun removeFromCollection(userId: String, asset: CryptoAsset, collectionName: String): Result<Unit> {
+        initializeForUser(userId)
+        return usersDocuments.getValue(userId).update(collectionName, FieldValue.arrayRemove(asset)).getTaskResult()
     }
 
     private suspend fun Task<Void>.getTaskResult(): Result<Unit> {

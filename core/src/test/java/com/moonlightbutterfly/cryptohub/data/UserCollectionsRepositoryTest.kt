@@ -2,6 +2,7 @@ package com.moonlightbutterfly.cryptohub.data
 
 import com.moonlightbutterfly.cryptohub.models.CryptoAsset
 import com.moonlightbutterfly.cryptohub.models.CryptoCollection
+import com.moonlightbutterfly.cryptohub.models.User
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -17,12 +18,14 @@ import org.junit.Test
 @ExperimentalCoroutinesApi
 class UserCollectionsRepositoryTest {
 
-    private val collection = flowOf(Result.Success(CryptoCollection(cryptoAssets = listOf(CryptoAsset.EMPTY, CryptoAsset.EMPTY))))
-    private val collectionNames = flowOf(Result.Success(listOf("Test", "test2")))
+    private val collectionLocal = flowOf(Result.Success(CryptoCollection(cryptoAssets = listOf(CryptoAsset.EMPTY, CryptoAsset.EMPTY))))
+    private val collectionRemote = flowOf(Result.Success(CryptoCollection(cryptoAssets = listOf(CryptoAsset.EMPTY))))
+    private val collectionNamesLocal = flowOf(Result.Success(listOf("local", "test2")))
+    private val collectionNamesRemote = flowOf(Result.Success(listOf("remote", "test2")))
 
-    private val userConfigurationDataSource = mockk<UserCollectionsDataSource> {
-        every { getCollection(any()) } returns collection
-        every { getAllCollectionNames() } returns collectionNames
+    private val userConfigurationLocalDataSource = mockk<UserCollectionsLocalDataSource> {
+        every { getCollection(any()) } returns collectionLocal
+        every { getAllCollectionNames() } returns collectionNamesLocal
         coEvery { createCollection(any()) } returns Result.Success(Unit)
         coEvery { addToCollection(any(), any()) } returns Result.Success(Unit)
         coEvery { removeCollection(any()) } returns Result.Success(Unit)
@@ -30,30 +33,51 @@ class UserCollectionsRepositoryTest {
         coEvery { removeFromCollection(any(), any()) } returns Result.Success(Unit)
     }
 
-    private val repository = UserCollectionsRepository(userConfigurationDataSource)
+    private val userConfigurationRemoteDataSource = mockk<UserCollectionsRemoteDataSource> {
+        every { getCollection(any(), any()) } returns collectionRemote
+        every { getAllCollectionNames(any()) } returns collectionNamesRemote
+        coEvery { createCollection(any(), any()) } returns Result.Success(Unit)
+        coEvery { addToCollection(any(), any(), any()) } returns Result.Success(Unit)
+        coEvery { removeCollection(any(), any()) } returns Result.Success(Unit)
+        coEvery { clearCollection(any(), any()) } returns Result.Success(Unit)
+        coEvery { removeFromCollection(any(), any(), any()) } returns Result.Success(Unit)
+    }
+
+    private val userDataSource = mockk<UserDataSource> {
+        every { isUserSignedIn() } returns Result.Success(false) andThen Result.Success(true)
+        every { getUser() } returns Result.Success(User("test"))
+    }
+
+    private val repository = UserCollectionsRepository(userConfigurationRemoteDataSource, userConfigurationLocalDataSource, userDataSource)
 
     @Test
     fun `should get collection`() = runBlockingTest {
         // GIVEN WHEN
-        val collectionTest = repository.getCollection("").first()
+        val local = repository.getCollection("").first()
+        val remote = repository.getCollection("").first()
 
         // THEN
         verify {
-            userConfigurationDataSource.getCollection("")
+            userConfigurationLocalDataSource.getCollection("")
+            userConfigurationRemoteDataSource.getCollection("test", "")
         }
-        assertEquals(collection.first(), collectionTest)
+        assertEquals(collectionLocal.first().getOrThrow(), local.getOrThrow())
+        assertEquals(collectionRemote.first().getOrThrow(), remote.getOrThrow())
     }
 
     @Test
     fun `should get collection names`() = runBlockingTest {
         // GIVEN WHEN
-        val names = repository.getAllCollectionNames().first()
+        val local = repository.getAllCollectionNames().first()
+        val remote = repository.getAllCollectionNames().first()
 
         // THEN
         verify {
-            userConfigurationDataSource.getAllCollectionNames()
+            userConfigurationLocalDataSource.getAllCollectionNames()
+            userConfigurationRemoteDataSource.getAllCollectionNames("test")
         }
-        assertEquals(collectionNames.first(), names)
+        assertEquals(collectionNamesLocal.first().getOrThrow(), local.getOrThrow())
+        assertEquals(collectionNamesRemote.first().getOrThrow(), remote.getOrThrow())
     }
 
     @Test
@@ -62,10 +86,12 @@ class UserCollectionsRepositoryTest {
         val asset = CryptoAsset(name = "test")
         // WHEN
         repository.addToCollection(asset, "")
+        repository.addToCollection(asset, "")
 
         // THEN
         coVerify {
-            userConfigurationDataSource.addToCollection(asset, "")
+            userConfigurationLocalDataSource.addToCollection(asset, "")
+            userConfigurationRemoteDataSource.addToCollection("test", asset, "")
         }
     }
 
@@ -73,10 +99,12 @@ class UserCollectionsRepositoryTest {
     fun `should clear collection`() = runBlockingTest {
         // WHEN
         repository.clearCollection("")
+        repository.clearCollection("")
 
         // THEN
         coVerify {
-            userConfigurationDataSource.clearCollection("")
+            userConfigurationLocalDataSource.clearCollection("")
+            userConfigurationRemoteDataSource.clearCollection("test", "")
         }
     }
 
@@ -84,10 +112,12 @@ class UserCollectionsRepositoryTest {
     fun `should create collection`() = runBlockingTest {
         // WHEN
         repository.createCollection("")
+        repository.createCollection("")
 
         // THEN
         coVerify {
-            userConfigurationDataSource.createCollection("")
+            userConfigurationLocalDataSource.createCollection("")
+            userConfigurationRemoteDataSource.createCollection("test", "")
         }
     }
 
@@ -95,10 +125,12 @@ class UserCollectionsRepositoryTest {
     fun `should remove collection`() = runBlockingTest {
         // WHEN
         repository.removeCollection("")
+        repository.removeCollection("")
 
         // THEN
         coVerify {
-            userConfigurationDataSource.removeCollection("")
+            userConfigurationLocalDataSource.removeCollection("")
+            userConfigurationRemoteDataSource.removeCollection("test", "")
         }
     }
 
@@ -109,10 +141,12 @@ class UserCollectionsRepositoryTest {
 
         // WHEN
         repository.removeFromCollection(asset, "")
+        repository.removeFromCollection(asset, "")
 
         // THEN
         coVerify {
-            userConfigurationDataSource.removeFromCollection(asset, "")
+            userConfigurationLocalDataSource.removeFromCollection(asset, "")
+            userConfigurationRemoteDataSource.removeFromCollection("test", asset, "")
         }
     }
 }

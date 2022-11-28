@@ -13,8 +13,8 @@ import com.moonlightbutterfly.cryptohub.data.CryptoAssetsRepository
 import com.moonlightbutterfly.cryptohub.data.ErrorMapper
 import com.moonlightbutterfly.cryptohub.data.LocalPreferencesDataSource
 import com.moonlightbutterfly.cryptohub.data.LocalPreferencesRepository
-import com.moonlightbutterfly.cryptohub.data.Result
-import com.moonlightbutterfly.cryptohub.data.UserCollectionsDataSource
+import com.moonlightbutterfly.cryptohub.data.UserCollectionsLocalDataSource
+import com.moonlightbutterfly.cryptohub.data.UserCollectionsRemoteDataSource
 import com.moonlightbutterfly.cryptohub.data.UserCollectionsRepository
 import com.moonlightbutterfly.cryptohub.data.UserDataSource
 import com.moonlightbutterfly.cryptohub.data.UserRepository
@@ -31,7 +31,6 @@ import com.moonlightbutterfly.cryptohub.framework.data.signin.FirebaseSignInHand
 import com.moonlightbutterfly.cryptohub.framework.database.CryptoHubDatabase
 import com.moonlightbutterfly.cryptohub.framework.database.daos.CryptoCollectionsDao
 import com.moonlightbutterfly.cryptohub.framework.database.daos.LocalPreferencesDao
-import com.moonlightbutterfly.cryptohub.usecases.GetSignedInUserUseCase
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -71,22 +70,22 @@ abstract class RepositoryModule {
         ): CryptoAssetsDataSource = CryptoAssetsDataSourceImpl(service, errorMapper)
 
         @Provides
-        fun provideUserCollectionsDataSource(
+        fun provideUserCollectionsLocalDataSource(
             cryptoCollectionsDao: CryptoCollectionsDao,
-            firebaseFirestore: FirebaseFirestore,
-            getSignedInUserUseCase: GetSignedInUserUseCase,
             errorMapper: ErrorMapper,
-        ): UserCollectionsDataSource {
-            val userSignedIn = getSignedInUserUseCase()
-            return if (userSignedIn is Result.Success) {
-                UserCollectionsRemoteDataSourceImpl(
-                    firebaseFirestore,
-                    userSignedIn.data.userId,
-                    errorMapper
-                )
-            } else {
-                UserCollectionsLocalDataSourceImpl(cryptoCollectionsDao, errorMapper)
-            }
+        ): UserCollectionsLocalDataSource {
+            return UserCollectionsLocalDataSourceImpl(cryptoCollectionsDao, errorMapper)
+        }
+
+        @Provides
+        fun provideUserCollectionsRemoteDataSource(
+            firebaseFirestore: FirebaseFirestore,
+            errorMapper: ErrorMapper,
+        ): UserCollectionsRemoteDataSource {
+            return UserCollectionsRemoteDataSourceImpl(
+                firebaseFirestore,
+                errorMapper
+            )
         }
 
         @Provides
@@ -114,9 +113,11 @@ abstract class RepositoryModule {
 
         @Provides
         fun provideUserCollectionsRepository(
-            userCollectionsDataSource: UserCollectionsDataSource,
+            userCollectionsLocalDataSource: UserCollectionsLocalDataSource,
+            userCollectionsRemoteDataSource: UserCollectionsRemoteDataSource,
+            userDataSource: UserDataSource
         ): UserCollectionsRepository {
-            return UserCollectionsRepository(userCollectionsDataSource)
+            return UserCollectionsRepository(userCollectionsRemoteDataSource, userCollectionsLocalDataSource, userDataSource)
         }
 
         @Provides
