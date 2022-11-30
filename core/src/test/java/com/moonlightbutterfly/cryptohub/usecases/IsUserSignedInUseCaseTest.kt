@@ -1,8 +1,8 @@
 package com.moonlightbutterfly.cryptohub.usecases
 
-import com.moonlightbutterfly.cryptohub.data.Result
-import com.moonlightbutterfly.cryptohub.data.UserRepository
-import com.moonlightbutterfly.cryptohub.data.getOrThrow
+import com.moonlightbutterfly.cryptohub.data.common.Result
+import com.moonlightbutterfly.cryptohub.data.common.getOrThrow
+import com.moonlightbutterfly.cryptohub.data.user.UserRepository
 import io.mockk.every
 import io.mockk.mockk
 import junit.framework.TestCase

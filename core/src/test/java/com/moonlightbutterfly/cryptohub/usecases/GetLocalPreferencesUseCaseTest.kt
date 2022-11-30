@@ -1,8 +1,8 @@
 package com.moonlightbutterfly.cryptohub.usecases
 
-import com.moonlightbutterfly.cryptohub.data.LocalPreferencesRepository
-import com.moonlightbutterfly.cryptohub.data.Result
-import com.moonlightbutterfly.cryptohub.data.getOrThrow
+import com.moonlightbutterfly.cryptohub.data.common.Result
+import com.moonlightbutterfly.cryptohub.data.common.getOrThrow
+import com.moonlightbutterfly.cryptohub.data.localpreferences.LocalPreferencesRepository
 import com.moonlightbutterfly.cryptohub.models.LocalPreferences
 import io.mockk.every
 import io.mockk.mockk

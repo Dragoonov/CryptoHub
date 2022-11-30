@@ -1,7 +1,7 @@
 package com.moonlightbutterfly.cryptohub.di
 
 import android.content.Context
-import com.moonlightbutterfly.cryptohub.presentation.ViewModelFactory
+import com.moonlightbutterfly.cryptohub.presentation.core.ViewModelFactory
 import dagger.BindsInstance
 import dagger.Component
 

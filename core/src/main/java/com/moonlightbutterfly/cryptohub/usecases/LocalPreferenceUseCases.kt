@@ -1,6 +1,6 @@
 package com.moonlightbutterfly.cryptohub.usecases
 
-import com.moonlightbutterfly.cryptohub.data.LocalPreferencesRepository
+import com.moonlightbutterfly.cryptohub.data.localpreferences.LocalPreferencesRepository
 import com.moonlightbutterfly.cryptohub.models.LocalPreferences
 
 class UpdateLocalPreferencesUseCase(private val localPreferencesRepository: LocalPreferencesRepository) {

@@ -13,7 +13,7 @@
         android:theme="@style/Theme.CryptoHub.NoActionBar"
         android:allowBackup="false">
         <meta-data android:name="com.facebook.sdk.ClientToken" android:value="@string/fb_app_client_token"/>
-        <activity android:name=".presentation.ui.MainActivity"
+        <activity android:name=".presentation.core.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

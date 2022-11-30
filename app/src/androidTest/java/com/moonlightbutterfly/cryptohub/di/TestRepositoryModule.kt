@@ -2,21 +2,21 @@ package com.moonlightbutterfly.cryptohub.di
 
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
-import com.moonlightbutterfly.cryptohub.data.CryptoAssetsDataSource
-import com.moonlightbutterfly.cryptohub.data.CryptoAssetsRepository
-import com.moonlightbutterfly.cryptohub.data.LocalPreferencesDataSource
-import com.moonlightbutterfly.cryptohub.data.LocalPreferencesRepository
-import com.moonlightbutterfly.cryptohub.data.UserCollectionsLocalDataSource
-import com.moonlightbutterfly.cryptohub.data.UserCollectionsRemoteDataSource
-import com.moonlightbutterfly.cryptohub.data.UserCollectionsRepository
-import com.moonlightbutterfly.cryptohub.data.UserDataSource
-import com.moonlightbutterfly.cryptohub.data.UserRepository
-import com.moonlightbutterfly.cryptohub.framework.data.UserDataSourceImpl
-import com.moonlightbutterfly.cryptohub.repository.FakeCryptoAssetsDataSourceImpl
-import com.moonlightbutterfly.cryptohub.repository.FakeFirebaseSignInHandler
-import com.moonlightbutterfly.cryptohub.repository.FakeLocalPreferencesDataSourceImpl
-import com.moonlightbutterfly.cryptohub.repository.FakeUserCollectionsLocalDataSourceImpl
-import com.moonlightbutterfly.cryptohub.repository.FakeUserCollectionsRemoteDataSourceImpl
+import com.moonlightbutterfly.cryptohub.data.assets.CryptoAssetsDataSource
+import com.moonlightbutterfly.cryptohub.data.assets.CryptoAssetsRepository
+import com.moonlightbutterfly.cryptohub.data.assets.FakeCryptoAssetsDataSourceImpl
+import com.moonlightbutterfly.cryptohub.data.collections.FakeUserCollectionsLocalDataSourceImpl
+import com.moonlightbutterfly.cryptohub.data.collections.FakeUserCollectionsRemoteDataSourceImpl
+import com.moonlightbutterfly.cryptohub.data.collections.UserCollectionsLocalDataSource
+import com.moonlightbutterfly.cryptohub.data.collections.UserCollectionsRemoteDataSource
+import com.moonlightbutterfly.cryptohub.data.collections.UserCollectionsRepository
+import com.moonlightbutterfly.cryptohub.data.localpreferences.FakeLocalPreferencesDataSourceImpl
+import com.moonlightbutterfly.cryptohub.data.localpreferences.LocalPreferencesDataSource
+import com.moonlightbutterfly.cryptohub.data.localpreferences.LocalPreferencesRepository
+import com.moonlightbutterfly.cryptohub.data.signin.FakeFirebaseSignInHandler
+import com.moonlightbutterfly.cryptohub.data.user.UserDataSource
+import com.moonlightbutterfly.cryptohub.data.user.UserDataSourceImpl
+import com.moonlightbutterfly.cryptohub.data.user.UserRepository
 import dagger.Module
 import dagger.Provides
 
