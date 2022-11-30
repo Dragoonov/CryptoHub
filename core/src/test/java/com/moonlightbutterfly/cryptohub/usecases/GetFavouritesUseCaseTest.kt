@@ -1,7 +1,6 @@
 package com.moonlightbutterfly.cryptohub.usecases
 
-import com.moonlightbutterfly.cryptohub.data.Result
-import com.moonlightbutterfly.cryptohub.data.UserCollectionsRepository
+import com.moonlightbutterfly.cryptohub.data.collections.UserCollectionsRepository
 import com.moonlightbutterfly.cryptohub.models.CryptoAsset
 import com.moonlightbutterfly.cryptohub.models.CryptoCollection
 import io.mockk.every
@@ -14,6 +13,7 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
 import org.junit.Test
+import com.moonlightbutterfly.cryptohub.data.common.Result
 
 class GetFavouritesUseCaseTest {
 

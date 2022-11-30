@@ -1,6 +1,6 @@
 package com.moonlightbutterfly.cryptohub.usecases
 
-import com.moonlightbutterfly.cryptohub.data.CryptoAssetsRepository
+import com.moonlightbutterfly.cryptohub.data.assets.CryptoAssetsRepository
 
 class GetAllCryptoAssetsMarketInfoUseCase(private val cryptoAssetsRepository: CryptoAssetsRepository) {
     suspend operator fun invoke(page: Int) = cryptoAssetsRepository.getCryptoAssetsMarketInfo(page)

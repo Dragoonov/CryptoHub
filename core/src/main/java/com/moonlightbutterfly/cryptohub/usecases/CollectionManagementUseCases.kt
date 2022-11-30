@@ -1,11 +1,10 @@
 package com.moonlightbutterfly.cryptohub.usecases
 
-import com.moonlightbutterfly.cryptohub.data.Result
-import com.moonlightbutterfly.cryptohub.data.UserCollectionsRepository
+import com.moonlightbutterfly.cryptohub.data.collections.UserCollectionsRepository
 import com.moonlightbutterfly.cryptohub.models.CryptoAsset
 
 class AddAssetToCollectionUseCase(private val userCollectionsRepository: UserCollectionsRepository) {
-    suspend operator fun invoke(asset: CryptoAsset, collectionName: String): Result<Unit> =
+    suspend operator fun invoke(asset: CryptoAsset, collectionName: String) =
         userCollectionsRepository.addToCollection(asset, collectionName)
 }
 

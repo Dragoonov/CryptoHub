@@ -1,7 +1,7 @@
 package com.moonlightbutterfly.cryptohub.usecases
 
-import com.moonlightbutterfly.cryptohub.data.CryptoAssetsRepository
-import com.moonlightbutterfly.cryptohub.data.Result
+import com.moonlightbutterfly.cryptohub.data.assets.CryptoAssetsRepository
+import com.moonlightbutterfly.cryptohub.data.common.Result
 import com.moonlightbutterfly.cryptohub.models.CryptoAssetMarketInfo
 import io.mockk.coEvery
 import io.mockk.coVerify

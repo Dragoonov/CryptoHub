@@ -1,6 +1,6 @@
 package com.moonlightbutterfly.cryptohub.usecases
 
-import com.moonlightbutterfly.cryptohub.data.UserRepository
+import com.moonlightbutterfly.cryptohub.data.user.UserRepository
 
 class GoogleSignInUseCase(private val userRepository: UserRepository) {
     operator fun invoke() = userRepository.googleSignIn()
