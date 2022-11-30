@@ -2,8 +2,8 @@ package com.moonlightbutterfly.cryptohub.presentation.core
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.moonlightbutterfly.cryptohub.presentation.panel.CryptoAssetPanelViewModel
 import com.moonlightbutterfly.cryptohub.presentation.list.CryptoAssetsListViewModel
+import com.moonlightbutterfly.cryptohub.presentation.panel.CryptoAssetPanelViewModel
 import com.moonlightbutterfly.cryptohub.presentation.search.SearchViewModel
 import com.moonlightbutterfly.cryptohub.presentation.settings.SettingsViewModel
 import com.moonlightbutterfly.cryptohub.presentation.signin.SignInViewModel

@@ -1,5 +1,6 @@
 package com.moonlightbutterfly.cryptohub.data.assets
 
+import com.moonlightbutterfly.cryptohub.data.common.Result
 import com.moonlightbutterfly.cryptohub.models.CryptoAssetMarketInfo
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -9,7 +10,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Test
-import com.moonlightbutterfly.cryptohub.data.common.Result
 
 class CryptoAssetsRepositoryTest {
 

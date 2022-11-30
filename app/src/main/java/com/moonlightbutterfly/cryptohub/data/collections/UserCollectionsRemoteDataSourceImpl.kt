@@ -4,16 +4,15 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
-import com.moonlightbutterfly.cryptohub.data.*
 import com.moonlightbutterfly.cryptohub.data.common.Error
 import com.moonlightbutterfly.cryptohub.data.common.ErrorMapper
+import com.moonlightbutterfly.cryptohub.data.common.Result
+import com.moonlightbutterfly.cryptohub.data.common.unpack
 import com.moonlightbutterfly.cryptohub.models.CryptoAsset
 import com.moonlightbutterfly.cryptohub.models.CryptoCollection
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.tasks.await
-import com.moonlightbutterfly.cryptohub.data.common.Result
-import com.moonlightbutterfly.cryptohub.data.common.unpack
 
 /**
  * Data source using the Firestore database. It registers to the database and converts the

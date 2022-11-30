@@ -1,12 +1,12 @@
 package com.moonlightbutterfly.cryptohub.usecases
 
+import com.moonlightbutterfly.cryptohub.data.common.Result
+import com.moonlightbutterfly.cryptohub.data.common.getOrThrow
 import com.moonlightbutterfly.cryptohub.data.user.UserRepository
 import io.mockk.every
 import io.mockk.mockk
 import junit.framework.TestCase
 import org.junit.Test
-import com.moonlightbutterfly.cryptohub.data.common.Result
-import com.moonlightbutterfly.cryptohub.data.common.getOrThrow
 
 class IsUserSignedInUseCaseTest {
 

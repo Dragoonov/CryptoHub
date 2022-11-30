@@ -1,5 +1,7 @@
 package com.moonlightbutterfly.cryptohub.data.localpreferences
 
+import com.moonlightbutterfly.cryptohub.data.common.Result
+import com.moonlightbutterfly.cryptohub.data.common.getOrThrow
 import com.moonlightbutterfly.cryptohub.models.LocalPreferences
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -12,8 +14,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Test
-import com.moonlightbutterfly.cryptohub.data.common.Result
-import com.moonlightbutterfly.cryptohub.data.common.getOrThrow
 
 @ExperimentalCoroutinesApi
 class LocalPreferencesRepositoryTest {

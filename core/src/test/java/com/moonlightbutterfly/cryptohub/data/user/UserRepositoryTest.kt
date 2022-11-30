@@ -1,5 +1,7 @@
 package com.moonlightbutterfly.cryptohub.data.user
 
+import com.moonlightbutterfly.cryptohub.data.common.Result
+import com.moonlightbutterfly.cryptohub.data.common.getOrThrow
 import com.moonlightbutterfly.cryptohub.models.User
 import io.mockk.every
 import io.mockk.mockk
@@ -11,8 +13,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Test
-import com.moonlightbutterfly.cryptohub.data.common.Result
-import com.moonlightbutterfly.cryptohub.data.common.getOrThrow
 
 class UserRepositoryTest {
 

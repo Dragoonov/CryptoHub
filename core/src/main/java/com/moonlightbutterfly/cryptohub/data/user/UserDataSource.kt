@@ -1,8 +1,8 @@
 package com.moonlightbutterfly.cryptohub.data.user
 
+import com.moonlightbutterfly.cryptohub.data.common.Result
 import com.moonlightbutterfly.cryptohub.models.User
 import kotlinx.coroutines.flow.Flow
-import com.moonlightbutterfly.cryptohub.data.common.Result
 
 interface UserDataSource {
 

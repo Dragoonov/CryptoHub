@@ -4,7 +4,6 @@ import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
-import com.moonlightbutterfly.cryptohub.data.signin.FirebaseSignInHandlerImpl
 import com.moonlightbutterfly.cryptohub.data.user.FirebaseAuthDataProvider
 import io.mockk.Runs
 import io.mockk.every

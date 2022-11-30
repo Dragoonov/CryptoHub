@@ -17,9 +17,9 @@ import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.moonlightbutterfly.cryptohub.R
+import com.moonlightbutterfly.cryptohub.data.user.FirebaseAuthDataProvider
 import com.moonlightbutterfly.cryptohub.di.ActivityScope
 import com.moonlightbutterfly.cryptohub.di.DaggerAppComponent
-import com.moonlightbutterfly.cryptohub.data.user.FirebaseAuthDataProvider
 import com.moonlightbutterfly.cryptohub.presentation.ui.CryptoHubTheme
 import com.moonlightbutterfly.cryptohub.presentation.ui.LocalViewModelFactory
 import com.moonlightbutterfly.cryptohub.presentation.ui.composables.AppLayout

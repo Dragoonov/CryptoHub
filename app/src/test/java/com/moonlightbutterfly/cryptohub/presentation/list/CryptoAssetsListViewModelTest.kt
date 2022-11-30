@@ -4,7 +4,6 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.moonlightbutterfly.cryptohub.data.common.Result
 import com.moonlightbutterfly.cryptohub.models.CryptoAsset
 import com.moonlightbutterfly.cryptohub.models.CryptoCollection
-import com.moonlightbutterfly.cryptohub.presentation.list.CryptoAssetsListViewModel
 import com.moonlightbutterfly.cryptohub.usecases.AddFavouriteUseCase
 import com.moonlightbutterfly.cryptohub.usecases.GetAllCryptoAssetsMarketInfoUseCase
 import com.moonlightbutterfly.cryptohub.usecases.GetCryptoAssetsMarketInfoUseCase

@@ -2,7 +2,6 @@ package com.moonlightbutterfly.cryptohub.presentation.settings
 
 import com.moonlightbutterfly.cryptohub.data.common.Result
 import com.moonlightbutterfly.cryptohub.models.LocalPreferences
-import com.moonlightbutterfly.cryptohub.presentation.settings.SettingsViewModel
 import com.moonlightbutterfly.cryptohub.usecases.GetLocalPreferencesUseCase
 import com.moonlightbutterfly.cryptohub.usecases.IsUserSignedInUseCase
 import com.moonlightbutterfly.cryptohub.usecases.SignOutUseCase

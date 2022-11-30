@@ -1,5 +1,7 @@
 package com.moonlightbutterfly.cryptohub.data.collections
 
+import com.moonlightbutterfly.cryptohub.data.common.Result
+import com.moonlightbutterfly.cryptohub.data.common.getOrThrow
 import com.moonlightbutterfly.cryptohub.data.user.UserDataSource
 import com.moonlightbutterfly.cryptohub.models.CryptoAsset
 import com.moonlightbutterfly.cryptohub.models.CryptoCollection
@@ -14,8 +16,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runBlockingTest
-import com.moonlightbutterfly.cryptohub.data.common.Result
-import com.moonlightbutterfly.cryptohub.data.common.getOrThrow
 import org.junit.Test
 
 @ExperimentalCoroutinesApi

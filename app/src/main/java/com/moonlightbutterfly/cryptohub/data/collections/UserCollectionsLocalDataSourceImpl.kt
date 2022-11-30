@@ -2,6 +2,7 @@ package com.moonlightbutterfly.cryptohub.data.collections
 
 import com.moonlightbutterfly.cryptohub.data.common.Error
 import com.moonlightbutterfly.cryptohub.data.common.ErrorMapper
+import com.moonlightbutterfly.cryptohub.data.common.Result
 import com.moonlightbutterfly.cryptohub.data.database.daos.CryptoCollectionsDao
 import com.moonlightbutterfly.cryptohub.data.database.entities.CryptoCollectionEntity
 import com.moonlightbutterfly.cryptohub.models.CryptoAsset
@@ -10,7 +11,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import com.moonlightbutterfly.cryptohub.data.common.Result
 
 /**
  * Data source using the Room database.

@@ -28,8 +28,8 @@ import coil.annotation.ExperimentalCoilApi
 import com.moonlightbutterfly.cryptohub.R
 import com.moonlightbutterfly.cryptohub.models.CryptoAsset
 import com.moonlightbutterfly.cryptohub.models.CryptoAssetMarketInfo
-import com.moonlightbutterfly.cryptohub.presentation.ui.LocalViewModelFactory
 import com.moonlightbutterfly.cryptohub.presentation.panel.CryptoAssetPanelViewModel
+import com.moonlightbutterfly.cryptohub.presentation.ui.LocalViewModelFactory
 import com.moonlightbutterfly.cryptohub.utils.round
 import com.moonlightbutterfly.cryptohub.utils.toStringAbbr
 

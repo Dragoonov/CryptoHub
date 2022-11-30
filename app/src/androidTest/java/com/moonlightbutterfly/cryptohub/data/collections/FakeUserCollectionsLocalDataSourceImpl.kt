@@ -1,8 +1,8 @@
 package com.moonlightbutterfly.cryptohub.data.collections
 
+import com.moonlightbutterfly.cryptohub.data.common.Result
 import com.moonlightbutterfly.cryptohub.models.CryptoAsset
 import com.moonlightbutterfly.cryptohub.models.CryptoCollection
-import com.moonlightbutterfly.cryptohub.data.common.Result
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flowOf

@@ -1,9 +1,9 @@
 package com.moonlightbutterfly.cryptohub.data.collections
 
+import com.moonlightbutterfly.cryptohub.data.common.Result
 import com.moonlightbutterfly.cryptohub.models.CryptoAsset
 import com.moonlightbutterfly.cryptohub.models.CryptoCollection
 import kotlinx.coroutines.flow.Flow
-import com.moonlightbutterfly.cryptohub.data.common.Result
 
 interface UserCollectionsRemoteDataSource {
 

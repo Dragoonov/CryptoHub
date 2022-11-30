@@ -1,8 +1,8 @@
 package com.moonlightbutterfly.cryptohub.di
 
 import com.moonlightbutterfly.cryptohub.data.assets.CryptoAssetsRepository
-import com.moonlightbutterfly.cryptohub.data.localpreferences.LocalPreferencesRepository
 import com.moonlightbutterfly.cryptohub.data.collections.UserCollectionsRepository
+import com.moonlightbutterfly.cryptohub.data.localpreferences.LocalPreferencesRepository
 import com.moonlightbutterfly.cryptohub.data.user.UserRepository
 import com.moonlightbutterfly.cryptohub.usecases.AddAssetToCollectionUseCase
 import com.moonlightbutterfly.cryptohub.usecases.AddFavouriteUseCase

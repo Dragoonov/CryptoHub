@@ -5,7 +5,6 @@ import com.moonlightbutterfly.cryptohub.data.common.Result
 import com.moonlightbutterfly.cryptohub.models.CryptoAsset
 import com.moonlightbutterfly.cryptohub.models.CryptoAssetMarketInfo
 import com.moonlightbutterfly.cryptohub.models.CryptoCollection
-import com.moonlightbutterfly.cryptohub.presentation.panel.CryptoAssetPanelViewModel
 import com.moonlightbutterfly.cryptohub.usecases.AddFavouriteUseCase
 import com.moonlightbutterfly.cryptohub.usecases.GetCryptoAssetsMarketInfoUseCase
 import com.moonlightbutterfly.cryptohub.usecases.GetFavouritesUseCase

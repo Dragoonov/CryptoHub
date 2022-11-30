@@ -1,6 +1,7 @@
 package com.moonlightbutterfly.cryptohub.usecases
 
 import com.moonlightbutterfly.cryptohub.data.collections.UserCollectionsRepository
+import com.moonlightbutterfly.cryptohub.data.common.Result
 import com.moonlightbutterfly.cryptohub.models.CryptoAsset
 import com.moonlightbutterfly.cryptohub.models.CryptoCollection
 import io.mockk.every
@@ -10,7 +11,6 @@ import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runBlockingTest
-import com.moonlightbutterfly.cryptohub.data.common.Result
 import org.junit.Test
 
 class GetCollectionUseCaseTest {

@@ -25,8 +25,8 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.firebase.ui.auth.AuthUI
 import com.moonlightbutterfly.cryptohub.R
-import com.moonlightbutterfly.cryptohub.presentation.ui.LocalViewModelFactory
 import com.moonlightbutterfly.cryptohub.presentation.settings.SettingsViewModel
+import com.moonlightbutterfly.cryptohub.presentation.ui.LocalViewModelFactory
 
 @Composable
 fun SettingsScreen(onSignOutClicked: () -> Unit) {

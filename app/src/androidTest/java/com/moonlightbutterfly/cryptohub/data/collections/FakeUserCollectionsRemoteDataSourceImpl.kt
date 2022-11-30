@@ -1,11 +1,11 @@
 package com.moonlightbutterfly.cryptohub.data.collections
 
+import com.moonlightbutterfly.cryptohub.data.common.Result
 import com.moonlightbutterfly.cryptohub.models.CryptoAsset
 import com.moonlightbutterfly.cryptohub.models.CryptoCollection
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flowOf
-import com.moonlightbutterfly.cryptohub.data.common.Result
 
 class FakeUserCollectionsRemoteDataSourceImpl : UserCollectionsRemoteDataSource {
 
