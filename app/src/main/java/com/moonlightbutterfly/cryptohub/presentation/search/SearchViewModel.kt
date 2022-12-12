@@ -15,6 +15,7 @@ import com.moonlightbutterfly.cryptohub.usecases.GetRecentsUseCase
 import com.moonlightbutterfly.cryptohub.usecases.RemoveRecentUseCase
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -74,7 +75,7 @@ class SearchViewModel @Inject constructor(
 
     private suspend fun fetchResultsToFilter() {
         while (searchPage <= 10) {
-            val newResults = getAllCryptoAssetsMarketInfoUseCase(searchPage).propagateErrors()
+            val newResults = getAllCryptoAssetsMarketInfoUseCase(searchPage).propagateErrors().first()
             searchPage += 1
             allResults += newResults.unpack(emptyList()).map { it.asset }
         }

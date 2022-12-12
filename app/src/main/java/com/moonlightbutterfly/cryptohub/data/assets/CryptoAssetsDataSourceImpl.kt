@@ -9,19 +9,19 @@ import com.moonlightbutterfly.cryptohub.models.CryptoAssetMarketInfo
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
+import java.util.concurrent.CancellationException
 
 /**
  * Data source interacting with CoinMarketCap service for info.
  */
 class CryptoAssetsDataSourceImpl(
     private val service: CoinMarketCapService,
-    private val errorMapper: ErrorMapper
+    private val errorMapper: ErrorMapper,
 ) : CryptoAssetsDataSource {
 
     override fun getCryptoAssetsMarketInfo(
-        symbols: List<String>
+        symbols: List<String>,
     ): Flow<Result<List<CryptoAssetMarketInfo>>> {
         val metaDataFlow = flow {
             service.getMetadata(
@@ -54,38 +54,41 @@ class CryptoAssetsDataSourceImpl(
         }
     }
 
-    override suspend fun getCryptoAssetsMarketInfo(page: Int): Result<List<CryptoAssetMarketInfo>> {
+    override fun getCryptoAssetsMarketInfo(page: Int): Flow<Result<List<CryptoAssetMarketInfo>>> {
         val firstIndex = CryptoAssetsDataSource.ITEMS_PER_PAGE * (page - 1) + 1
         val assetAmountPerCall = CryptoAssetsDataSource.ITEMS_PER_PAGE
-        try {
-            val listing = flow {
-                service.getListings(
+        return flow<Result<List<CryptoAssetMarketInfo>>> {
+            try {
+                val listing = service.getListings(
                     apiKey = BuildConfig.API_KEY,
                     start = firstIndex,
                     limit = assetAmountPerCall
-                ).let { emit(it) }
-            }.first().data.sortedBy { it.symbol }
+                ).data.sortedBy { it.symbol }
 
-            val metadataList = flow {
-                service.getMetadata(
-                    apiKey = BuildConfig.API_KEY,
-                    symbols = listing.map { it.symbol }.joinToString(separator = ",")
-                ).let { emit(it) }
-            }.first().data.values.sortedBy { it.symbol }
+                val metadataList =
+                    service.getMetadata(
+                        apiKey = BuildConfig.API_KEY,
+                        symbols = listing.map { it.symbol }.joinToString(separator = ",")
+                    ).data.values.sortedBy { it.symbol }
 
-            val resultData = metadataList.zip(listing) { metadata, marketInfo ->
-                mergeToCryptoAssetMarketInfo(marketInfo, metadata)
-            }.sortedByDescending { it.marketCap }
+                val resultData = metadataList.zip(listing) { metadata, marketInfo ->
+                    mergeToCryptoAssetMarketInfo(marketInfo, metadata)
+                }.sortedByDescending { it.marketCap }
 
-            return Result.Success(resultData)
-        } catch (exception: Exception) {
-            return Result.Failure(errorMapper.mapError(exception))
+                emit(Result.Success(resultData))
+            } catch (exception: Exception) {
+                if (exception is CancellationException) {
+                    throw exception
+                } else {
+                    emit(Result.Failure(errorMapper.mapError(exception)))
+                }
+            }
         }
     }
 
     private fun mergeToCryptoAssetMarketInfo(
         marketQuote: CryptoAssetMarketQuoteDto,
-        metadata: CryptoAssetMetadataDto
+        metadata: CryptoAssetMetadataDto,
     ): CryptoAssetMarketInfo {
         return CryptoAssetMarketInfo(
             asset = CryptoAsset(

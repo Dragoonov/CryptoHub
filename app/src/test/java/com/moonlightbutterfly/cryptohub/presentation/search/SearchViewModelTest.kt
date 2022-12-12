@@ -19,6 +19,7 @@ import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runBlockingTest
@@ -48,14 +49,16 @@ class SearchViewModelTest {
     @Before
     fun setup() {
         every { getRecentsUseCase() } returns recentsFlow
-        coEvery { getAllCryptoAssetsMarketInfoUseCase(1) } returns Result.Success(
-            listOf(
-                CryptoAssetMarketInfo(asset = CryptoAsset(symbol = "ada")),
-                CryptoAssetMarketInfo(asset = CryptoAsset(name = "cadard")),
-                CryptoAssetMarketInfo(asset = CryptoAsset(name = "polkadot")),
+        coEvery { getAllCryptoAssetsMarketInfoUseCase(1) } returns flowOf(
+            Result.Success(
+                listOf(
+                    CryptoAssetMarketInfo(asset = CryptoAsset(symbol = "ada")),
+                    CryptoAssetMarketInfo(asset = CryptoAsset(name = "cadard")),
+                    CryptoAssetMarketInfo(asset = CryptoAsset(name = "polkadot")),
+                )
             )
         )
-        coEvery { getAllCryptoAssetsMarketInfoUseCase(not(1)) } returns Result.Success(listOf())
+        coEvery { getAllCryptoAssetsMarketInfoUseCase(not(1)) } returns flowOf(Result.Success(listOf()))
         coEvery { addRecentUseCase(any()) } returns Result.Success(Unit)
         coEvery { removeRecentUseCase(any()) } returns Result.Success(Unit)
         coEvery { clearRecentsUseCase() } returns Result.Success(Unit)

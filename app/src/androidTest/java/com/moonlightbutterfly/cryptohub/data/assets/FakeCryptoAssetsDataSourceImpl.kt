@@ -13,16 +13,18 @@ class FakeCryptoAssetsDataSourceImpl @Inject constructor() : CryptoAssetsDataSou
         return flowOf(Result.Success(symbols.map { CryptoAssetMarketInfo(asset = CryptoAsset(symbol = it)) }))
     }
 
-    override suspend fun getCryptoAssetsMarketInfo(page: Int): Result<List<CryptoAssetMarketInfo>> {
-        return Result.Success(
-            if (page == 1) {
-                listOf(
-                    CryptoAssetMarketInfo(asset = CryptoAsset(name = "Bitcoin", symbol = "BTC")),
-                    CryptoAssetMarketInfo(asset = CryptoAsset(name = "Ethereum", symbol = "ETH"))
-                )
-            } else {
-                listOf()
-            }
+    override fun getCryptoAssetsMarketInfo(page: Int): Flow<Result<List<CryptoAssetMarketInfo>>> {
+        return flowOf(
+            Result.Success(
+                if (page == 1) {
+                    listOf(
+                        CryptoAssetMarketInfo(asset = CryptoAsset(name = "Bitcoin", symbol = "BTC")),
+                        CryptoAssetMarketInfo(asset = CryptoAsset(name = "Ethereum", symbol = "ETH"))
+                    )
+                } else {
+                    listOf()
+                }
+            )
         )
     }
 }

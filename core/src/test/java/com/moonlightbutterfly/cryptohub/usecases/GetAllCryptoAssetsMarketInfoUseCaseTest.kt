@@ -8,23 +8,28 @@ import io.mockk.coVerify
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Test
 
 class GetAllCryptoAssetsMarketInfoUseCaseTest {
 
-    private val assets = Result.Success(
-        listOf(
-            CryptoAssetMarketInfo(price = 12.1),
-            CryptoAssetMarketInfo(price = 12.2),
-            CryptoAssetMarketInfo(price = 12.3)
+    private val assets = flowOf(
+        Result.Success(
+            listOf(
+                CryptoAssetMarketInfo(price = 12.1),
+                CryptoAssetMarketInfo(price = 12.2),
+                CryptoAssetMarketInfo(price = 12.3)
+            )
         )
     )
 
-    private val assets2 = Result.Success(
-        listOf(
-            CryptoAssetMarketInfo(price = 10.1),
-            CryptoAssetMarketInfo(price = 10.2),
+    private val assets2 = flowOf(
+        Result.Success(
+            listOf(
+                CryptoAssetMarketInfo(price = 10.1),
+                CryptoAssetMarketInfo(price = 10.2),
+            )
         )
     )
 
