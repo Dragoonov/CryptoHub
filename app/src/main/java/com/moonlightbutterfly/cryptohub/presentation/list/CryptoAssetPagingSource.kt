@@ -14,14 +14,18 @@ class CryptoAssetPagingSource(
     PagingSource<Int, CryptoAssetMarketInfo>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, CryptoAssetMarketInfo> {
-        val nextPage = params.key ?: 1
-        val assets = assetProvider(nextPage)
-        val nextKey = if (assets.isEmpty()) null else nextPage + 1
-        return LoadResult.Page(
-            data = assets,
-            prevKey = if (nextPage == 1) null else nextPage - 1,
-            nextKey = nextKey
-        )
+        return try {
+            val nextPage = params.key ?: 1
+            val assets = assetProvider(nextPage)
+            val nextKey = if (assets.isEmpty()) null else nextPage + 1
+            LoadResult.Page(
+                data = assets,
+                prevKey = if (nextPage == 1) null else nextPage - 1,
+                nextKey = nextKey
+            )
+        } catch (e: Exception) {
+            LoadResult.Error(e)
+        }
     }
 
     override fun getRefreshKey(state: PagingState<Int, CryptoAssetMarketInfo>): Int? {

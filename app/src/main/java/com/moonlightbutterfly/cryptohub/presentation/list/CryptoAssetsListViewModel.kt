@@ -4,6 +4,7 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
+import androidx.paging.cachedIn
 import com.moonlightbutterfly.cryptohub.data.assets.CryptoAssetsDataSource
 import com.moonlightbutterfly.cryptohub.data.common.unpack
 import com.moonlightbutterfly.cryptohub.models.CryptoAsset
@@ -15,6 +16,7 @@ import com.moonlightbutterfly.cryptohub.usecases.GetCryptoAssetsMarketInfoUseCas
 import com.moonlightbutterfly.cryptohub.usecases.GetFavouritesUseCase
 import com.moonlightbutterfly.cryptohub.usecases.RemoveFavouriteUseCase
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -30,9 +32,9 @@ class CryptoAssetsListViewModel @Inject constructor(
 
     val cryptoAssets = Pager(PagingConfig(CryptoAssetsDataSource.ITEMS_PER_PAGE)) {
         CryptoAssetPagingSource {
-            getAllCryptoAssetsMarketInfoUseCase(it).propagateErrors().unpack(emptyList())
+            getAllCryptoAssetsMarketInfoUseCase(it).first().propagateErrors().unpack(emptyList())
         }
-    }.flow
+    }.flow.cachedIn(viewModelScope)
 
     private val favouriteAssets = getFavouritesUseCase()
         .propagateErrors()

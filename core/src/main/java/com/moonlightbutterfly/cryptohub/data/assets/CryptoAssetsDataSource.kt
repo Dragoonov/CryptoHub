@@ -8,7 +8,7 @@ interface CryptoAssetsDataSource {
 
     fun getCryptoAssetsMarketInfo(symbols: List<String>): Flow<Result<List<CryptoAssetMarketInfo>>>
 
-    suspend fun getCryptoAssetsMarketInfo(page: Int): Result<List<CryptoAssetMarketInfo>>
+    fun getCryptoAssetsMarketInfo(page: Int): Flow<Result<List<CryptoAssetMarketInfo>>>
 
     companion object {
         const val ITEMS_PER_PAGE = 50

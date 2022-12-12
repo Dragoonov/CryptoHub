@@ -8,5 +8,5 @@ class CryptoAssetsRepository(
 ) {
     fun getCryptoAssetsMarketInfo(symbols: List<String>) = cryptoAssetsDataSource.getCryptoAssetsMarketInfo(symbols)
 
-    suspend fun getCryptoAssetsMarketInfo(page: Int) = cryptoAssetsDataSource.getCryptoAssetsMarketInfo(page)
+    fun getCryptoAssetsMarketInfo(page: Int) = cryptoAssetsDataSource.getCryptoAssetsMarketInfo(page)
 }

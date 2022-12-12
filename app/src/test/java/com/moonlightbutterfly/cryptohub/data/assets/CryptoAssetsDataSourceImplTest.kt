@@ -72,7 +72,7 @@ class CryptoAssetsDataSourceImplTest {
     @Test
     fun `should return proper market info by page`() = runBlockingTest {
         // WHEN
-        val list = cryptoAssetsDataSourceImpl.getCryptoAssetsMarketInfo(1).getOrThrow()
+        val list = cryptoAssetsDataSourceImpl.getCryptoAssetsMarketInfo(1).first().getOrThrow()
 
         // THEN
         coVerify {

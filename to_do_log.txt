@@ -1,7 +1,4 @@
-- Revise files hierarchy
-- Rework the way app decides if it should work on local/remote data source (now it's dagger logic) - introduce local/remote interfaces etc.
-- Rework interface CryptoAssetsDataSource - methods have different api because of presentation demands - fix it.
-- Think about introducing error handling layer specifically
-- Think about using fun interfaces as use cases
-- Think about unifying suspend/flow returns
-- Think about improving pagingdata
+- Introduce login activity/main activity as an app flows, introduce fragments and use jetpack navigation
+- Improve dagger to use subcomponents per flow
+- Use Hilt
+- Introduce notifications
