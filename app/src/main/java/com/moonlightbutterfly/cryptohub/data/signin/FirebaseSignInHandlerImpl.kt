@@ -25,19 +25,21 @@ class FirebaseSignInHandlerImpl @Inject constructor(
         return AuthUI.getInstance()
             .createSignInIntentBuilder()
             .setAvailableProviders(authProviders)
-            .setTheme(firebaseAuthDataProvider.getConfigurationData().theme)
+            .setTheme(firebaseAuthDataProvider.configurationData!!.theme)
             .build()
     }
 
     override fun signIn(): Flow<Result<User>> {
-        setSignInResult()
-        val intent = createSignInIntent()
-        firebaseAuthDataProvider.getConfigurationData().intentLauncher.launch(intent)
+        firebaseAuthDataProvider.configurationData?.let {
+            setSignInResult()
+            val intent = createSignInIntent()
+            it.intentLauncher.launch(intent)
+        }
         return signInChannel.receiveAsFlow()
     }
 
     private fun setSignInResult() {
-        firebaseAuthDataProvider.setActionOnResult { result ->
+        firebaseAuthDataProvider.actionOnResult = { result ->
             if (result.resultCode == AppCompatActivity.RESULT_OK) {
                 signInChannel.trySend(
                     firebaseAuth.currentUser?.toUser()?.let {

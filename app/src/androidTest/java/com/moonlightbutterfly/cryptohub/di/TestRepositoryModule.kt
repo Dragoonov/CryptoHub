@@ -14,75 +14,82 @@ import com.moonlightbutterfly.cryptohub.data.localpreferences.FakeLocalPreferenc
 import com.moonlightbutterfly.cryptohub.data.localpreferences.LocalPreferencesDataSource
 import com.moonlightbutterfly.cryptohub.data.localpreferences.LocalPreferencesRepository
 import com.moonlightbutterfly.cryptohub.data.signin.FakeFirebaseSignInHandler
+import com.moonlightbutterfly.cryptohub.data.signin.FirebaseSignInHandler
+import com.moonlightbutterfly.cryptohub.data.user.FirebaseAuthDataProvider
+import com.moonlightbutterfly.cryptohub.data.user.FirebaseAuthDataProviderImpl
 import com.moonlightbutterfly.cryptohub.data.user.UserDataSource
 import com.moonlightbutterfly.cryptohub.data.user.UserDataSourceImpl
 import com.moonlightbutterfly.cryptohub.data.user.UserRepository
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.components.SingletonComponent
+import dagger.hilt.testing.TestInstallIn
 
 @Module
-class TestRepositoryModule {
+@TestInstallIn(components = [SingletonComponent::class], replaces = [RepositoryModule::class])
+abstract class TestRepositoryModule {
 
-    @Provides
-    fun provideCryptoAssetsDataSource(): CryptoAssetsDataSource {
-        return FakeCryptoAssetsDataSourceImpl()
-    }
+    @Binds
+    abstract fun bindFirebaseAuthDataProvider(provider: FirebaseAuthDataProviderImpl): FirebaseAuthDataProvider
 
-    @Provides
-    @ActivityScope
-    fun provideUserConfigurationLocalDataSource(): UserCollectionsLocalDataSource {
-        return FakeUserCollectionsLocalDataSourceImpl()
-    }
+    @Binds
+    abstract fun bindCryptoAssetsDataSource(impl: FakeCryptoAssetsDataSourceImpl): CryptoAssetsDataSource
 
-    @Provides
-    @ActivityScope
-    fun provideUserConfigurationRemoteDataSource(): UserCollectionsRemoteDataSource {
-        return FakeUserCollectionsRemoteDataSourceImpl()
-    }
+    @Binds
+    abstract fun provideUserConfigurationLocalDataSource(impl: FakeUserCollectionsLocalDataSourceImpl): UserCollectionsLocalDataSource
 
-    @Provides
-    fun provideUserConfigurationRepository(
-        userCollectionsLocalDataSource: UserCollectionsLocalDataSource,
-        userCollectionsRemoteDataSource: UserCollectionsRemoteDataSource,
-        userDataSource: UserDataSource
-    ): UserCollectionsRepository {
-        return UserCollectionsRepository(userCollectionsRemoteDataSource, userCollectionsLocalDataSource, userDataSource)
-    }
+    @Binds
+    abstract fun provideUserConfigurationRemoteDataSource(impl: FakeUserCollectionsRemoteDataSourceImpl): UserCollectionsRemoteDataSource
 
-    @Provides
-    fun provideLocalPreferencesRepository(
-        localPreferencesDataSource: LocalPreferencesDataSource
-    ): LocalPreferencesRepository {
-        return LocalPreferencesRepository(localPreferencesDataSource)
-    }
+    @Binds
+    abstract fun bindFirebaseSignInHandler(firebaseSignInHandlerImpl: FakeFirebaseSignInHandler): FirebaseSignInHandler
 
-    @Provides
-    fun provideCryptoAssetsRepository(
-        cryptoAssetsDataSource: CryptoAssetsDataSource
-    ): CryptoAssetsRepository {
-        return CryptoAssetsRepository(cryptoAssetsDataSource)
-    }
+    @Binds
+    abstract fun provideLocalPreferencesDataSource(impl: FakeLocalPreferencesDataSourceImpl): LocalPreferencesDataSource
 
-    @Provides
-    @ActivityScope
-    fun provideLocalPreferencesDataSource(): LocalPreferencesDataSource =
-        FakeLocalPreferencesDataSourceImpl()
+    @Binds
+    abstract fun bindUserDataSource(userDataSourceImpl: UserDataSourceImpl): UserDataSource
 
-    @Provides
-    @ActivityScope
-    fun provideUserDataSource(): UserDataSource = UserDataSourceImpl(
-        FakeFirebaseSignInHandler(), FirebaseAuth.getInstance()
-    )
+    companion object {
+        @Provides
+        fun provideUserConfigurationRepository(
+            userCollectionsLocalDataSource: UserCollectionsLocalDataSource,
+            userCollectionsRemoteDataSource: UserCollectionsRemoteDataSource,
+            userDataSource: UserDataSource
+        ): UserCollectionsRepository {
+            return UserCollectionsRepository(userCollectionsRemoteDataSource,
+                userCollectionsLocalDataSource,
+                userDataSource)
+        }
 
-    @Provides
-    fun provideUserRepository(
-        userDataSource: UserDataSource
-    ): UserRepository {
-        return UserRepository(userDataSource)
-    }
+        @Provides
+        fun provideLocalPreferencesRepository(
+            localPreferencesDataSource: LocalPreferencesDataSource
+        ): LocalPreferencesRepository {
+            return LocalPreferencesRepository(localPreferencesDataSource)
+        }
 
-    @Provides
-    fun provideAuthProviders(): List<AuthUI.IdpConfig> {
-        return listOf()
+        @Provides
+        fun provideFirebaseAuth(): FirebaseAuth = FirebaseAuth.getInstance()
+
+        @Provides
+        fun provideCryptoAssetsRepository(
+            cryptoAssetsDataSource: CryptoAssetsDataSource
+        ): CryptoAssetsRepository {
+            return CryptoAssetsRepository(cryptoAssetsDataSource)
+        }
+
+        @Provides
+        fun provideUserRepository(
+            userDataSource: UserDataSource
+        ): UserRepository {
+            return UserRepository(userDataSource)
+        }
+
+        @Provides
+        fun provideAuthProviders(): List<AuthUI.IdpConfig> {
+            return listOf()
+        }
     }
 }

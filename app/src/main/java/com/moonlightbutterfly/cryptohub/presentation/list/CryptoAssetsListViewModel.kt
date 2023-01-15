@@ -15,6 +15,7 @@ import com.moonlightbutterfly.cryptohub.usecases.GetAllCryptoAssetsMarketInfoUse
 import com.moonlightbutterfly.cryptohub.usecases.GetCryptoAssetsMarketInfoUseCase
 import com.moonlightbutterfly.cryptohub.usecases.GetFavouritesUseCase
 import com.moonlightbutterfly.cryptohub.usecases.RemoveFavouriteUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapConcat
@@ -22,6 +23,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class CryptoAssetsListViewModel @Inject constructor(
     getAllCryptoAssetsMarketInfoUseCase: GetAllCryptoAssetsMarketInfoUseCase,
     getCryptoAssetsMarketInfoUseCase: GetCryptoAssetsMarketInfoUseCase,

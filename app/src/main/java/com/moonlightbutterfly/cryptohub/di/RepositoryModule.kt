@@ -28,17 +28,26 @@ import com.moonlightbutterfly.cryptohub.data.localpreferences.LocalPreferencesRe
 import com.moonlightbutterfly.cryptohub.data.signin.FirebaseSignInHandler
 import com.moonlightbutterfly.cryptohub.data.signin.FirebaseSignInHandlerImpl
 import com.moonlightbutterfly.cryptohub.data.user.FirebaseAuthDataProvider
+import com.moonlightbutterfly.cryptohub.data.user.FirebaseAuthDataProviderImpl
 import com.moonlightbutterfly.cryptohub.data.user.UserDataSource
 import com.moonlightbutterfly.cryptohub.data.user.UserDataSourceImpl
 import com.moonlightbutterfly.cryptohub.data.user.UserRepository
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Singleton
 
 @Module
+@InstallIn(SingletonComponent::class)
 abstract class RepositoryModule {
+
+    @Binds
+    abstract fun bindFirebaseAuthDataProvider(provider: FirebaseAuthDataProviderImpl): FirebaseAuthDataProvider
 
     @Binds
     abstract fun bindErrorMapper(errorMapperImpl: ErrorMapperImpl): ErrorMapper
@@ -46,47 +55,34 @@ abstract class RepositoryModule {
     @Binds
     abstract fun bindFirebaseSignInHandler(firebaseSignInHandlerImpl: FirebaseSignInHandlerImpl): FirebaseSignInHandler
 
-    @Module
-    companion object {
+    @Binds
+    abstract fun bindUserDataSource(userDataSourceImpl: UserDataSourceImpl): UserDataSource
 
-        private val service by lazy {
-            Retrofit.Builder()
-                .baseUrl(API_ADDRESS)
-                .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
-                .build().create(CoinMarketCapService::class.java)
-        }
+    @Binds
+    abstract fun bindsCryptoAssetsDataSource(impl: CryptoAssetsDataSourceImpl): CryptoAssetsDataSource
+
+    @Binds
+    abstract fun bindUserCollectionsLocalDataSource(impl: UserCollectionsLocalDataSourceImpl): UserCollectionsLocalDataSource
+
+    @Binds
+    abstract fun bindUserCollectionsRemoteDataSource(impl: UserCollectionsRemoteDataSourceImpl): UserCollectionsRemoteDataSource
+
+    @Binds
+    abstract fun bindLocalPreferencesDataSource(impl: LocalPreferencesDataSourceImpl): LocalPreferencesDataSource
+
+    companion object {
 
         private const val API_ADDRESS = "https://pro-api.coinmarketcap.com/"
 
         @Provides
-        fun provideCoinMarketCapService(): CoinMarketCapService = service
+        @Singleton
+        fun provideCoinMarketCapService(): CoinMarketCapService = Retrofit.Builder()
+            .baseUrl(API_ADDRESS)
+            .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
+            .build().create(CoinMarketCapService::class.java)
 
         @Provides
         fun provideFirestoreDatabase(): FirebaseFirestore = Firebase.firestore
-
-        @Provides
-        fun provideCryptoAssetsDataSource(
-            errorMapper: ErrorMapper,
-        ): CryptoAssetsDataSource = CryptoAssetsDataSourceImpl(service, errorMapper)
-
-        @Provides
-        fun provideUserCollectionsLocalDataSource(
-            cryptoCollectionsDao: CryptoCollectionsDao,
-            errorMapper: ErrorMapper,
-        ): UserCollectionsLocalDataSource {
-            return UserCollectionsLocalDataSourceImpl(cryptoCollectionsDao, errorMapper)
-        }
-
-        @Provides
-        fun provideUserCollectionsRemoteDataSource(
-            firebaseFirestore: FirebaseFirestore,
-            errorMapper: ErrorMapper,
-        ): UserCollectionsRemoteDataSource {
-            return UserCollectionsRemoteDataSourceImpl(
-                firebaseFirestore,
-                errorMapper
-            )
-        }
 
         @Provides
         fun provideLocalPreferencesRepository(
@@ -96,19 +92,11 @@ abstract class RepositoryModule {
         }
 
         @Provides
-        fun provideLocalPreferencesDataSource(
-            localPreferencesDao: LocalPreferencesDao,
-            errorMapper: ErrorMapper,
-        ): LocalPreferencesDataSource {
-            return LocalPreferencesDataSourceImpl(localPreferencesDao, errorMapper)
-        }
-
-        @Provides
-        fun provideLocalPreferencesDao(context: Context): LocalPreferencesDao =
+        fun provideLocalPreferencesDao(@ApplicationContext context: Context): LocalPreferencesDao =
             CryptoHubDatabase.getInstance(context).localPreferencesDao()
 
         @Provides
-        fun provideCryptoCollectionsDao(context: Context): CryptoCollectionsDao =
+        fun provideCryptoCollectionsDao(@ApplicationContext context: Context): CryptoCollectionsDao =
             CryptoHubDatabase.getInstance(context).cryptoCollectionsDao()
 
         @Provides
@@ -132,20 +120,6 @@ abstract class RepositoryModule {
             userDataSource: UserDataSource,
         ): UserRepository {
             return UserRepository(userDataSource)
-        }
-
-        @Provides
-        @ActivityScope
-        fun provideUserDataSource(
-            firebaseSignInHandler: FirebaseSignInHandler,
-            firebaseAuth: FirebaseAuth
-        ): UserDataSource {
-            return UserDataSourceImpl(firebaseSignInHandler, firebaseAuth)
-        }
-
-        @Provides
-        fun provideFirebaseAuthResultHandler(context: Context): FirebaseAuthDataProvider {
-            return context as FirebaseAuthDataProvider
         }
 
         @Provides

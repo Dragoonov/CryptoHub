@@ -6,10 +6,11 @@ import androidx.lifecycle.viewModelScope
 import com.moonlightbutterfly.cryptohub.data.common.getOrNull
 import com.moonlightbutterfly.cryptohub.models.User
 import com.moonlightbutterfly.cryptohub.presentation.core.BaseViewModel
-import kotlinx.coroutines.flow.collect
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class SignInViewModel @Inject constructor(
     private val signInFacade: SignInFacade
 ) : BaseViewModel() {

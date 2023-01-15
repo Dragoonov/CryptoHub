@@ -12,10 +12,10 @@ import androidx.navigation.navigation
 import coil.annotation.ExperimentalCoilApi
 import com.moonlightbutterfly.cryptohub.presentation.list.CryptoAssetsListScreen
 import com.moonlightbutterfly.cryptohub.presentation.navigation.Screen
+import com.moonlightbutterfly.cryptohub.presentation.panel.CryptoAssetPanelScreen
 import com.moonlightbutterfly.cryptohub.presentation.search.SearchScreen
-import com.moonlightbutterfly.cryptohub.presentation.ui.composables.CryptoAssetPanelScreen
 import com.moonlightbutterfly.cryptohub.presentation.ui.composables.HOME_ROUTE
-import com.moonlightbutterfly.cryptohub.presentation.ui.composables.SettingsScreen
+import com.moonlightbutterfly.cryptohub.presentation.settings.SettingsScreen
 import com.moonlightbutterfly.cryptohub.presentation.ui.composables.SignInScreen
 import kotlinx.coroutines.FlowPreview
 

@@ -4,8 +4,9 @@ import com.moonlightbutterfly.cryptohub.data.common.Result
 import com.moonlightbutterfly.cryptohub.models.LocalPreferences
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import javax.inject.Inject
 
-class FakeLocalPreferencesDataSourceImpl : LocalPreferencesDataSource {
+class FakeLocalPreferencesDataSourceImpl @Inject constructor() : LocalPreferencesDataSource {
 
     private var localPreferences = LocalPreferences.DEFAULT
     private val localPreferencesFlow = MutableStateFlow(Result.Success(localPreferences))

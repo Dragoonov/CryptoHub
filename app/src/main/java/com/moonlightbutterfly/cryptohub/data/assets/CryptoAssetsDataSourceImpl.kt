@@ -11,11 +11,12 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
 import java.util.concurrent.CancellationException
+import javax.inject.Inject
 
 /**
  * Data source interacting with CoinMarketCap service for info.
  */
-class CryptoAssetsDataSourceImpl(
+class CryptoAssetsDataSourceImpl @Inject constructor(
     private val service: CoinMarketCapService,
     private val errorMapper: ErrorMapper,
 ) : CryptoAssetsDataSource {

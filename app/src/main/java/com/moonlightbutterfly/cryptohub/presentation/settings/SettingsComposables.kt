@@ -1,4 +1,4 @@
-package com.moonlightbutterfly.cryptohub.presentation.ui.composables
+package com.moonlightbutterfly.cryptohub.presentation.settings
 
 import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
@@ -22,17 +22,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.firebase.ui.auth.AuthUI
 import com.moonlightbutterfly.cryptohub.R
-import com.moonlightbutterfly.cryptohub.presentation.settings.SettingsViewModel
-import com.moonlightbutterfly.cryptohub.presentation.ui.LocalViewModelFactory
+import com.moonlightbutterfly.cryptohub.presentation.ui.composables.ErrorHandler
 
 @Composable
 fun SettingsScreen(onSignOutClicked: () -> Unit) {
-    val viewModel: SettingsViewModel = viewModel(
-        factory = LocalViewModelFactory.current
-    )
+
+    val viewModel: SettingsViewModel = hiltViewModel()
     val nightModeEnabled by viewModel.isNightModeEnabled.observeAsState(false)
 
     val error by viewModel.errorMessageFlow.collectAsState(null)

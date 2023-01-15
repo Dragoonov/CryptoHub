@@ -6,8 +6,9 @@ import com.moonlightbutterfly.cryptohub.models.CryptoCollection
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flowOf
+import javax.inject.Inject
 
-class FakeUserCollectionsLocalDataSourceImpl : UserCollectionsLocalDataSource {
+class FakeUserCollectionsLocalDataSourceImpl @Inject constructor() : UserCollectionsLocalDataSource {
 
     private val collections = mutableMapOf(
         "favourites" to MutableStateFlow(Result.Success(CryptoCollection.EMPTY)),

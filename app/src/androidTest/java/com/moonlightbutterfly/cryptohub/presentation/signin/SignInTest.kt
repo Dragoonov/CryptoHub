@@ -3,9 +3,11 @@ package com.moonlightbutterfly.cryptohub.presentation.signin
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.onNodeWithText
 import com.moonlightbutterfly.cryptohub.presentation.core.CryptoHubAndroidTest
+import dagger.hilt.android.testing.HiltAndroidTest
 import junit.framework.TestCase
 import org.junit.Test
 
+@HiltAndroidTest
 class SignInTest : CryptoHubAndroidTest() {
 
     @Test

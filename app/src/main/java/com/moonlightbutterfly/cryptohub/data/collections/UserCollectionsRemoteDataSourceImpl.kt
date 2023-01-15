@@ -13,12 +13,13 @@ import com.moonlightbutterfly.cryptohub.models.CryptoCollection
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.tasks.await
+import javax.inject.Inject
 
 /**
  * Data source using the Firestore database. It registers to the database and converts the
  * incoming data into flows.
  */
-class UserCollectionsRemoteDataSourceImpl(
+class UserCollectionsRemoteDataSourceImpl @Inject constructor(
     private val db: FirebaseFirestore,
     private val errorMapper: ErrorMapper
 ) : UserCollectionsRemoteDataSource {

@@ -10,12 +10,14 @@ import com.moonlightbutterfly.cryptohub.usecases.GetLocalPreferencesUseCase
 import com.moonlightbutterfly.cryptohub.usecases.IsUserSignedInUseCase
 import com.moonlightbutterfly.cryptohub.usecases.SignOutUseCase
 import com.moonlightbutterfly.cryptohub.usecases.UpdateLocalPreferencesUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class SettingsViewModel @Inject constructor(
     private val getLocalPreferencesUseCase: GetLocalPreferencesUseCase,
     private val updateLocalPreferencesUseCase: UpdateLocalPreferencesUseCase,

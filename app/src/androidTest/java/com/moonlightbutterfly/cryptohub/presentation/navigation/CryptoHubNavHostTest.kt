@@ -4,9 +4,11 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import com.moonlightbutterfly.cryptohub.presentation.core.CryptoHubAndroidTest
+import dagger.hilt.android.testing.HiltAndroidTest
 import junit.framework.TestCase.assertEquals
 import org.junit.Test
 
+@HiltAndroidTest
 class CryptoHubNavHostTest : CryptoHubAndroidTest() {
 
     @Test
