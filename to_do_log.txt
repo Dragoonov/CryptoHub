@@ -1,4 +1,3 @@
+- migrate tests to use not deprecated api
 - Introduce login activity/main activity as an app flows, introduce fragments and use jetpack navigation
-- Improve dagger to use subcomponents per flow
-- Use Hilt
 - Introduce notifications

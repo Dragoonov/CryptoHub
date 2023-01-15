@@ -7,7 +7,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flowOf
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class FakeUserCollectionsLocalDataSourceImpl @Inject constructor() : UserCollectionsLocalDataSource {
 
     private val collections = mutableMapOf(

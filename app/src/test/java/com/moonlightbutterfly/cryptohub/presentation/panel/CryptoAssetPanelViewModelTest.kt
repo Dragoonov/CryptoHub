@@ -22,7 +22,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
@@ -86,7 +86,7 @@ class CryptoAssetPanelViewModelTest {
         coEvery { getCryptoAssetsMarketInfoUseCase(any()) } returns flowOf(Result.Success(listOf(marketAsset2)))
         val assetLiveData2 = viewModel.getCryptoAssetMarketInfo(asset2.symbol)
         assetLiveData2.observeForTesting {
-            runBlockingTest {
+            runTest {
                 // WHEN
                 val check1 = viewModel.isCryptoInFavourites().first()
                 // THEN
@@ -101,7 +101,7 @@ class CryptoAssetPanelViewModelTest {
         coEvery { getCryptoAssetsMarketInfoUseCase(any()) } returns flowOf(Result.Success(listOf(marketAsset)))
         val assetLiveData = viewModel.getCryptoAssetMarketInfo(asset.symbol)
         assetLiveData.observeForTesting {
-            runBlockingTest {
+            runTest {
                 // WHEN
                 val check1 = viewModel.isCryptoInFavourites().first()
                 // THEN
