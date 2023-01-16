@@ -7,10 +7,6 @@ import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import javax.inject.Inject
 import javax.inject.Singleton
 
-/**
- * Interface for communication between Firebase authentication framework and android classes:
- * ie. registering contracts and launching intents.
- */
 @Singleton
 class FirebaseAuthDataProviderImpl @Inject constructor() : FirebaseAuthDataProvider {
 
