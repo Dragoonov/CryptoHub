@@ -11,11 +11,12 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
 /**
  * Data source using the Room database.
  */
-class UserCollectionsLocalDataSourceImpl(
+class UserCollectionsLocalDataSourceImpl @Inject constructor(
     private val cryptoCollectionsDao: CryptoCollectionsDao,
     private val errorMapper: ErrorMapper,
 ) : UserCollectionsLocalDataSource {

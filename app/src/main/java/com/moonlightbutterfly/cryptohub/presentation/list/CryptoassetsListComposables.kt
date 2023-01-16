@@ -1,5 +1,6 @@
 package com.moonlightbutterfly.cryptohub.presentation.list
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -41,20 +42,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import coil.annotation.ExperimentalCoilApi
 import com.moonlightbutterfly.cryptohub.R
 import com.moonlightbutterfly.cryptohub.models.CryptoAsset
 import com.moonlightbutterfly.cryptohub.models.CryptoAssetMarketInfo
-import com.moonlightbutterfly.cryptohub.presentation.ui.LocalViewModelFactory
 import com.moonlightbutterfly.cryptohub.presentation.ui.composables.ErrorHandler
 import com.moonlightbutterfly.cryptohub.presentation.ui.composables.Favourite
 import com.moonlightbutterfly.cryptohub.presentation.ui.composables.getImagePainterFor
 import com.moonlightbutterfly.cryptohub.utils.round
 import kotlinx.coroutines.FlowPreview
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @FlowPreview
 @ExperimentalCoilApi
 @Composable
@@ -63,9 +64,8 @@ fun CryptoAssetsListScreen(
     onSearchClicked: () -> Unit
 ) {
 
-    val viewModel = viewModel<CryptoAssetsListViewModel>(
-        factory = LocalViewModelFactory.current
-    )
+    val viewModel: CryptoAssetsListViewModel = hiltViewModel()
+
     val cryptoAssets = viewModel.cryptoAssets.collectAsLazyPagingItems()
 
     val favourites by viewModel.favourites.collectAsState(initial = emptyList())

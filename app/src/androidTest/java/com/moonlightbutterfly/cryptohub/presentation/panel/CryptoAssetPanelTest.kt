@@ -6,8 +6,10 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.test.espresso.Espresso
 import com.moonlightbutterfly.cryptohub.presentation.core.CryptoHubAndroidTest
+import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
+@HiltAndroidTest
 class CryptoAssetPanelTest : CryptoHubAndroidTest() {
 
     @Test

@@ -7,11 +7,13 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import androidx.test.espresso.Espresso
 import com.moonlightbutterfly.cryptohub.presentation.core.CryptoHubAndroidTest
+import dagger.hilt.android.testing.HiltAndroidTest
 import junit.framework.TestCase
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
 
+@HiltAndroidTest
 class SearchTest : CryptoHubAndroidTest() {
 
     @Test

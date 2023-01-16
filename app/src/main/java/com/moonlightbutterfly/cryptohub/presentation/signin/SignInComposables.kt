@@ -25,10 +25,9 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.moonlightbutterfly.cryptohub.R
 import com.moonlightbutterfly.cryptohub.presentation.signin.SignInViewModel
-import com.moonlightbutterfly.cryptohub.presentation.ui.LocalViewModelFactory
 
 val SIGN_IN_CONTENT_UNDER_LOGO_HEIGHT = 400.dp
 
@@ -36,9 +35,7 @@ val SIGN_IN_CONTENT_UNDER_LOGO_HEIGHT = 400.dp
 fun SignInScreen(
     onSignedIn: () -> Unit,
 ) {
-    val viewModel: SignInViewModel = viewModel(
-        factory = LocalViewModelFactory.current
-    )
+    val viewModel: SignInViewModel = hiltViewModel()
 
     val user by viewModel.user.observeAsState()
     user?.let { onSignedIn() }
