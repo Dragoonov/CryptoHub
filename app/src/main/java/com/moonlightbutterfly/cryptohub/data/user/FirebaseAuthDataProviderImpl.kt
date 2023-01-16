@@ -12,7 +12,7 @@ import javax.inject.Singleton
  * ie. registering contracts and launching intents.
  */
 @Singleton
-class FirebaseAuthDataProviderImpl @Inject constructor(): FirebaseAuthDataProvider {
+class FirebaseAuthDataProviderImpl @Inject constructor() : FirebaseAuthDataProvider {
 
     override lateinit var actionOnResult: (FirebaseAuthUIAuthenticationResult) -> Unit
 

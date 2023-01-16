@@ -58,9 +58,11 @@ abstract class TestRepositoryModule {
             userCollectionsRemoteDataSource: UserCollectionsRemoteDataSource,
             userDataSource: UserDataSource
         ): UserCollectionsRepository {
-            return UserCollectionsRepository(userCollectionsRemoteDataSource,
+            return UserCollectionsRepository(
+                userCollectionsRemoteDataSource,
                 userCollectionsLocalDataSource,
-                userDataSource)
+                userDataSource
+            )
         }
 
         @Provides
