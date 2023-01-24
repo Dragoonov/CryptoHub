@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.moonlightbutterfly.cryptohub.presentation.ui
+package com.moonlightbutterfly.cryptohub.presentation.core
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Shapes

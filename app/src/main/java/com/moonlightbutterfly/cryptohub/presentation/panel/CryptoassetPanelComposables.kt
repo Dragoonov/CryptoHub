@@ -23,21 +23,19 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import coil.annotation.ExperimentalCoilApi
 import com.moonlightbutterfly.cryptohub.R
 import com.moonlightbutterfly.cryptohub.models.CryptoAsset
 import com.moonlightbutterfly.cryptohub.models.CryptoAssetMarketInfo
-import com.moonlightbutterfly.cryptohub.presentation.ui.composables.ErrorHandler
-import com.moonlightbutterfly.cryptohub.presentation.ui.composables.Favourite
-import com.moonlightbutterfly.cryptohub.presentation.ui.composables.getImagePainterFor
+import com.moonlightbutterfly.cryptohub.presentation.core.ErrorHandler
+import com.moonlightbutterfly.cryptohub.presentation.core.Favourite
+import com.moonlightbutterfly.cryptohub.presentation.core.getImagePainterFor
 import com.moonlightbutterfly.cryptohub.utils.round
 import com.moonlightbutterfly.cryptohub.utils.toStringAbbr
 
 @ExperimentalCoilApi
 @Composable
-fun CryptoAssetPanelScreen(cryptoAssetSymbol: String) {
-    val viewModel: CryptoAssetPanelViewModel = hiltViewModel()
+fun CryptoAssetPanelScreen(cryptoAssetSymbol: String, viewModel: CryptoAssetPanelViewModel) {
     val asset by viewModel.getCryptoAssetMarketInfo(cryptoAssetSymbol)
         .observeAsState(CryptoAssetMarketInfo.EMPTY)
 

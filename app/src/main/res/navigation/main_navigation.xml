@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_navigation"
+    app:startDestination="@id/listFragment">
+
+    <fragment
+        android:id="@+id/listFragment"
+        android:name="com.moonlightbutterfly.cryptohub.presentation.list.ListFragment"
+        android:label="ListFragment" >
+        <action
+            android:id="@+id/action_listFragment_to_panelFragment"
+            app:destination="@id/panelFragment" />
+        <action
+            android:id="@+id/action_listFragment_to_searchFragment"
+            app:destination="@id/searchFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/panelFragment"
+        android:name="com.moonlightbutterfly.cryptohub.presentation.panel.PanelFragment"
+        android:label="PanelFragment" >
+        <argument
+            android:name="symbol"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.moonlightbutterfly.cryptohub.presentation.search.SearchFragment"
+        android:label="SearchFragment" >
+        <action
+            android:id="@+id/action_searchFragment_to_panelFragment"
+            app:destination="@id/panelFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.moonlightbutterfly.cryptohub.presentation.settings.SettingsFragment"
+        android:label="SettingsFragment" />
+    <action
+        android:id="@+id/action_listFragment"
+        app:destination="@id/listFragment"
+        app:popUpTo="@id/main_navigation"
+        app:launchSingleTop="true"/>
+    <action
+        android:id="@+id/action_settingsFragment"
+        app:destination="@id/settingsFragment"
+        app:popUpTo="@id/main_navigation"
+        app:launchSingleTop="true"/>
+</navigation>
