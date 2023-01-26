@@ -20,7 +20,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -38,7 +38,7 @@ class CryptoAssetPanelViewModelTest {
     private val removeFavouriteUseCase: RemoveFavouriteUseCase = mockk()
 
     private lateinit var viewModel: CryptoAssetPanelViewModel
-    private val testDispatcher = TestCoroutineDispatcher()
+    private val testDispatcher = UnconfinedTestDispatcher()
 
     private val asset = CryptoAsset(symbol = "DOT")
     private val asset2 = CryptoAsset(symbol = "ADA")
@@ -66,6 +66,8 @@ class CryptoAssetPanelViewModelTest {
             )
         )
         coEvery { getCryptoAssetsMarketInfoUseCase(any()) } returns flowOf(Result.Success(listOf(marketAsset)))
+        coEvery { addFavouriteUseCase(any()) } returns Result.Success(Unit)
+        coEvery { removeFavouriteUseCase(any()) } returns Result.Success(Unit)
 
         viewModel = CryptoAssetPanelViewModel(
             getCryptoAssetsMarketInfoUseCase,

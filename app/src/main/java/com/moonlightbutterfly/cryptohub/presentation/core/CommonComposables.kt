@@ -1,4 +1,4 @@
-package com.moonlightbutterfly.cryptohub.presentation.ui.composables
+package com.moonlightbutterfly.cryptohub.presentation.core
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
@@ -7,11 +7,13 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -21,10 +23,23 @@ import coil.compose.ImagePainter
 import coil.compose.LocalImageLoader
 import coil.compose.rememberImagePainter
 import coil.size.Scale
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.moonlightbutterfly.cryptohub.R
 import com.moonlightbutterfly.cryptohub.data.common.Error
 import com.moonlightbutterfly.cryptohub.models.CryptoAsset
 
+@Composable
+fun SetStatusBarColor() {
+    val systemUiController = rememberSystemUiController()
+    val useDarkIcons = MaterialTheme.colors.isLight
+    val statusBarColor = MaterialTheme.colors.primary
+    SideEffect {
+        systemUiController.setStatusBarColor(
+            color = statusBarColor,
+            darkIcons = useDarkIcons
+        )
+    }
+}
 @ExperimentalCoilApi
 @Composable
 fun getImagePainterFor(asset: CryptoAsset): ImagePainter {

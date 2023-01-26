@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.moonlightbutterfly.cryptohub" >
+    package="com.moonlightbutterfly.cryptohub">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -12,19 +12,23 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.CryptoHub.NoActionBar" >
-        <meta-data
-            android:name="com.facebook.sdk.ClientToken"
-            android:value="@string/fb_app_client_token" />
+        android:theme="@style/Theme.CryptoHub.NoActionBar">
         <activity
-            android:name=".presentation.core.MainActivity"
-            android:exported="true" >
+            android:name=".presentation.signin.SignInActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <meta-data
+            android:name="com.facebook.sdk.ClientToken"
+            android:value="@string/fb_app_client_token" />
+
+        <activity
+            android:name=".presentation.core.MainActivity"
+            android:exported="false" />
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation" />

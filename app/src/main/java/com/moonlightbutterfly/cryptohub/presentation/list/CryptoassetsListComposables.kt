@@ -42,16 +42,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import coil.annotation.ExperimentalCoilApi
 import com.moonlightbutterfly.cryptohub.R
 import com.moonlightbutterfly.cryptohub.models.CryptoAsset
 import com.moonlightbutterfly.cryptohub.models.CryptoAssetMarketInfo
-import com.moonlightbutterfly.cryptohub.presentation.ui.composables.ErrorHandler
-import com.moonlightbutterfly.cryptohub.presentation.ui.composables.Favourite
-import com.moonlightbutterfly.cryptohub.presentation.ui.composables.getImagePainterFor
+import com.moonlightbutterfly.cryptohub.presentation.core.ErrorHandler
+import com.moonlightbutterfly.cryptohub.presentation.core.Favourite
+import com.moonlightbutterfly.cryptohub.presentation.core.getImagePainterFor
 import com.moonlightbutterfly.cryptohub.utils.round
 import kotlinx.coroutines.FlowPreview
 
@@ -61,10 +60,9 @@ import kotlinx.coroutines.FlowPreview
 @Composable
 fun CryptoAssetsListScreen(
     onItemClicked: (symbol: String) -> Unit,
-    onSearchClicked: () -> Unit
+    onSearchClicked: () -> Unit,
+    viewModel: CryptoAssetsListViewModel
 ) {
-
-    val viewModel: CryptoAssetsListViewModel = hiltViewModel()
 
     val cryptoAssets = viewModel.cryptoAssets.collectAsLazyPagingItems()
 

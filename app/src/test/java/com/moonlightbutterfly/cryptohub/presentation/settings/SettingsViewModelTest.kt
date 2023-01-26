@@ -18,9 +18,9 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.last
-import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
@@ -35,7 +35,7 @@ class SettingsViewModelTest {
 
     private lateinit var viewModel: SettingsViewModel
 
-    private val testDispatcher = TestCoroutineDispatcher()
+    private val testDispatcher = UnconfinedTestDispatcher()
 
     @Before
     fun setup() {
@@ -81,7 +81,7 @@ class SettingsViewModelTest {
     }
 
     @Test
-    fun `should check if user is signed in`() = runBlockingTest {
+    fun `should check if user is signed in`() = runTest {
         // WHEN
         var signedIn = viewModel.isUserSignedIn.first()
 

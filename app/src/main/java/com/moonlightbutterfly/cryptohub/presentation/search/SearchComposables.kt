@@ -34,20 +34,18 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import coil.annotation.ExperimentalCoilApi
 import com.moonlightbutterfly.cryptohub.R
 import com.moonlightbutterfly.cryptohub.models.CryptoAsset
+import com.moonlightbutterfly.cryptohub.presentation.core.ErrorHandler
 import com.moonlightbutterfly.cryptohub.presentation.list.CryptoAssetLogoFor
 import com.moonlightbutterfly.cryptohub.presentation.list.CryptoAssetNameColumnFor
-import com.moonlightbutterfly.cryptohub.presentation.ui.composables.ErrorHandler
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @ExperimentalCoilApi
 @Composable
-fun SearchScreen(onCancelSearch: () -> Unit, onItemClicked: (asset: String) -> Unit) {
+fun SearchScreen(onCancelSearch: () -> Unit, onItemClicked: (asset: String) -> Unit, viewModel: SearchViewModel) {
 
-    val viewModel = hiltViewModel<SearchViewModel>()
     val error by viewModel.errorMessageFlow.collectAsState(null)
     error?.let { ErrorHandler(error) }
 

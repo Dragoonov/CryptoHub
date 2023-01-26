@@ -1,6 +1,7 @@
-package com.moonlightbutterfly.cryptohub.presentation.ui.composables
+package com.moonlightbutterfly.cryptohub.presentation.signin
 
 import androidx.annotation.StringRes
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -25,17 +26,16 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.moonlightbutterfly.cryptohub.R
-import com.moonlightbutterfly.cryptohub.presentation.signin.SignInViewModel
+import com.moonlightbutterfly.cryptohub.presentation.core.ErrorHandler
 
 val SIGN_IN_CONTENT_UNDER_LOGO_HEIGHT = 400.dp
 
 @Composable
 fun SignInScreen(
     onSignedIn: () -> Unit,
+    viewModel: SignInViewModel
 ) {
-    val viewModel: SignInViewModel = hiltViewModel()
 
     val user by viewModel.user.observeAsState()
     user?.let { onSignedIn() }
@@ -46,7 +46,8 @@ fun SignInScreen(
     Column(
         Modifier
             .fillMaxWidth()
-            .fillMaxHeight(),
+            .fillMaxHeight()
+            .background(MaterialTheme.colors.background),
         verticalArrangement = Arrangement.SpaceAround,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

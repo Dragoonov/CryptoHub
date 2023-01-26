@@ -1,3 +1,5 @@
-- migrate tests to use not deprecated api
-- Introduce login activity/main activity as an app flows, introduce fragments and use jetpack navigation
 - Introduce notifications
+- add Splash screen
+- add CI/CD
+- add Icon
+- migrate to another crypto service

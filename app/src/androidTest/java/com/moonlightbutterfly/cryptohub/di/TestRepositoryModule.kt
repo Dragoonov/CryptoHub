@@ -15,10 +15,10 @@ import com.moonlightbutterfly.cryptohub.data.localpreferences.LocalPreferencesDa
 import com.moonlightbutterfly.cryptohub.data.localpreferences.LocalPreferencesRepository
 import com.moonlightbutterfly.cryptohub.data.signin.FakeFirebaseSignInHandler
 import com.moonlightbutterfly.cryptohub.data.signin.FirebaseSignInHandler
+import com.moonlightbutterfly.cryptohub.data.user.FakeUserDataSourceImpl
 import com.moonlightbutterfly.cryptohub.data.user.FirebaseAuthDataProvider
 import com.moonlightbutterfly.cryptohub.data.user.FirebaseAuthDataProviderImpl
 import com.moonlightbutterfly.cryptohub.data.user.UserDataSource
-import com.moonlightbutterfly.cryptohub.data.user.UserDataSourceImpl
 import com.moonlightbutterfly.cryptohub.data.user.UserRepository
 import dagger.Binds
 import dagger.Module
@@ -49,7 +49,7 @@ abstract class TestRepositoryModule {
     abstract fun provideLocalPreferencesDataSource(impl: FakeLocalPreferencesDataSourceImpl): LocalPreferencesDataSource
 
     @Binds
-    abstract fun bindUserDataSource(userDataSourceImpl: UserDataSourceImpl): UserDataSource
+    abstract fun bindUserDataSource(userDataSourceImpl: FakeUserDataSourceImpl): UserDataSource
 
     companion object {
         @Provides

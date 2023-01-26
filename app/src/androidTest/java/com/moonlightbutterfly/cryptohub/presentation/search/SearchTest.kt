@@ -6,41 +6,39 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import androidx.test.espresso.Espresso
+import coil.annotation.ExperimentalCoilApi
+import com.moonlightbutterfly.cryptohub.R
 import com.moonlightbutterfly.cryptohub.presentation.core.CryptoHubAndroidTest
+import com.moonlightbutterfly.cryptohub.string
 import dagger.hilt.android.testing.HiltAndroidTest
-import junit.framework.TestCase
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
 
 @HiltAndroidTest
+@OptIn(ExperimentalCoilApi::class)
 class SearchTest : CryptoHubAndroidTest() {
 
     @Test
     fun testOpenSearch() {
         composeTestRule.apply {
-            onNodeWithText("Continue without sign in").performClick()
-            onNodeWithContentDescription("Search").performClick()
+            onNodeWithContentDescription(string(R.string.search)).performClick()
+            onNodeWithContentDescription("SearchInputField").assertIsDisplayed()
         }
-        val route = navController.currentBackStackEntry?.destination?.route
-        TestCase.assertEquals(route, "search")
     }
 
     @Test
     fun testClickOnSearchItemAndSaveToRecents() {
         composeTestRule.apply {
-            onNodeWithText("Continue without sign in").performClick()
-            onNodeWithContentDescription("Search").performClick()
+            onNodeWithContentDescription(string(R.string.search)).performClick()
             onNodeWithContentDescription("SearchInputField").performTextInput("Eth")
             runBlocking { delay(2000) }
             onNodeWithText("Ethereum").assertIsDisplayed()
             onNodeWithText("Ethereum").performClick()
-            onNodeWithText("Statistics").assertIsDisplayed()
+            onNodeWithText(string(R.string.statistics)).assertIsDisplayed()
             Espresso.pressBack()
             onNodeWithContentDescription("SearchInputField").performTextInput("")
             onNodeWithText("Ethereum").assertIsDisplayed()
         }
-        val route = navController.currentBackStackEntry?.destination?.route
-        TestCase.assertEquals(route, "search")
     }
 }

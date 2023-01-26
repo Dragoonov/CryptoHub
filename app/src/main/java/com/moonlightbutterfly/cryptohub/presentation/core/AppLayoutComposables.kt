@@ -1,85 +1,82 @@
-package com.moonlightbutterfly.cryptohub.presentation.ui.composables
+package com.moonlightbutterfly.cryptohub.presentation.core
 
-import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.navigation.NavBackStackEntry
-import androidx.navigation.NavHostController
+import androidx.compose.ui.viewinterop.AndroidViewBinding
 import coil.annotation.ExperimentalCoilApi
+import com.moonlightbutterfly.cryptohub.databinding.ActivityMainBinding
 import com.moonlightbutterfly.cryptohub.presentation.navigation.Screen
-import com.moonlightbutterfly.cryptohub.presentation.navigation.Screen.Companion.isSignInScreen
-import com.moonlightbutterfly.cryptohub.presentation.ui.navigation.AppGraph
 import kotlinx.coroutines.FlowPreview
 
 @FlowPreview
 @ExperimentalCoilApi
 @Composable
 fun AppLayout(
-    navController: NavHostController,
-    backStackEntry: NavBackStackEntry?
+    getCurrentDestinationId: () -> Int?,
+    onCryptoListSelected: () -> Unit,
+    onSettingsSelected: () -> Unit,
 ) {
     Scaffold(
         bottomBar = {
-            if (navController.currentDestination?.route?.isSignInScreen() == false) {
-                AppBottomNavigation(navController, backStackEntry)
-            }
+            AppBottomNavigation(getCurrentDestinationId, onCryptoListSelected, onSettingsSelected)
         }
     ) {
-        AppGraph(navController = navController, padding = it)
+        AndroidViewBinding(
+            ActivityMainBinding::inflate,
+            Modifier.padding(bottom = it.calculateBottomPadding())
+        )
     }
 }
 
 @Composable
-fun AppBottomNavigation(navController: NavHostController, backStackEntry: NavBackStackEntry?) {
-    BottomNavigation {
-        val allScreens = Screen.bottomNavigationScreens()
-        allScreens.forEach { screen ->
-            AppBottomNavigationItem(
-                screen = screen,
-                navController = navController,
-                backStackEntry = backStackEntry
-            )
-        }
-    }
-}
-
-@Composable
-fun RowScope.AppBottomNavigationItem(
-    screen: Screen,
-    navController: NavHostController,
-    backStackEntry: NavBackStackEntry?
+fun AppBottomNavigation(
+    getCurrentDestinationId: () -> Int?,
+    onCryptoListSelected: () -> Unit,
+    onSettingsSelected: () -> Unit,
 ) {
-    val currentRoute = backStackEntry?.destination?.route
-    BottomNavigationItem(
-        icon = {
-            Icon(
-                screen.getIconConsideringCurrentRoute(currentRoute),
-                contentDescription = null
-            )
-        },
-        label = { Text(stringResource(screen.nameResourceId)) },
-        selected = currentRoute == screen.route,
-        onClick = {
-            navController.navigate(screen.route) {
-                popUpTo(HOME_ROUTE)
-                launchSingleTop = true
-            }
-        }
-    )
-}
+    BottomNavigation {
+        var currentDestinationId: Int? by remember { mutableStateOf(Int.MAX_VALUE) }
 
-private fun Screen.getIconConsideringCurrentRoute(route: String?): ImageVector {
-    return if (this.route == route) {
-        iconSelected
-    } else {
-        iconUnselected
+        val listSelected = currentDestinationId == Int.MAX_VALUE || currentDestinationId == Screen.CRYPTO_ASSETS_LIST.destinationId
+        val settingsSelected = currentDestinationId == Screen.SETTINGS.destinationId
+        BottomNavigationItem(
+            icon = {
+                Icon(
+                    if (listSelected) Screen.CRYPTO_ASSETS_LIST.iconSelected else Screen.CRYPTO_ASSETS_LIST.iconUnselected,
+                    contentDescription = null
+                )
+            },
+            label = { Text(stringResource(Screen.CRYPTO_ASSETS_LIST.nameResourceId)) },
+            selected = listSelected,
+            onClick = {
+                onCryptoListSelected()
+                currentDestinationId = getCurrentDestinationId()
+            }
+        )
+        BottomNavigationItem(
+            icon = {
+                Icon(
+                    if (settingsSelected) Screen.SETTINGS.iconSelected else Screen.SETTINGS.iconUnselected,
+                    contentDescription = null
+                )
+            },
+            label = { Text(stringResource(Screen.SETTINGS.nameResourceId)) },
+            selected = settingsSelected,
+            onClick = {
+                onSettingsSelected()
+                currentDestinationId = getCurrentDestinationId()
+            }
+        )
     }
 }
-
-val HOME_ROUTE = Screen.CRYPTO_ASSETS_LIST.route

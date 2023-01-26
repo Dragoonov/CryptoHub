@@ -5,32 +5,33 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.test.espresso.Espresso
+import coil.annotation.ExperimentalCoilApi
+import com.moonlightbutterfly.cryptohub.R
 import com.moonlightbutterfly.cryptohub.presentation.core.CryptoHubAndroidTest
+import com.moonlightbutterfly.cryptohub.string
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
 @HiltAndroidTest
+@OptIn(ExperimentalCoilApi::class)
 class CryptoAssetPanelTest : CryptoHubAndroidTest() {
 
     @Test
     fun testGoingThroughApp() {
         composeTestRule.apply {
-            onNodeWithText("Continue without sign in").performClick()
             onNodeWithText("BTC").performClick()
             onNodeWithText("BTC").assertIsDisplayed()
-            onNodeWithText("Statistics").assertIsDisplayed()
-
-            onNodeWithText("Crypto assets list").performClick()
+            onNodeWithText(string(R.string.statistics)).assertIsDisplayed()
+            onNodeWithText(string(R.string.crypto_assets_list)).performClick()
             onNodeWithText("ETH").performClick()
             onNodeWithText("ETH").assertIsDisplayed()
-            onNodeWithText("Statistics").assertIsDisplayed()
+            onNodeWithText(string(R.string.statistics)).assertIsDisplayed()
         }
     }
 
     @Test
     fun testManagingFavourites() {
         composeTestRule.apply {
-            onNodeWithText("Continue without sign in").performClick()
             onNodeWithText("Bitcoin").performClick()
             onNodeWithText("BTC").assertIsDisplayed()
             onNodeWithContentDescription("Favourites").performClick()
