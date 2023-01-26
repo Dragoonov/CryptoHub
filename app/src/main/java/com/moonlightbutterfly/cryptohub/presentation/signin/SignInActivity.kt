@@ -20,7 +20,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class SignInActivity : AppCompatActivity() {
 
-    private val viewModel:SignInViewModel by viewModels()
+    private val viewModel: SignInViewModel by viewModels()
 
     @Inject
     lateinit var firebaseAuthDataProvider: FirebaseAuthDataProvider

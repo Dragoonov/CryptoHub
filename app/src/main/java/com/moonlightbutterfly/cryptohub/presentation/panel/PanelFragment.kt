@@ -13,7 +13,7 @@ import coil.annotation.ExperimentalCoilApi
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class PanelFragment: Fragment() {
+class PanelFragment : Fragment() {
 
     private val args: PanelFragmentArgs by navArgs()
 
@@ -24,7 +24,7 @@ class PanelFragment: Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val viewModel: CryptoAssetPanelViewModel by viewModels()
-        return ComposeView(requireContext()).apply { 
+        return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent { CryptoAssetPanelScreen(cryptoAssetSymbol = args.symbol, viewModel) }
         }

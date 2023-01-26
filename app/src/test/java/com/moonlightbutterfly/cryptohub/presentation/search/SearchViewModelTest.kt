@@ -95,7 +95,7 @@ class SearchViewModelTest {
     @Test
     fun `should search and filter by query of 3 characters`() =
         viewModel.cryptoAssetsResults.observeForTesting {
-            runTest (testDispatcher) {
+            runTest(testDispatcher) {
                 // WHEN
                 viewModel.onQueryChange("ada")
                 advanceTimeBy(1500)

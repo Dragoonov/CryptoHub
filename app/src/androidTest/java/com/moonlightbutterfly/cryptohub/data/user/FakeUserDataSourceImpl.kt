@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import javax.inject.Inject
 
-class FakeUserDataSourceImpl @Inject constructor(): UserDataSource {
+class FakeUserDataSourceImpl @Inject constructor() : UserDataSource {
 
     override fun getUser(): Result<User> {
         return Result.Failure(Error.NotFound("User not found"))

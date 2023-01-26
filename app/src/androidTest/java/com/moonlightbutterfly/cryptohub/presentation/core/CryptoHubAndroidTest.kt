@@ -16,4 +16,3 @@ open class CryptoHubAndroidTest {
     @get:Rule
     val composeTestRule = createAndroidComposeRule<MainActivity>()
 }
-

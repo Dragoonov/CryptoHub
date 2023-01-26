@@ -13,7 +13,7 @@ import coil.annotation.ExperimentalCoilApi
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class SearchFragment: Fragment() {
+class SearchFragment : Fragment() {
 
     @OptIn(ExperimentalCoilApi::class)
     override fun onCreateView(
@@ -29,11 +29,13 @@ class SearchFragment: Fragment() {
 
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-            setContent { SearchScreen(
-                onCancelSearch = onCancelSearch,
-                onItemClicked = onItemClicked,
-                viewModel
-            ) }
+            setContent {
+                SearchScreen(
+                    onCancelSearch = onCancelSearch,
+                    onItemClicked = onItemClicked,
+                    viewModel
+                )
+            }
         }
     }
 }

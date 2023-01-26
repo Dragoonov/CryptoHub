@@ -18,7 +18,7 @@ import com.moonlightbutterfly.cryptohub.presentation.core.SetStatusBarColor
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class SignInFragment: Fragment() {
+class SignInFragment : Fragment() {
 
     @OptIn(ExperimentalCoilApi::class)
     override fun onCreateView(
@@ -32,10 +32,13 @@ class SignInFragment: Fragment() {
             setContent {
                 val isNightMode by viewModel.isNightModeEnabled.collectAsState(false)
                 CryptoHubTheme(darkTheme = isNightMode) {
-                    SignInScreen(onSignedIn = {
-                        startActivity(Intent(activity, MainActivity::class.java))
-                        activity?.finish()
-                    }, viewModel)
+                    SignInScreen(
+                        onSignedIn = {
+                            startActivity(Intent(activity, MainActivity::class.java))
+                            activity?.finish()
+                        },
+                        viewModel
+                    )
                     SetStatusBarColor()
                 }
             }

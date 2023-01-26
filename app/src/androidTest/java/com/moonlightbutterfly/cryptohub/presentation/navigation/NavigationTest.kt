@@ -15,7 +15,7 @@ import org.junit.Test
 
 @OptIn(ExperimentalCoilApi::class)
 @HiltAndroidTest
-class NavigationTest: CryptoHubAndroidTest() {
+class NavigationTest : CryptoHubAndroidTest() {
 
     @Test
     fun testStartingPoint() {
