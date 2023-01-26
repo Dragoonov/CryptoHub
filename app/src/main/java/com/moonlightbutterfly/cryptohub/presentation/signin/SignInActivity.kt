@@ -2,12 +2,15 @@ package com.moonlightbutterfly.cryptohub.presentation.signin
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.ui.viewinterop.AndroidViewBinding
 import coil.annotation.ExperimentalCoilApi
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.moonlightbutterfly.cryptohub.R
 import com.moonlightbutterfly.cryptohub.data.user.FirebaseAuthDataProvider
+import com.moonlightbutterfly.cryptohub.databinding.ActivitySignInBinding
 import com.moonlightbutterfly.cryptohub.presentation.core.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
@@ -37,7 +40,9 @@ class SignInActivity : AppCompatActivity() {
             startActivity(Intent(this, MainActivity::class.java))
             finish()
         }
-        setContentView(R.layout.activity_sign_in)
+        setContent {
+            AndroidViewBinding(ActivitySignInBinding::inflate)
+        }
     }
 
     private fun getConfigurationData(): FirebaseAuthDataProvider.ConfigurationData {

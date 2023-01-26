@@ -19,7 +19,7 @@ import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
 import org.junit.After
@@ -37,7 +37,7 @@ class CryptoAssetsListViewModelTest {
     private val removeFavouriteUseCase: RemoveFavouriteUseCase = mockk()
 
     private lateinit var viewModel: CryptoAssetsListViewModel
-    private val testDispatcher = TestCoroutineDispatcher()
+    private val testDispatcher = UnconfinedTestDispatcher()
 
     @get:Rule
     val rule = InstantTaskExecutorRule()
@@ -59,6 +59,8 @@ class CryptoAssetsListViewModelTest {
             )
         )
         coEvery { getCryptoAssetsMarketInfoUseCase(any()) } returns flowOf(Result.Success(listOf()))
+        coEvery { addFavouriteUseCase(any()) } returns Result.Success(Unit)
+        coEvery { removeFavouriteUseCase(any()) } returns Result.Success(Unit)
 
         viewModel = CryptoAssetsListViewModel(
             getAllCryptoAssetsMarketInfoUseCase,

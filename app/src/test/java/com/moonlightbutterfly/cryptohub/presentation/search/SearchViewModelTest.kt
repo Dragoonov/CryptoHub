@@ -20,10 +20,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
@@ -42,7 +42,7 @@ class SearchViewModelTest {
 
     private lateinit var viewModel: SearchViewModel
 
-    private val testDispatcher = TestCoroutineDispatcher()
+    private val testDispatcher = UnconfinedTestDispatcher()
 
     @get:Rule
     val rule = InstantTaskExecutorRule()
@@ -95,7 +95,7 @@ class SearchViewModelTest {
     @Test
     fun `should search and filter by query of 3 characters`() =
         viewModel.cryptoAssetsResults.observeForTesting {
-            runBlockingTest(testDispatcher) {
+            runTest (testDispatcher) {
                 // WHEN
                 viewModel.onQueryChange("ada")
                 advanceTimeBy(1500)
@@ -110,7 +110,7 @@ class SearchViewModelTest {
 
     @Test
     fun `should just add crypto asset to recents`() = viewModel.recents.observeForTesting {
-        runBlockingTest {
+        runTest {
             // GIVEN
             recentsFlow.emit(Result.Success(CryptoCollection.EMPTY))
 
@@ -130,7 +130,7 @@ class SearchViewModelTest {
     @Test
     fun `should add crypto asset to recents and remove the same asset`() =
         viewModel.recents.observeForTesting {
-            runBlockingTest {
+            runTest {
                 // GIVEN
                 val asset = CryptoAsset(name = "test")
                 recentsFlow.emit(Result.Success(CryptoCollection(cryptoAssets = listOf(asset))))
@@ -149,7 +149,7 @@ class SearchViewModelTest {
     @Test
     fun `should add crypto asset to recents and remove last asset`() =
         viewModel.recents.observeForTesting {
-            runBlockingTest {
+            runTest {
                 // GIVEN
                 val asset = CryptoAsset(name = "test")
                 val asset2 = CryptoAsset(name = "test2")
