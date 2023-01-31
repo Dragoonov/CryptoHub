@@ -64,6 +64,7 @@ jacoco {
 
 tasks.withType(Test) {
     jacoco.includeNoLocationClasses = true
+    excludes = ['jdk.internal.*']
 }
 
 tasks.create(name: "testCoverage", type: JacocoReport, dependsOn: "test") {
