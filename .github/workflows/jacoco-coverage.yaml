@@ -6,7 +6,8 @@ on:
       - master
 
 jobs:
-  build:
+  Jacoco report:
+    name: Jacoco report
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
