@@ -25,6 +25,9 @@ jobs:
       - name: List files
         run: echo "ls la"
 
+      - name: Cat
+        run: cat local.properties
+
       - name: Assemble
         run: ./gradlew assembleDebug
 
