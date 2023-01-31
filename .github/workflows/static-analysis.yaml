@@ -1,0 +1,17 @@
+name: Static Analysis
+on:
+  pull_request:
+    branches:
+      - master
+jobs:
+  static-analysis:
+    name: Static analysis
+    runs-on: ubuntu-latest
+    steps:
+        uses: actions/checkout@v1
+
+      - name: Touch local properties
+        run: touch local.properties
+
+      - name: Ktlint Check
+        run: ./gradlew ktlintCheck
