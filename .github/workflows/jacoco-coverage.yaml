@@ -6,7 +6,7 @@ on:
       - master
 
 jobs:
-  Jacoco report:
+  jacoco-report:
     name: Jacoco report
     runs-on: ubuntu-latest
     steps:
