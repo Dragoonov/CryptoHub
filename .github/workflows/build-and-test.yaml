@@ -65,5 +65,8 @@ jobs:
       - name: Touch local properties
         run: touch local.properties
 
+      - name: Add Api Key
+        run: echo "apiKey=\"\"" >> local.properties
+
       - name: Ktlint Check
         run: ./gradlew ktlintCheck
