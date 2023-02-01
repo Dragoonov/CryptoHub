@@ -22,7 +22,6 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "com.moonlightbutterfly.cryptohub.CustomTestRunner"
-        buildConfigField("String", "API_KEY", "\"" + localProperties['coinMarketCapKey'] + "\"")
     }
 
     buildFeatures {
@@ -31,6 +30,9 @@ android {
         viewBinding true
     }
     buildTypes {
+        debug {
+            buildConfigField("String", "API_KEY", "\"" + localProperties['coinMarketCapKey'] + "\"")
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
