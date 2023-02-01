@@ -23,19 +23,19 @@ jobs:
         run: echo "coinMarketCapKey=1234" >> local.properties
 
       - name: Run Coverage
-        run: ./gradlew testCoverage
+        run: ./gradlew createDebugCoverageReport
 
       - name: Upload Report
         uses: 'actions/upload-artifact@v2'
         with:
           name: report.xml
-          path: app/build/reports/jacoco/testCoverage/testCoverage.xml
+          path: app/build/reports/coverage/androidTest/debug/report.xml
 
       - name: Jacoco Report to PR
         id: jacoco
         uses: madrapps/jacoco-report@v1.1
         with:
-          path: app/build/reports/jacoco/testCoverage/testCoverage.xml
+          path: app/build/reports/coverage/androidTest/debug/report.xml
           token: ${{ secrets.JACOCO_TOKEN }}
           min-coverage-overall: 40
           min-coverage-changed-files: 60
