@@ -20,7 +20,7 @@ jobs:
         run: touch local.properties
 
       - name: Add Api Key
-        run: echo "coinMarketCapKey=\"\"" >> local.properties
+        run: echo "coinMarketCapKey=1234" >> local.properties
 
       - name: List files
         run: echo ls -la
