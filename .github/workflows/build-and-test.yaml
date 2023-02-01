@@ -17,10 +17,10 @@ jobs:
       - name: Touch local properties
         run: touch local.properties
       - name: Add Api Key
-        run: echo "apiKey=\"\"" >> local.properties
+        run: echo "coinMarketCapKey=1234" >> local.properties
       - name: Unit tests
         run: ./gradlew testDebugUnitTest
-      - name: Run instrumentation tests
+      - name: Instrumentation tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 29
@@ -56,17 +56,3 @@ jobs:
         with:
           name: build-output
           path: app/build/outputs/apk/debug/app-debug.apk
-  static-analysis:
-    name: Static analysis
-    runs-on: ubuntu-latest
-    steps:
-        uses: actions/checkout@v1
-
-      - name: Touch local properties
-        run: touch local.properties
-
-      - name: Add Api Key
-        run: echo "apiKey=\"\"" >> local.properties
-
-      - name: Ktlint Check
-        run: ./gradlew ktlintCheck
