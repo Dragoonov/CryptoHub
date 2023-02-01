@@ -20,10 +20,10 @@ jobs:
         run: touch local.properties
 
       - name: Add Api Key
-        run: echo "apiKey=\"\"" >> local.properties
+        run: echo "coinMarketCapKey=\"\"" >> local.properties
 
       - name: List files
-        run: echo "ls la"
+        run: echo ls -la
 
       - name: Cat
         run: cat local.properties
