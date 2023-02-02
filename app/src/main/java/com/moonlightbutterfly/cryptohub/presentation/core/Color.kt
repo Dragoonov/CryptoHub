@@ -18,7 +18,10 @@ package com.moonlightbutterfly.cryptohub.presentation.core
 
 import androidx.compose.ui.graphics.Color
 
-val yellow = Color(0xFFFFC400)
-val yellowDark = Color(0xFFC79400)
-val red = Color(0xFFFF3D00)
-val redDark = Color(0xFFC30000)
+@SuppressWarnings("MagicNumber")
+object Color {
+    val yellow = Color(0xFFFFC400)
+    val yellowDark = Color(0xFFC79400)
+    val red = Color(0xFFFF3D00)
+    val redDark = Color(0xFFC30000)
+}

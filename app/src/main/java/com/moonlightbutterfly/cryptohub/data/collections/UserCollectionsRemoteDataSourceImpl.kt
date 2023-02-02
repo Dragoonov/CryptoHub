@@ -24,9 +24,11 @@ class UserCollectionsRemoteDataSourceImpl @Inject constructor(
     private val errorMapper: ErrorMapper
 ) : UserCollectionsRemoteDataSource {
 
-    private val subscribedUsersCollections = mutableMapOf<String, MutableMap<String, MutableStateFlow<Result<CryptoCollection>>>>()
+    private val subscribedUsersCollections =
+        mutableMapOf<String, MutableMap<String, MutableStateFlow<Result<CryptoCollection>>>>()
     private val usersDocuments = mutableMapOf<String, DocumentReference>()
-    private val allUsersCollectionNames = mutableMapOf<String, MutableStateFlow<Result<List<String>>>>()
+    private val allUsersCollectionNames =
+        mutableMapOf<String, MutableStateFlow<Result<List<String>>>>()
     private val trackedUserIds = mutableListOf<String>()
 
     private fun initializeForUser(userId: String) {
@@ -59,7 +61,8 @@ class UserCollectionsRemoteDataSourceImpl @Inject constructor(
                     }
                     if (assets != null) {
                         val collection = CryptoCollection(name = key, assets)
-                        if (userCollections[key]?.value?.unpack(CryptoCollection.EMPTY) != collection) {
+                        val unpacked = userCollections[key]?.value?.unpack(CryptoCollection.EMPTY)
+                        if (unpacked != collection) {
                             userCollections[key]?.value = Result.Success(collection)
                         }
                     }
@@ -82,12 +85,18 @@ class UserCollectionsRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun clearCollection(userId: String, name: String): Result<Unit> {
         initializeForUser(userId)
-        return usersDocuments.getValue(userId).update(name, emptyList<CryptoAsset>()).getTaskResult()
+        return usersDocuments
+            .getValue(userId)
+            .update(name, emptyList<CryptoAsset>())
+            .getTaskResult()
     }
 
     override suspend fun createCollection(userId: String, name: String): Result<Unit> {
         initializeForUser(userId)
-        return usersDocuments.getValue(userId).update(name, emptyList<List<CryptoAsset>>()).getTaskResult()
+        return usersDocuments
+            .getValue(userId)
+            .update(name, emptyList<List<CryptoAsset>>())
+            .getTaskResult()
     }
 
     override suspend fun removeCollection(userId: String, name: String): Result<Unit> {
@@ -95,14 +104,28 @@ class UserCollectionsRemoteDataSourceImpl @Inject constructor(
         return usersDocuments.getValue(userId).update(name, FieldValue.delete()).getTaskResult()
     }
 
-    override suspend fun addToCollection(userId: String, asset: CryptoAsset, collectionName: String): Result<Unit> {
+    override suspend fun addToCollection(
+        userId: String,
+        asset: CryptoAsset,
+        collectionName: String
+    ): Result<Unit> {
         initializeForUser(userId)
-        return usersDocuments.getValue(userId).update(collectionName, FieldValue.arrayUnion(asset)).getTaskResult()
+        return usersDocuments
+            .getValue(userId)
+            .update(collectionName, FieldValue.arrayUnion(asset))
+            .getTaskResult()
     }
 
-    override suspend fun removeFromCollection(userId: String, asset: CryptoAsset, collectionName: String): Result<Unit> {
+    override suspend fun removeFromCollection(
+        userId: String,
+        asset: CryptoAsset,
+        collectionName: String
+    ): Result<Unit> {
         initializeForUser(userId)
-        return usersDocuments.getValue(userId).update(collectionName, FieldValue.arrayRemove(asset)).getTaskResult()
+        return usersDocuments
+            .getValue(userId)
+            .update(collectionName, FieldValue.arrayRemove(asset))
+            .getTaskResult()
     }
 
     private suspend fun Task<Void>.getTaskResult(): Result<Unit> {

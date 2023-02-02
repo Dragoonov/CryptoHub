@@ -8,7 +8,8 @@ import com.moonlightbutterfly.cryptohub.models.LocalPreferences
 class LocalPreferencesRepository(
     private val localPreferencesDataSource: LocalPreferencesDataSource
 ) {
-    suspend fun updateLocalPreferences(localPreferences: LocalPreferences) = localPreferencesDataSource.updateLocalPreferences(localPreferences)
+    suspend fun updateLocalPreferences(localPreferences: LocalPreferences) =
+        localPreferencesDataSource.updateLocalPreferences(localPreferences)
 
     fun getLocalPreferences() = localPreferencesDataSource.getLocalPreferences()
 }

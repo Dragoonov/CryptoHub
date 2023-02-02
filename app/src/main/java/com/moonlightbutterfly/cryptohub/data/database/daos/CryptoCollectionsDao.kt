@@ -15,7 +15,10 @@ interface CryptoCollectionsDao {
     @Query("SELECT name FROM ${CryptoHubDatabase.CRYPTO_COLLECTIONS_TABLE_NAME}")
     fun getAllCollectionNames(): Flow<List<String>>
 
-    @Query("SELECT * FROM ${CryptoHubDatabase.CRYPTO_COLLECTIONS_TABLE_NAME} WHERE ${CryptoHubDatabase.CRYPTO_COLLECTIONS_NAME_COLUMN_NAME} = :name")
+    @Query(
+        "SELECT * FROM ${CryptoHubDatabase.CRYPTO_COLLECTIONS_TABLE_NAME} WHERE " +
+            "${CryptoHubDatabase.CRYPTO_COLLECTIONS_NAME_COLUMN_NAME} = :name"
+    )
     fun getCollectionByName(name: String): Flow<List<CryptoCollectionEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -24,6 +27,9 @@ interface CryptoCollectionsDao {
     @Update
     suspend fun update(cryptoCollection: CryptoCollectionEntity): Int
 
-    @Query("DELETE from ${CryptoHubDatabase.CRYPTO_COLLECTIONS_TABLE_NAME} WHERE ${CryptoHubDatabase.CRYPTO_COLLECTIONS_NAME_COLUMN_NAME} = :name")
+    @Query(
+        "DELETE from ${CryptoHubDatabase.CRYPTO_COLLECTIONS_TABLE_NAME} WHERE" +
+            " ${CryptoHubDatabase.CRYPTO_COLLECTIONS_NAME_COLUMN_NAME} = :name"
+    )
     suspend fun remove(name: String): Int
 }

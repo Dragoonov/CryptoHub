@@ -24,9 +24,15 @@ class ListFragment : Fragment() {
     ): View {
         val viewModel: CryptoAssetsListViewModel by viewModels()
 
-        val onItemClicked: (String) -> Unit = { findNavController().navigate(ListFragmentDirections.actionListFragmentToPanelFragment(it)) }
+        val onItemClicked: (String) -> Unit = {
+            findNavController()
+                .navigate(ListFragmentDirections.actionListFragmentToPanelFragment(it))
+        }
 
-        val onSearchClicked = { findNavController().navigate(ListFragmentDirections.actionListFragmentToSearchFragment()) }
+        val onSearchClicked = {
+            findNavController()
+                .navigate(ListFragmentDirections.actionListFragmentToSearchFragment())
+        }
 
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)

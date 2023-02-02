@@ -47,13 +47,18 @@ fun AppBottomNavigation(
 ) {
     BottomNavigation {
         var currentDestinationId: Int? by remember { mutableStateOf(Int.MAX_VALUE) }
-
-        val listSelected = currentDestinationId == Int.MAX_VALUE || currentDestinationId == Screen.CRYPTO_ASSETS_LIST.destinationId
+        val isInitialDestination = currentDestinationId == Int.MAX_VALUE
+        val isListDestination = currentDestinationId == Screen.CRYPTO_ASSETS_LIST.destinationId
+        val listSelected = isInitialDestination || isListDestination
         val settingsSelected = currentDestinationId == Screen.SETTINGS.destinationId
         BottomNavigationItem(
             icon = {
                 Icon(
-                    if (listSelected) Screen.CRYPTO_ASSETS_LIST.iconSelected else Screen.CRYPTO_ASSETS_LIST.iconUnselected,
+                    if (listSelected) {
+                        Screen.CRYPTO_ASSETS_LIST.iconSelected
+                    } else {
+                        Screen.CRYPTO_ASSETS_LIST.iconUnselected
+                    },
                     contentDescription = null
                 )
             },
