@@ -8,6 +8,7 @@ jobs:
     name: Static analysis
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout current repository
         uses: actions/checkout@v1
       - name: Setup JDK 1.11
         uses: actions/setup-java@v1
