@@ -19,6 +19,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
@@ -67,19 +68,19 @@ fun CryptoAssetPanelScreen(cryptoAssetSymbol: String, viewModel: CryptoAssetPane
         Section(name = stringResource(id = R.string.statistics)) {
             Stat(
                 title = stringResource(id = R.string.market_cap),
-                value = "${asset.marketCap.toStringAbbr()} USD",
+                value = "${asset.marketCap.toStringAbbr(LocalContext.current)} USD",
             )
             Stat(
                 title = stringResource(id = R.string.volume),
-                value = "${asset.volume24H.toStringAbbr()} USD",
+                value = "${asset.volume24H.toStringAbbr(LocalContext.current)} USD",
             )
             Stat(
                 title = stringResource(id = R.string.circulating_supply),
-                value = asset.circulatingSupply.toStringAbbr()
+                value = asset.circulatingSupply.toStringAbbr(LocalContext.current)
             )
             Stat(
                 title = stringResource(id = R.string.max_supply),
-                value = asset.maxSupply.toStringAbbr()
+                value = asset.maxSupply.toStringAbbr(LocalContext.current)
             )
             Stat(
                 title = stringResource(id = R.string.rank),

@@ -41,4 +41,6 @@
     <string name="access_denied_error">Access denied error occurred</string>
     <string name="service_unavailable_error">Service unavailable error occurred</string>
     <string name="unknown_error">Unknown error occurred</string>
+    <string name="billion_abbr">bln</string>
+    <string name="million_abbr">mln</string>
 </resources>

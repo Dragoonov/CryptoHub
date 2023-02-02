@@ -1,6 +1,8 @@
 package com.moonlightbutterfly.cryptohub.utils
 
+import android.content.Context
 import com.google.firebase.auth.FirebaseUser
+import com.moonlightbutterfly.cryptohub.R
 import com.moonlightbutterfly.cryptohub.models.User
 
 @SuppressWarnings("MagicNumber")
@@ -10,9 +12,11 @@ fun Double.round(decimals: Int): Double {
     return kotlin.math.round(this * multiplier) / multiplier
 }
 
-fun Double.toStringAbbr(): String = when {
-    this > BILLION -> "${this.div(BILLION).round(2)} bln"
-    this > MILLION -> "${this.div(MILLION).round(2)} mln"
+fun Double.toStringAbbr(context: Context): String = when {
+    this > BILLION ->
+        "${this.div(BILLION).round(2)} ${context.getString(R.string.billion_abbr)}"
+    this > MILLION ->
+        "${this.div(MILLION).round(2)} ${context.getString(R.string.million_abbr)}"
     else -> this.round(2).toString()
 }
 
