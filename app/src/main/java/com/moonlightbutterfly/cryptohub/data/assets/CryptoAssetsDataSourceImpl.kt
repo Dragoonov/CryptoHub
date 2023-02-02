@@ -24,7 +24,7 @@ class CryptoAssetsDataSourceImpl @Inject constructor(
     override fun getCryptoAssetsMarketInfo(
         symbols: List<String>,
     ): Flow<Result<List<CryptoAssetMarketInfo>>> {
-        val metaDataFlow = flow{
+        val metaDataFlow = flow {
             service.getMetadata(
                 apiKey = BuildConfig.API_KEY,
                 symbols = symbols.joinToString(separator = ",")
