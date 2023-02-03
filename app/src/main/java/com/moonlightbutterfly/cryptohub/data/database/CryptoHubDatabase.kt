@@ -28,12 +28,12 @@ abstract class CryptoHubDatabase : RoomDatabase() {
     companion object {
         private var INSTANCE: CryptoHubDatabase? = null
         private const val DATABASE_NAME = "crypto_hub_database"
-        private const val DATABASE_TEMPLATE_PATH = "databases/$DATABASE_NAME.db"
-        const val LOCAL_PREFERENCES_TABLE_NAME = "local_preferences"
         const val LOCAL_PREFERENCES_COLUMN_NAME = "preferences"
         const val CRYPTO_COLLECTIONS_TABLE_NAME = "crypto_collection"
         const val CRYPTO_COLLECTIONS_NAME_COLUMN_NAME = "name"
         const val CRYPTO_COLLECTIONS_ASSETS_COLUMN_NAME = "assets"
+        const val LOCAL_PREFERENCES_TABLE_NAME = "local_preferences"
+        // private const val DATABASE_TEMPLATE_PATH = "databases/$DATABASE_NAME.db"
 
         fun getInstance(context: Context): CryptoHubDatabase {
             synchronized(this) {
@@ -57,7 +57,7 @@ abstract class CryptoHubDatabase : RoomDatabase() {
         }
 
         private val initializeCallbackHelper =
-            object : RoomDatabase.Callback() {
+            object : Callback() {
                 override fun onCreate(db: SupportSQLiteDatabase) {
                     val createLocalPreferences =
                         "CREATE TABLE IF NOT EXISTS $LOCAL_PREFERENCES_TABLE_NAME (" +

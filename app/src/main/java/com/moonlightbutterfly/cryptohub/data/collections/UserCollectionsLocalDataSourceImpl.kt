@@ -101,19 +101,21 @@ class UserCollectionsLocalDataSourceImpl @Inject constructor(
         return cryptoCollectionsDao.update(newCollection)
     }
 
-    private fun Int.getResult(): Result<Unit> {
-        return if (this > 0) {
-            Result.Success(Unit)
-        } else {
-            Result.Failure(Error.NotFound(""))
+    private companion object {
+        private fun Int.getResult(): Result<Unit> {
+            return if (this > 0) {
+                Result.Success(Unit)
+            } else {
+                Result.Failure(Error.NotFound(""))
+            }
         }
-    }
 
-    private fun Long.getResult(): Result<Unit> {
-        return if (this >= 0) {
-            Result.Success(Unit)
-        } else {
-            Result.Failure(Error.Unknown(""))
+        private fun Long.getResult(): Result<Unit> {
+            return if (this >= 0) {
+                Result.Success(Unit)
+            } else {
+                Result.Failure(Error.Unknown(""))
+            }
         }
     }
 }

@@ -5,6 +5,30 @@ plugins {
     id 'com.google.gms.google-services'
     id 'com.google.dagger.hilt.android'
     id 'androidx.navigation.safeargs.kotlin'
+    id 'jacoco'
+}
+
+task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'createDebugCoverageReport']) {
+
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+
+    def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*']
+    def debugTree = fileTree(dir: "${buildDir}/intermediates/classes/debug", excludes: fileFilter)
+    def mainSrc = "${project.projectDir}/src/main/java"
+
+    sourceDirectories.setFrom(files([mainSrc]))
+    classDirectories.setFrom(files([debugTree]))
+    executionData.setFrom(fileTree(dir: "$buildDir", includes: [
+            "jacoco/testDebugUnitTest.exec",
+            "outputs/code-coverage/connected/*coverage.ec"
+    ]))
+}
+
+jacoco {
+    toolVersion = "0.8.8"
 }
 
 def localProperties = new Properties()
@@ -29,9 +53,21 @@ android {
         compose true
         viewBinding true
     }
+
+    testOptions {
+        unitTests.all {
+            jacoco {
+                includeNoLocationClasses = true
+                jacoco.excludes = ['jdk.internal.*']
+            }
+        }
+        unitTests.returnDefaultValues = true
+    }
+
     buildTypes {
         debug {
             buildConfigField("String", "API_KEY", "\"" + localProperties['coinMarketCapKey'] + "\"")
+            testCoverageEnabled true
         }
         release {
             minifyEnabled false
@@ -54,7 +90,15 @@ android {
         exclude 'META-INF/LGPL2.1'
     }
 }
-
+configurations.all{
+    resolutionStrategy {
+        eachDependency { details ->
+            if ('org.jacoco' == details.requested.group) {
+                details.useVersion "0.8.8"
+            }
+        }
+    }
+}
 dependencies {
     implementation project(':core')
     implementation 'androidx.core:core-ktx:1.9.0'

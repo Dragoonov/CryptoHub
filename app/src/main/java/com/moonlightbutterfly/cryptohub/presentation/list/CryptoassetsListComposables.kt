@@ -227,7 +227,7 @@ fun CryptoAssetLogoFor(asset: CryptoAsset) {
 fun RowScope.CryptoAssetNameColumnFor(asset: CryptoAsset) {
     Column(
         Modifier
-            .weight(3f)
+            .weight(THREE_FIFTHS_WEIGHT)
             .fillMaxHeight(),
         Arrangement.SpaceBetween
     ) {
@@ -246,7 +246,7 @@ fun RowScope.CryptoAssetNameColumnFor(asset: CryptoAsset) {
 fun RowScope.CryptoAssetPriceColumnFor(asset: CryptoAssetMarketInfo) {
     Column(
         Modifier
-            .weight(2f)
+            .weight(TWO_FIFTHS_WEIGHT)
             .fillMaxHeight(),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
@@ -257,3 +257,6 @@ fun RowScope.CryptoAssetPriceColumnFor(asset: CryptoAssetMarketInfo) {
         )
     }
 }
+
+private const val THREE_FIFTHS_WEIGHT = 3f
+private const val TWO_FIFTHS_WEIGHT = 2f

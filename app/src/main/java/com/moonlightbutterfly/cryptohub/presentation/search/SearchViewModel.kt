@@ -73,10 +73,10 @@ class SearchViewModel @Inject constructor(
         }
     }
 
-    private fun String.isLongEnough() = this.length >= 3
+    private fun String.isLongEnough() = this.length >= MINIMAL_QUERY_LENGTH
 
     private suspend fun fetchResultsToFilter() {
-        while (searchPage <= 10) {
+        while (searchPage <= THRESHOLD_PAGES_FOR_FILTERING) {
             val newResults = getAllCryptoAssetsMarketInfoUseCase(searchPage).propagateErrors().first()
             searchPage += 1
             allResults += newResults.unpack(emptyList()).map { it.asset }
@@ -97,7 +97,7 @@ class SearchViewModel @Inject constructor(
             viewModelScope.launch {
                 if (it.contains(cryptoAsset)) {
                     removeRecentUseCase(cryptoAsset).propagateErrors()
-                } else if (it.size >= 10) {
+                } else if (it.size >= MAX_RECENTS) {
                     removeRecentUseCase(it.first()).propagateErrors()
                 }
                 addRecentUseCase(cryptoAsset).propagateErrors()
@@ -113,5 +113,8 @@ class SearchViewModel @Inject constructor(
 
     private companion object {
         private const val WAITING_TIME_MS = 1000L
+        private const val MINIMAL_QUERY_LENGTH = 3
+        private const val THRESHOLD_PAGES_FOR_FILTERING = 10
+        private const val MAX_RECENTS = 10
     }
 }

@@ -22,6 +22,10 @@ import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import com.moonlightbutterfly.cryptohub.presentation.core.Color.red
+import com.moonlightbutterfly.cryptohub.presentation.core.Color.redDark
+import com.moonlightbutterfly.cryptohub.presentation.core.Color.yellow
+import com.moonlightbutterfly.cryptohub.presentation.core.Color.yellowDark
 
 private val DarkColorPalette = darkColors(
     primary = yellowDark,

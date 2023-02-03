@@ -25,7 +25,10 @@ class SearchFragment : Fragment() {
 
         val onCancelSearch: () -> Unit = { findNavController().popBackStack() }
 
-        val onItemClicked: (String) -> Unit = { findNavController().navigate(SearchFragmentDirections.actionSearchFragmentToPanelFragment(it)) }
+        val onItemClicked: (String) -> Unit = {
+            findNavController()
+                .navigate(SearchFragmentDirections.actionSearchFragmentToPanelFragment(it))
+        }
 
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)

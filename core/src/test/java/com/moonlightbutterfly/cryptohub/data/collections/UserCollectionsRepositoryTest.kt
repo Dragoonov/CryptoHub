@@ -21,8 +21,16 @@ import org.junit.Test
 @ExperimentalCoroutinesApi
 class UserCollectionsRepositoryTest {
 
-    private val collectionLocal = flowOf(Result.Success(CryptoCollection(cryptoAssets = listOf(CryptoAsset.EMPTY, CryptoAsset.EMPTY))))
-    private val collectionRemote = flowOf(Result.Success(CryptoCollection(cryptoAssets = listOf(CryptoAsset.EMPTY))))
+    private val collectionLocal = flowOf(
+        Result.Success(
+            CryptoCollection(cryptoAssets = listOf(CryptoAsset.EMPTY, CryptoAsset.EMPTY))
+        )
+    )
+    private val collectionRemote = flowOf(
+        Result.Success(
+            CryptoCollection(cryptoAssets = listOf(CryptoAsset.EMPTY))
+        )
+    )
     private val collectionNamesLocal = flowOf(Result.Success(listOf("local", "test2")))
     private val collectionNamesRemote = flowOf(Result.Success(listOf("remote", "test2")))
 
@@ -47,11 +55,17 @@ class UserCollectionsRepositoryTest {
     }
 
     private val userDataSource = mockk<UserDataSource> {
-        every { isUserSignedIn() } returns Result.Success(false) andThen Result.Success(true)
+        every {
+            isUserSignedIn()
+        } returns Result.Success(false) andThen Result.Success(true)
         every { getUser() } returns Result.Success(User("test"))
     }
 
-    private val repository = UserCollectionsRepository(userConfigurationRemoteDataSource, userConfigurationLocalDataSource, userDataSource)
+    private val repository = UserCollectionsRepository(
+        userConfigurationRemoteDataSource,
+        userConfigurationLocalDataSource,
+        userDataSource
+    )
 
     @Test
     fun `should get collection`() = runBlockingTest {

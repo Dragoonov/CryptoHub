@@ -129,7 +129,9 @@ class UserCollectionsLocalDataSourceImplTest {
     fun `should create collection on adding to non existent collection`() = runBlockingTest {
         // GIVEN
         val asset = CryptoAsset("name")
-        every { cryptoCollectionsDao.getCollectionByName(eq("test")) } returns flowOf(emptyList()) andThen collectionFlow
+        every {
+            cryptoCollectionsDao.getCollectionByName(eq("test"))
+        } returns flowOf(emptyList()) andThen collectionFlow
 
         // WHEN
         userConfigurationLocalDataSourceImpl.addToCollection(asset, "test")

@@ -62,13 +62,19 @@ abstract class RepositoryModule {
     abstract fun bindsCryptoAssetsDataSource(impl: CryptoAssetsDataSourceImpl): CryptoAssetsDataSource
 
     @Binds
-    abstract fun bindUserCollectionsLocalDataSource(impl: UserCollectionsLocalDataSourceImpl): UserCollectionsLocalDataSource
+    abstract fun bindUserCollectionsLocalDataSource(
+        impl: UserCollectionsLocalDataSourceImpl
+    ): UserCollectionsLocalDataSource
 
     @Binds
-    abstract fun bindUserCollectionsRemoteDataSource(impl: UserCollectionsRemoteDataSourceImpl): UserCollectionsRemoteDataSource
+    abstract fun bindUserCollectionsRemoteDataSource(
+        impl: UserCollectionsRemoteDataSourceImpl
+    ): UserCollectionsRemoteDataSource
 
     @Binds
-    abstract fun bindLocalPreferencesDataSource(impl: LocalPreferencesDataSourceImpl): LocalPreferencesDataSource
+    abstract fun bindLocalPreferencesDataSource(
+        impl: LocalPreferencesDataSourceImpl
+    ): LocalPreferencesDataSource
 
     companion object {
 
@@ -92,11 +98,15 @@ abstract class RepositoryModule {
         }
 
         @Provides
-        fun provideLocalPreferencesDao(@ApplicationContext context: Context): LocalPreferencesDao =
+        fun provideLocalPreferencesDao(
+            @ApplicationContext context: Context
+        ): LocalPreferencesDao =
             CryptoHubDatabase.getInstance(context).localPreferencesDao()
 
         @Provides
-        fun provideCryptoCollectionsDao(@ApplicationContext context: Context): CryptoCollectionsDao =
+        fun provideCryptoCollectionsDao(
+            @ApplicationContext context: Context
+        ): CryptoCollectionsDao =
             CryptoHubDatabase.getInstance(context).cryptoCollectionsDao()
 
         @Provides
@@ -105,7 +115,11 @@ abstract class RepositoryModule {
             userCollectionsRemoteDataSource: UserCollectionsRemoteDataSource,
             userDataSource: UserDataSource
         ): UserCollectionsRepository {
-            return UserCollectionsRepository(userCollectionsRemoteDataSource, userCollectionsLocalDataSource, userDataSource)
+            return UserCollectionsRepository(
+                userCollectionsRemoteDataSource,
+                userCollectionsLocalDataSource,
+                userDataSource
+            )
         }
 
         @Provides
