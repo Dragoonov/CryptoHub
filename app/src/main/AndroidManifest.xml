@@ -8,11 +8,11 @@
     <application
         android:name=".di.CryptoHubApplication"
         android:allowBackup="false"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.CryptoHub.NoActionBar">
+        android:theme="@style/Theme.AppSplash">
         <activity
             android:name=".presentation.signin.SignInActivity"
             android:exported="true">
@@ -28,6 +28,7 @@
 
         <activity
             android:name=".presentation.core.MainActivity"
+            android:theme="@style/Theme.CryptoHub"
             android:exported="false" />
         <activity
             android:name="com.facebook.FacebookActivity"

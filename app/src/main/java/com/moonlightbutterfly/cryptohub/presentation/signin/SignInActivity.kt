@@ -1,11 +1,13 @@
 package com.moonlightbutterfly.cryptohub.presentation.signin
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.ui.viewinterop.AndroidViewBinding
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import coil.annotation.ExperimentalCoilApi
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.moonlightbutterfly.cryptohub.R
@@ -36,6 +38,10 @@ class SignInActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         firebaseAuthDataProvider.configurationData = getConfigurationData()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            splashScreen.setSplashScreenTheme(firebaseAuthDataProvider.configurationData!!.theme)
+        }
+        installSplashScreen()
         if (viewModel.isUserSignedIn()) {
             startActivity(Intent(this, MainActivity::class.java))
             finish()
@@ -48,9 +54,9 @@ class SignInActivity : AppCompatActivity() {
     private fun getConfigurationData(): FirebaseAuthDataProvider.ConfigurationData {
         val nightModeEnabled = runBlocking { viewModel.isNightModeEnabled.first() }
         val theme = if (nightModeEnabled) {
-            R.style.Theme_CryptoHub_NoActionBar_Night
+            R.style.Theme_CryptoHub_Night
         } else {
-            R.style.Theme_CryptoHub_NoActionBar_Day
+            R.style.Theme_CryptoHub_Day
         }
         return FirebaseAuthDataProvider.ConfigurationData(intentLauncher, theme)
     }
