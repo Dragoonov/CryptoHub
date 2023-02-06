@@ -1,5 +1,6 @@
 package com.moonlightbutterfly.cryptohub.presentation.core
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.moonlightbutterfly.cryptohub.data.common.Error
 import com.moonlightbutterfly.cryptohub.data.common.Result
@@ -16,6 +17,7 @@ abstract class BaseViewModel : ViewModel() {
         return onEach {
             if (it is Result.Failure) {
                 messageFlow.emit(it.error)
+                Log.e(this::class.java.name, it.error.message)
             }
         }
     }
@@ -24,6 +26,7 @@ abstract class BaseViewModel : ViewModel() {
         return apply {
             if (this is Result.Failure) {
                 messageFlow.emit(this.error)
+                Log.e(this::class.java.name, error.message)
             }
         }
     }

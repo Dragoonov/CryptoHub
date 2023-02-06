@@ -58,7 +58,11 @@ class SignInActivity : AppCompatActivity() {
         } else {
             R.style.Theme_CryptoHub_Day
         }
-        return FirebaseAuthDataProvider.ConfigurationData(intentLauncher, theme)
+        return FirebaseAuthDataProvider.ConfigurationData(
+            intentLauncher,
+            theme,
+            R.drawable.crypto_logo
+        )
     }
 
     override fun onDestroy() {

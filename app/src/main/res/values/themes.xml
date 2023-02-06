@@ -3,6 +3,7 @@
     <style name="Theme.CryptoHub" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="android:statusBarColor">@color/fui_transparent</item>
     </style>
 
     <style name="Theme.AppSplash" parent="Theme.SplashScreen">
@@ -12,7 +13,7 @@
         <item name="postSplashScreenTheme">@style/Theme.CryptoHub</item>
 
         <!-- Status bar and Nav bar configs -->
-        <item name="android:statusBarColor">@color/black</item>
+        <item name="android:statusBarColor">@color/fui_transparent</item>
         <item name="android:navigationBarColor">@color/yellow</item>
         <item name="android:windowLightStatusBar">true</item>
 

@@ -26,6 +26,7 @@ class FirebaseSignInHandlerImpl @Inject constructor(
             .createSignInIntentBuilder()
             .setAvailableProviders(authProviders)
             .setTheme(firebaseAuthDataProvider.configurationData!!.theme)
+            .setLogo(firebaseAuthDataProvider.configurationData!!.logo)
             .build()
     }
 
