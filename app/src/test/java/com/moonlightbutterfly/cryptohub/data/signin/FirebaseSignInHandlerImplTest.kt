@@ -42,6 +42,7 @@ class FirebaseSignInHandlerImplTest {
                 .createSignInIntentBuilder()
                 .setAvailableProviders(any())
                 .setTheme(any())
+                .setLogo(any())
                 .build()
         } returns intent
     }
