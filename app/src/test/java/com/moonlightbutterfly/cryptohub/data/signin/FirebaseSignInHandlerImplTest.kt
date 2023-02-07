@@ -23,6 +23,7 @@ class FirebaseSignInHandlerImplTest {
         every { actionOnResult = any() } just Runs
         every { configurationData } returns FirebaseAuthDataProvider.ConfigurationData(
             launcher,
+            0,
             0
         )
     }
