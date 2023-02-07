@@ -23,6 +23,7 @@ class FirebaseSignInHandlerImplTest {
         every { actionOnResult = any() } just Runs
         every { configurationData } returns FirebaseAuthDataProvider.ConfigurationData(
             launcher,
+            0,
             0
         )
     }
@@ -41,6 +42,7 @@ class FirebaseSignInHandlerImplTest {
                 .createSignInIntentBuilder()
                 .setAvailableProviders(any())
                 .setTheme(any())
+                .setLogo(any())
                 .build()
         } returns intent
     }

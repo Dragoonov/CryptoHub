@@ -2,6 +2,7 @@ package com.moonlightbutterfly.cryptohub.data.user
 
 import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
+import androidx.annotation.DrawableRes
 import androidx.annotation.StyleRes
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 
@@ -16,5 +17,6 @@ interface FirebaseAuthDataProvider {
     data class ConfigurationData(
         val intentLauncher: ActivityResultLauncher<Intent>,
         @StyleRes val theme: Int,
+        @DrawableRes val logo: Int,
     )
 }

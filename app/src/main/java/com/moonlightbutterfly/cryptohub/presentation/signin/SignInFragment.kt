@@ -16,6 +16,8 @@ import com.moonlightbutterfly.cryptohub.presentation.core.CryptoHubTheme
 import com.moonlightbutterfly.cryptohub.presentation.core.MainActivity
 import com.moonlightbutterfly.cryptohub.presentation.core.SetStatusBarColor
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 
 @AndroidEntryPoint
 class SignInFragment : Fragment() {
@@ -27,10 +29,11 @@ class SignInFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val viewModel: SignInViewModel by viewModels()
+        val initialMode = runBlocking { viewModel.isNightModeEnabled.first() }
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
-                val isNightMode by viewModel.isNightModeEnabled.collectAsState(false)
+                val isNightMode by viewModel.isNightModeEnabled.collectAsState(initialMode)
                 CryptoHubTheme(darkTheme = isNightMode) {
                     SignInScreen(
                         onSignedIn = {
