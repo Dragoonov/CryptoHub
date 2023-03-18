@@ -1,5 +1,3 @@
-- Introduce notifications
-- add Splash screen
-- add CI/CD
-- add Icon
 - migrate to another crypto service
+- refactor to clean modules
+- refactor panel viewmodel to get symbol in constructor

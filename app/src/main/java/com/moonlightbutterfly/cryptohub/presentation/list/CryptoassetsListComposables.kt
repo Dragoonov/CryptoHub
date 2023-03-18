@@ -203,9 +203,9 @@ fun CryptoAssetListItem(
             .clickable { onItemClicked(asset.asset.symbol) }
     ) {
         CryptoAssetLogoFor(asset.asset)
-        CryptoAssetNameColumnFor(asset.asset)
-        CryptoAssetPriceColumnFor(asset)
-        Favourite(isInFavourites = isLiked, onSelectionChanged = onLiked)
+        CryptoAssetNameColumnForAsset(asset.asset)
+        CryptoAssetPriceColumnForAsset(asset)
+        Favourite(modifier = Modifier.padding(start = 10.dp), isInFavourites = isLiked, onSelectionChanged = onLiked)
     }
 }
 
@@ -224,11 +224,12 @@ fun CryptoAssetLogoFor(asset: CryptoAsset) {
 }
 
 @Composable
-fun RowScope.CryptoAssetNameColumnFor(asset: CryptoAsset) {
+fun RowScope.CryptoAssetNameColumnForAsset(asset: CryptoAsset) {
     Column(
         Modifier
-            .weight(THREE_FIFTHS_WEIGHT)
-            .fillMaxHeight(),
+            .weight(1f)
+            .fillMaxHeight()
+            .padding(end = 10.dp),
         Arrangement.SpaceBetween
     ) {
         Text(
@@ -243,12 +244,12 @@ fun RowScope.CryptoAssetNameColumnFor(asset: CryptoAsset) {
 }
 
 @Composable
-fun RowScope.CryptoAssetPriceColumnFor(asset: CryptoAssetMarketInfo) {
+fun RowScope.CryptoAssetPriceColumnForAsset(asset: CryptoAssetMarketInfo) {
     Column(
         Modifier
-            .weight(TWO_FIFTHS_WEIGHT)
+            .weight(1f)
             .fillMaxHeight(),
-        verticalArrangement = Arrangement.SpaceBetween
+        verticalArrangement = Arrangement.Center,
     ) {
         val textModifier = Modifier.align(Alignment.End)
         Text(
@@ -257,6 +258,3 @@ fun RowScope.CryptoAssetPriceColumnFor(asset: CryptoAssetMarketInfo) {
         )
     }
 }
-
-private const val THREE_FIFTHS_WEIGHT = 3f
-private const val TWO_FIFTHS_WEIGHT = 2f

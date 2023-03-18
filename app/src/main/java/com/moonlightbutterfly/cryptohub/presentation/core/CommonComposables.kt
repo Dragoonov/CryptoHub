@@ -3,8 +3,8 @@ package com.moonlightbutterfly.cryptohub.presentation.core
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -54,10 +54,10 @@ fun getImagePainterFor(asset: CryptoAsset): ImagePainter {
 }
 
 @Composable
-fun RowScope.Favourite(isInFavourites: Boolean, onSelectionChanged: (changed: Boolean) -> Unit) {
+fun Favourite(modifier: Modifier, isInFavourites: Boolean, onSelectionChanged: (changed: Boolean) -> Unit) {
     Column(
-        Modifier
-            .weight(1f)
+        modifier
+            .wrapContentWidth()
             .fillMaxHeight(),
         Arrangement.Center
     ) {
