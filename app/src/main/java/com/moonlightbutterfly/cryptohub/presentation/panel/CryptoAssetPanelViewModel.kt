@@ -29,6 +29,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
+@SuppressWarnings("LongParameterList")
 class CryptoAssetPanelViewModel @Inject constructor(
     private val getCryptoAssetsMarketInfoUseCase: GetCryptoAssetsMarketInfoUseCase,
     getFavouritesUseCase: GetFavouritesUseCase,
@@ -59,18 +60,26 @@ class CryptoAssetPanelViewModel @Inject constructor(
         .propagateErrors()
         .map { it.unpack(CryptoCollection.EMPTY) }
 
-    fun areNotificationsEnabled() = getLocalPreferencesUseCase().map { it.unpack(LocalPreferences.DEFAULT).notificationsEnabled }
+    fun areNotificationsEnabled() =
+        getLocalPreferencesUseCase().map { it.unpack(LocalPreferences.DEFAULT).notificationsEnabled }
+
     fun isCryptoInFavourites() = favourites.combine(asset.asFlow()) { collection, asset ->
         collection.cryptoAssets.find { it.symbol == asset.asset.symbol } != null
     }
 
-    fun isCryptoInNotifications() = getLocalPreferencesUseCase().combine(asset.asFlow()) { preferences, asset ->
-        preferences.unpack(LocalPreferences.DEFAULT).notificationsConfiguration.find { it.symbol == asset.asset.symbol } != null
-    }
+    fun isCryptoInNotifications() =
+        getLocalPreferencesUseCase().combine(asset.asFlow()) { preferences, asset ->
+            preferences.unpack(LocalPreferences.DEFAULT).notificationsConfiguration.find {
+                it.symbol == asset.asset.symbol
+            } != null
+        }
 
-    fun getConfigurationForCrypto() = getLocalPreferencesUseCase().combine(asset.asFlow()) { preferences, asset ->
-        preferences.unpack(LocalPreferences.DEFAULT).notificationsConfiguration.find { it.symbol == asset.asset.symbol }
-    }.filterNotNull()
+    fun getConfigurationForCrypto() =
+        getLocalPreferencesUseCase().combine(asset.asFlow()) { preferences, asset ->
+            preferences.unpack(LocalPreferences.DEFAULT).notificationsConfiguration.find {
+                it.symbol == asset.asset.symbol
+            }
+        }.filterNotNull()
 
     fun addCryptoToFavourites() {
         asset.value?.let {
@@ -88,14 +97,25 @@ class CryptoAssetPanelViewModel @Inject constructor(
         }
     }
 
-    fun addCryptoToNotifications(notificationTime: NotificationTime?, notificationInterval: NotificationInterval?) {
+    fun addCryptoToNotifications(
+        notificationTime: NotificationTime?,
+        notificationInterval: NotificationInterval?
+    ) {
         viewModelScope.launch {
             getLocalPreferencesUseCase().first()
                 .propagateErrors()
                 .let {
                     if (it is Result.Success) {
-                        val newSet = it.data.notificationsConfiguration.filter { crypto -> crypto.symbol != asset.value?.asset?.symbol }.toSet() + NotificationConfiguration(asset.value!!.asset.symbol, notificationInterval, notificationTime)
-                        updateLocalPreferencesUseCase(it.data.copy(notificationsConfiguration = newSet))
+                        val newSet = it.data.notificationsConfiguration.filter { crypto ->
+                            crypto.symbol != asset.value?.asset?.symbol
+                        }.toSet() + NotificationConfiguration(
+                            asset.value!!.asset.symbol,
+                            notificationInterval,
+                            notificationTime
+                        )
+                        updateLocalPreferencesUseCase(
+                            it.data.copy(notificationsConfiguration = newSet)
+                        )
                             .propagateErrors()
                         configureNotificationsUseCase(newSet).propagateErrors()
                     }

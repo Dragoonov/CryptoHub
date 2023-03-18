@@ -6,5 +6,6 @@ import com.moonlightbutterfly.cryptohub.models.NotificationConfiguration
 class ConfigureNotificationsUseCase(
     private val notifier: Notifier
 ) {
-    operator fun invoke(notificationConfiguration: Set<NotificationConfiguration>) = notifier.configure(notificationConfiguration)
+    operator fun invoke(notificationConfiguration: Set<NotificationConfiguration>) =
+        notifier.configure(notificationConfiguration)
 }

@@ -31,12 +31,12 @@ class NotifierImpl @Inject constructor(
         .build()
 
     private val timeMap = mapOf(
-        NotificationInterval.WEEK to Pair(7L, TimeUnit.DAYS),
-        NotificationInterval.DAY to Pair(1L, TimeUnit.DAYS),
-        NotificationInterval.HOURS_5 to Pair(5L, TimeUnit.HOURS),
-        NotificationInterval.HOURS_2 to Pair(2L, TimeUnit.HOURS),
-        NotificationInterval.HOUR to Pair(1L, TimeUnit.HOURS),
-        NotificationInterval.MINUTES_30 to Pair(30L, TimeUnit.MINUTES),
+        NotificationInterval.WEEK to Pair(SEVEN, TimeUnit.DAYS),
+        NotificationInterval.DAY to Pair(ONE, TimeUnit.DAYS),
+        NotificationInterval.HOURS_5 to Pair(FIVE, TimeUnit.HOURS),
+        NotificationInterval.HOURS_2 to Pair(TWO, TimeUnit.HOURS),
+        NotificationInterval.HOUR to Pair(ONE, TimeUnit.HOURS),
+        NotificationInterval.MINUTES_30 to Pair(THIRTY, TimeUnit.MINUTES),
     )
 
     override fun configure(notificationConfiguration: Set<NotificationConfiguration>): Result<Unit> {
@@ -96,5 +96,10 @@ class NotifierImpl @Inject constructor(
 
     companion object {
         private const val WORKERS_TAG = "tag_cryptohub"
+        private const val SEVEN = 7L
+        private const val ONE = 1L
+        private const val TWO = 2L
+        private const val FIVE = 5L
+        private const val THIRTY = 30L
     }
 }

@@ -138,7 +138,11 @@ fun Entries(
 fun NightModeEntry(nightModeEnabled: Boolean, onNightModeChanged: (Boolean) -> Unit) {
     EntryRow {
         Text(text = stringResource(id = R.string.night_mode))
-        Switch(checked = nightModeEnabled, onCheckedChange = onNightModeChanged, modifier = Modifier.testTag("nightModeSwitch"))
+        Switch(
+            checked = nightModeEnabled,
+            onCheckedChange = onNightModeChanged,
+            modifier = Modifier.testTag("nightModeSwitch")
+        )
     }
 }
 
@@ -150,7 +154,11 @@ fun NotificationsEntry(
 ) {
     EntryRow {
         Text(text = stringResource(id = R.string.post_notifications))
-        Switch(checked = notificationsEnabled, onCheckedChange = onNotificationsChange, modifier = Modifier.testTag("notificationsSwitch"))
+        Switch(
+            checked = notificationsEnabled,
+            onCheckedChange = onNotificationsChange,
+            modifier = Modifier.testTag("notificationsSwitch")
+        )
     }
     if (notificationsEnabled) {
         EntryRow {

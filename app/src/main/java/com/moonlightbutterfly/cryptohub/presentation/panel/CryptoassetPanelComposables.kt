@@ -1,3 +1,5 @@
+@file:Suppress("TooManyFunctions")
+
 package com.moonlightbutterfly.cryptohub.presentation.panel
 
 import android.app.TimePickerDialog
@@ -72,55 +74,29 @@ import java.util.Calendar
 @ExperimentalCoilApi
 @Composable
 fun CryptoAssetPanelScreen(cryptoAssetSymbol: String, viewModel: CryptoAssetPanelViewModel) {
-    val asset by viewModel.getCryptoAssetMarketInfo(cryptoAssetSymbol)
-        .observeAsState(CryptoAssetMarketInfo.EMPTY)
-
+    val asset by viewModel.getCryptoAssetMarketInfo(cryptoAssetSymbol).observeAsState(CryptoAssetMarketInfo.EMPTY)
     val isLiked by viewModel.isCryptoInFavourites().collectAsState(false)
-
     val isSavedForNotifications by viewModel.isCryptoInNotifications().collectAsState(false)
-
     val areNotificationsEnabled by viewModel.areNotificationsEnabled().collectAsState(false)
-
     val error by viewModel.errorMessageFlow.collectAsState(null)
     error?.let { ErrorHandler(error) }
-    val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
+    val bottomSheetState = rememberBottomSheetScaffoldState(
         bottomSheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Collapsed)
     )
-    val coroutineScope = rememberCoroutineScope()
-
-    val notificationTimes = mapOf(
-        NotificationInterval.MINUTES_30 to stringResource(id = R.string.notification_interval_30_minutes),
-        NotificationInterval.HOUR to stringResource(id = R.string.notification_interval_hour),
-        NotificationInterval.HOURS_2 to stringResource(id = R.string.notification_interval_2_hours),
-        NotificationInterval.HOURS_5 to stringResource(id = R.string.notification_interval_5_hours),
-        NotificationInterval.DAY to stringResource(id = R.string.notification_interval_day),
-        NotificationInterval.WEEK to stringResource(id = R.string.notification_interval_week)
-    )
-
+    val scope = rememberCoroutineScope()
+    val notificationTimes = getNotificationTimes()
     val selectedChips = remember {
-        mutableStateMapOf(
-            NotificationInterval.MINUTES_30 to false,
-            NotificationInterval.HOUR to false,
-            NotificationInterval.HOURS_2 to false,
-            NotificationInterval.HOURS_5 to false,
-            NotificationInterval.DAY to false,
-            NotificationInterval.WEEK to false
-        )
+        mutableStateMapOf<NotificationInterval, Boolean>().apply {
+            putAll(NotificationInterval.values().associateWith { false })
+        }
     }
 
     BottomSheetScaffold(
-        scaffoldState = bottomSheetScaffoldState,
+        scaffoldState = bottomSheetState,
         sheetShape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp),
         sheetElevation = 15.dp,
         sheetContent = {
-            BottomSheetContent(
-                notificationTimes,
-                selectedChips,
-                viewModel,
-                asset,
-                coroutineScope,
-                bottomSheetScaffoldState
-            )
+            BottomSheetContent(notificationTimes, selectedChips, viewModel, asset, scope, bottomSheetState)
         },
         sheetPeekHeight = 0.dp
     ) {
@@ -130,15 +106,13 @@ fun CryptoAssetPanelScreen(cryptoAssetSymbol: String, viewModel: CryptoAssetPane
                 .fillMaxWidth()
                 .fillMaxHeight()
                 .verticalScroll(rememberScrollState())
-                .clickable(
-                    interactionSource = MutableInteractionSource(),
-                    indication = null
-                ) { coroutineScope.launch { bottomSheetScaffoldState.bottomSheetState.collapse() } }
+                .clickable(MutableInteractionSource(), null) {
+                    scope.launch { bottomSheetState.bottomSheetState.collapse() }
+                }
         ) {
             Header(
-                asset = asset.asset,
-                isInFavourites = isLiked,
-                onFavouriteClicked = {
+                asset.asset, isLiked,
+                {
                     if (it) {
                         viewModel.addCryptoToFavourites()
                     } else {
@@ -147,38 +121,54 @@ fun CryptoAssetPanelScreen(cryptoAssetSymbol: String, viewModel: CryptoAssetPane
                 },
                 isSavedForNotifications,
                 areNotificationsEnabled,
-                { coroutineScope.launch { bottomSheetScaffoldState.bottomSheetState.expand() } }
+                { scope.launch { bottomSheetState.bottomSheetState.expand() } }
             )
             PriceChangeRow(asset = asset)
             DescriptionRow(asset = asset)
-            Section(name = stringResource(id = R.string.statistics)) {
-                Stat(
-                    title = stringResource(id = R.string.market_cap),
-                    value = "${asset.marketCap.toStringAbbr(LocalContext.current)} USD",
-                )
-                Stat(
-                    title = stringResource(id = R.string.volume),
-                    value = "${asset.volume24H.toStringAbbr(LocalContext.current)} USD",
-                )
-                Stat(
-                    title = stringResource(id = R.string.circulating_supply),
-                    value = asset.circulatingSupply.toStringAbbr(LocalContext.current)
-                )
-                Stat(
-                    title = stringResource(id = R.string.max_supply),
-                    value = asset.maxSupply.toStringAbbr(LocalContext.current)
-                )
-                Stat(
-                    title = stringResource(id = R.string.rank),
-                    value = "${asset.rank}"
-                )
-            }
+            Statistics(asset = asset)
         }
+    }
+}
+
+@Composable
+private fun getNotificationTimes() = mapOf(
+    NotificationInterval.MINUTES_30 to stringResource(id = R.string.notification_interval_30_minutes),
+    NotificationInterval.HOUR to stringResource(id = R.string.notification_interval_hour),
+    NotificationInterval.HOURS_2 to stringResource(id = R.string.notification_interval_2_hours),
+    NotificationInterval.HOURS_5 to stringResource(id = R.string.notification_interval_5_hours),
+    NotificationInterval.DAY to stringResource(id = R.string.notification_interval_day),
+    NotificationInterval.WEEK to stringResource(id = R.string.notification_interval_week)
+)
+
+@Composable
+fun Statistics(asset: CryptoAssetMarketInfo) {
+    Section(name = stringResource(id = R.string.statistics)) {
+        Stat(
+            title = stringResource(id = R.string.market_cap),
+            value = "${asset.marketCap.toStringAbbr(LocalContext.current)} USD",
+        )
+        Stat(
+            title = stringResource(id = R.string.volume),
+            value = "${asset.volume24H.toStringAbbr(LocalContext.current)} USD",
+        )
+        Stat(
+            title = stringResource(id = R.string.circulating_supply),
+            value = asset.circulatingSupply.toStringAbbr(LocalContext.current)
+        )
+        Stat(
+            title = stringResource(id = R.string.max_supply),
+            value = asset.maxSupply.toStringAbbr(LocalContext.current)
+        )
+        Stat(
+            title = stringResource(id = R.string.rank),
+            value = "${asset.rank}"
+        )
     }
 }
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
+@SuppressWarnings("LongParameterList")
 fun BottomSheetContent(
     notificationTimes: Map<NotificationInterval, String>,
     selectedChips: SnapshotStateMap<NotificationInterval, Boolean>,
@@ -230,7 +220,12 @@ fun BottomSheetContent(
             )
             SummaryText(selectedNotificationConfiguration, notificationTimes)
             Row {
-                SaveButton(viewModel, selectedNotificationConfiguration, coroutineScope, bottomSheetScaffoldState)
+                SaveButton(
+                    viewModel,
+                    selectedNotificationConfiguration,
+                    coroutineScope,
+                    bottomSheetScaffoldState
+                )
                 Spacer(modifier = Modifier.padding(10.dp))
                 DisableButton {
                     selectedNotificationConfiguration =
@@ -249,10 +244,14 @@ private fun SnapshotStateMap<NotificationInterval, Boolean>.clearChips() {
 }
 
 @Composable
-fun SummaryText(selectedNotificationConfiguration: NotificationConfiguration, notificationTimes: Map<NotificationInterval, String>) {
+fun SummaryText(
+    selectedNotificationConfiguration: NotificationConfiguration,
+    notificationTimes: Map<NotificationInterval, String>
+) {
     val intervalString =
         selectedNotificationConfiguration.notificationInterval?.let {
-            stringResource(R.string.every) + " " + (notificationTimes[selectedNotificationConfiguration.notificationInterval])
+            stringResource(R.string.every) + " " +
+                (notificationTimes[selectedNotificationConfiguration.notificationInterval])
         } ?: ""
     val timeString = selectedNotificationConfiguration.notificationTime?.let {
         val comma = if (intervalString.isEmpty()) "" else ", "
@@ -268,10 +267,18 @@ fun SummaryText(selectedNotificationConfiguration: NotificationConfiguration, no
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun SaveButton(viewModel: CryptoAssetPanelViewModel, selectedNotificationConfiguration: NotificationConfiguration, coroutineScope: CoroutineScope, bottomSheetScaffoldState: BottomSheetScaffoldState) {
+fun SaveButton(
+    viewModel: CryptoAssetPanelViewModel,
+    selectedNotificationConfiguration: NotificationConfiguration,
+    coroutineScope: CoroutineScope,
+    bottomSheetScaffoldState: BottomSheetScaffoldState
+) {
     Button(
         onClick = {
-            viewModel.addCryptoToNotifications(selectedNotificationConfiguration.notificationTime, selectedNotificationConfiguration.notificationInterval)
+            viewModel.addCryptoToNotifications(
+                selectedNotificationConfiguration.notificationTime,
+                selectedNotificationConfiguration.notificationInterval
+            )
             coroutineScope.launch { bottomSheetScaffoldState.bottomSheetState.collapse() }
         }
     ) {
@@ -306,6 +313,7 @@ fun ChipsGroup(
 
 @ExperimentalCoilApi
 @Composable
+@SuppressWarnings("LongParameterList")
 fun Header(
     asset: CryptoAsset,
     isInFavourites: Boolean,

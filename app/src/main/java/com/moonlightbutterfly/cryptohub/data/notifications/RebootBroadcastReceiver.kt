@@ -22,14 +22,17 @@ class RebootBroadcastReceiver : BroadcastReceiver() {
             return
         }
         runBlocking {
-            localPreferencesRepository.getLocalPreferences().first().unpack(LocalPreferences.DEFAULT).notificationsConfiguration.forEach { configuration ->
-                configuration.notificationTime?.let { notificationTime ->
-                    context?.let {
-                        val time = calculateNotificationTime(notificationTime)
-                        setAlarm(configuration.symbol, time, it)
+            localPreferencesRepository.getLocalPreferences()
+                .first()
+                .unpack(LocalPreferences.DEFAULT).notificationsConfiguration
+                .forEach { configuration ->
+                    configuration.notificationTime?.let { notificationTime ->
+                        context?.let {
+                            val time = calculateNotificationTime(notificationTime)
+                            setAlarm(configuration.symbol, time, it)
+                        }
                     }
                 }
-            }
         }
     }
 }

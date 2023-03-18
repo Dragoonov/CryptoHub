@@ -20,7 +20,10 @@ object WorkManagerInitializerModule : Initializer<WorkManager> {
     @Provides
     @Singleton
     override fun create(@ApplicationContext context: Context): WorkManager {
-        val workerFactory = EntryPoints.get(context, BaseApplication.WorkerFactoryEntryPoint::class.java).getWorkerFactory()
+        val workerFactory = EntryPoints.get(
+            context,
+            BaseApplication.WorkerFactoryEntryPoint::class.java
+        ).getWorkerFactory()
         val configuration = Configuration.Builder()
             .setWorkerFactory(workerFactory)
             .build()

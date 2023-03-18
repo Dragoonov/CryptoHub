@@ -21,7 +21,12 @@ class AlarmReceiver : BroadcastReceiver() {
             return
         }
         val symbol = p1.getStringExtra(SYMBOL_KEY)!!
-        val getter = { runBlocking { cryptoAssetsDataSource.getCryptoAssetsMarketInfo(listOf(symbol)).first().getOrNull()?.first() } }
+        val getter = {
+            runBlocking {
+                cryptoAssetsDataSource
+                    .getCryptoAssetsMarketInfo(listOf(symbol)).first().getOrNull()?.first()
+            }
+        }
         postNotification(getter, p0)
     }
 
