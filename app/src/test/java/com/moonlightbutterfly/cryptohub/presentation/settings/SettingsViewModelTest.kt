@@ -2,6 +2,7 @@ package com.moonlightbutterfly.cryptohub.presentation.settings
 
 import com.moonlightbutterfly.cryptohub.data.common.Result
 import com.moonlightbutterfly.cryptohub.models.LocalPreferences
+import com.moonlightbutterfly.cryptohub.usecases.ConfigureNotificationsUseCase
 import com.moonlightbutterfly.cryptohub.usecases.GetLocalPreferencesUseCase
 import com.moonlightbutterfly.cryptohub.usecases.IsUserSignedInUseCase
 import com.moonlightbutterfly.cryptohub.usecases.SignOutUseCase
@@ -32,6 +33,7 @@ class SettingsViewModelTest {
     private val updateLocalPreferencesUseCase: UpdateLocalPreferencesUseCase = mockk()
     private val signOutUserUseCase: SignOutUseCase = mockk()
     private val getSignedInUserUseCase: IsUserSignedInUseCase = mockk()
+    private val configureNotificationsUseCase: ConfigureNotificationsUseCase = mockk()
 
     private lateinit var viewModel: SettingsViewModel
 
@@ -43,12 +45,14 @@ class SettingsViewModelTest {
         coEvery { updateLocalPreferencesUseCase(any()) } returns Result.Success(Unit)
         every { signOutUserUseCase() } returns Result.Success(Unit)
         every { getSignedInUserUseCase() } returns Result.Success(true) andThen Result.Success(false)
+        every { configureNotificationsUseCase(any()) } returns Result.Success(Unit)
         Dispatchers.setMain(testDispatcher)
         viewModel = SettingsViewModel(
             getLocalPreferencesUseCase,
             updateLocalPreferencesUseCase,
             signOutUserUseCase,
-            getSignedInUserUseCase
+            getSignedInUserUseCase,
+            configureNotificationsUseCase
         )
     }
 
@@ -93,5 +97,33 @@ class SettingsViewModelTest {
 
         // THEN
         assertFalse(signedIn)
+    }
+
+    @Test
+    fun `should enable notifications`() {
+        // GIVEN
+        every { getLocalPreferencesUseCase() } answers { flowOf(Result.Success(LocalPreferences.DEFAULT)) }
+        // WHEN
+        viewModel.onEnabledNotifications()
+        // THEN
+        coVerify {
+            getLocalPreferencesUseCase()
+            configureNotificationsUseCase(LocalPreferences.DEFAULT.notificationsConfiguration)
+            updateLocalPreferencesUseCase(any())
+        }
+    }
+
+    @Test
+    fun `should disable notifications`() {
+        // GIVEN
+        every { getLocalPreferencesUseCase() } answers { flowOf(Result.Success(LocalPreferences.DEFAULT)) }
+        // WHEN
+        viewModel.onDisabledNotifications()
+        // THEN
+        coVerify {
+            getLocalPreferencesUseCase()
+            configureNotificationsUseCase(emptySet())
+            updateLocalPreferencesUseCase(any())
+        }
     }
 }

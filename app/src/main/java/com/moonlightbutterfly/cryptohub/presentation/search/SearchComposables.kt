@@ -39,7 +39,7 @@ import com.moonlightbutterfly.cryptohub.R
 import com.moonlightbutterfly.cryptohub.models.CryptoAsset
 import com.moonlightbutterfly.cryptohub.presentation.core.ErrorHandler
 import com.moonlightbutterfly.cryptohub.presentation.list.CryptoAssetLogoFor
-import com.moonlightbutterfly.cryptohub.presentation.list.CryptoAssetNameColumnFor
+import com.moonlightbutterfly.cryptohub.presentation.list.CryptoAssetNameColumnForAsset
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @ExperimentalCoilApi
@@ -187,6 +187,6 @@ fun CryptoAssetSearchListItem(
             .clickable { onItemClicked(asset) }
     ) {
         CryptoAssetLogoFor(asset)
-        CryptoAssetNameColumnFor(asset)
+        CryptoAssetNameColumnForAsset(asset)
     }
 }

@@ -1,6 +1,7 @@
 package com.moonlightbutterfly.cryptohub.presentation.panel
 
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import coil.annotation.ExperimentalCoilApi
@@ -19,6 +20,8 @@ class CryptoAssetPanelTest : CryptoHubAndroidTest() {
         composeTestRule.apply {
             onNodeWithText("BTC").performClick()
             onNodeWithText("BTC").assertIsDisplayed()
+            onNodeWithContentDescription(string(R.string.favourites)).assertIsDisplayed()
+            onNodeWithContentDescription(string(R.string.notifications)).assertIsDisplayed()
             onNodeWithText(string(R.string.statistics)).assertIsDisplayed()
             onNodeWithText(string(R.string.crypto_assets_list)).performClick()
             onNodeWithText("ETH").performClick()
@@ -26,22 +29,4 @@ class CryptoAssetPanelTest : CryptoHubAndroidTest() {
             onNodeWithText(string(R.string.statistics)).assertIsDisplayed()
         }
     }
-
-// FLAKY
-//    @Test
-//    fun testManagingFavourites() {
-//        composeTestRule.apply {
-//            onNodeWithText("Bitcoin").performClick()
-//            onNodeWithText("BTC").assertIsDisplayed()
-//            onNodeWithContentDescription("Favourites").performClick()
-//            Espresso.pressBack()
-//            onNodeWithText("Favourites").performClick()
-//            onNodeWithText("BTC").assertIsDisplayed()
-//            onNodeWithContentDescription("Favourites").performClick()
-//            onNodeWithText("Settings").performClick()
-//            onNodeWithText("Crypto assets list").performClick()
-//            onNodeWithText("Favourites").performClick()
-//            onNodeWithText("BTC").assertDoesNotExist()
-//        }
-//    }
 }

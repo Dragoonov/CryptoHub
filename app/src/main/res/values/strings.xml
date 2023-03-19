@@ -43,4 +43,22 @@
     <string name="unknown_error">Unknown error occurred</string>
     <string name="billion_abbr">bln</string>
     <string name="million_abbr">mln</string>
+    <string name="channel_name">Crypto info</string>
+    <string name="channel_description">Informations about cryptocurrencies</string>
+    <string name="notification_data">Current %s price is %.2f </string>
+    <string name="notification_interval_30_minutes">30 Minutes</string>
+    <string name="notification_interval_hour">1 hour</string>
+    <string name="notification_interval_2_hours">2 hours</string>
+    <string name="notification_interval_5_hours">5 hours</string>
+    <string name="notification_interval_day">Day</string>
+    <string name="notification_interval_week">Week</string>
+    <string name="select_time">Select time</string>
+    <string name="clear_time">Clear time</string>
+    <string name="selected">Selected:</string>
+    <string name="save">Save</string>
+    <string name="every">every</string>
+    <string name="disable">Disable</string>
+    <string name="saved_notifications">Saved notifications: </string>
+    <string name="post_notifications">Post notifications</string>
+    <string name="notifications">Notifications</string>
 </resources>

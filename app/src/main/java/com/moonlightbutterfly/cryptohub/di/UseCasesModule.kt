@@ -3,11 +3,13 @@ package com.moonlightbutterfly.cryptohub.di
 import com.moonlightbutterfly.cryptohub.data.assets.CryptoAssetsRepository
 import com.moonlightbutterfly.cryptohub.data.collections.UserCollectionsRepository
 import com.moonlightbutterfly.cryptohub.data.localpreferences.LocalPreferencesRepository
+import com.moonlightbutterfly.cryptohub.data.notifications.Notifier
 import com.moonlightbutterfly.cryptohub.data.user.UserRepository
 import com.moonlightbutterfly.cryptohub.usecases.AddAssetToCollectionUseCase
 import com.moonlightbutterfly.cryptohub.usecases.AddFavouriteUseCase
 import com.moonlightbutterfly.cryptohub.usecases.AddRecentUseCase
 import com.moonlightbutterfly.cryptohub.usecases.ClearRecentsUseCase
+import com.moonlightbutterfly.cryptohub.usecases.ConfigureNotificationsUseCase
 import com.moonlightbutterfly.cryptohub.usecases.CreateCollectionUseCase
 import com.moonlightbutterfly.cryptohub.usecases.EmailSignInUseCase
 import com.moonlightbutterfly.cryptohub.usecases.FacebookSignInUseCase
@@ -193,5 +195,12 @@ class UseCasesModule {
         userRepository: UserRepository
     ): IsUserSignedInUseCase {
         return IsUserSignedInUseCase(userRepository)
+    }
+
+    @Provides
+    fun provideConfigureNotificationsUseCase(
+        notifier: Notifier
+    ): ConfigureNotificationsUseCase {
+        return ConfigureNotificationsUseCase(notifier)
     }
 }

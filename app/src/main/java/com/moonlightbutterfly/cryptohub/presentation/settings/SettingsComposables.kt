@@ -18,6 +18,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -30,6 +31,9 @@ import com.moonlightbutterfly.cryptohub.presentation.core.ErrorHandler
 fun SettingsScreen(onSignOutClicked: () -> Unit, viewModel: SettingsViewModel) {
 
     val nightModeEnabled by viewModel.isNightModeEnabled.observeAsState(false)
+    val notificationsEnabled by viewModel.areNotificationsEnabled.observeAsState(false)
+
+    val configurations by viewModel.notificationsSymbols.collectAsState(initial = emptyList())
 
     val error by viewModel.errorMessageFlow.collectAsState(null)
     error?.let { ErrorHandler(error) }
@@ -43,7 +47,16 @@ fun SettingsScreen(onSignOutClicked: () -> Unit, viewModel: SettingsViewModel) {
     Column(Modifier.fillMaxWidth()) {
         DeviceSpecificSection(
             nightModeEnabled = nightModeEnabled,
-            onNightModeChanged = viewModel::onNightModeChanged
+            onNightModeChanged = viewModel::onNightModeChanged,
+            notificationsEnabled = notificationsEnabled,
+            onNotificationsChange = {
+                if (it) {
+                    viewModel.onEnabledNotifications()
+                } else {
+                    viewModel.onDisabledNotifications()
+                }
+            },
+            configurations
         )
         if (isUserSignedIn) {
             SignOutButton(onSignedOut)
@@ -54,10 +67,19 @@ fun SettingsScreen(onSignOutClicked: () -> Unit, viewModel: SettingsViewModel) {
 @Composable
 fun DeviceSpecificSection(
     nightModeEnabled: Boolean,
-    onNightModeChanged: (Boolean) -> Unit
+    onNightModeChanged: (Boolean) -> Unit,
+    notificationsEnabled: Boolean,
+    onNotificationsChange: (Boolean) -> Unit,
+    notifications: List<String>
 ) {
     Title(stringResource(R.string.device_specific))
-    Entries(nightModeEnabled = nightModeEnabled, onNightModeChanged = onNightModeChanged)
+    Entries(
+        nightModeEnabled,
+        onNightModeChanged,
+        notificationsEnabled,
+        onNotificationsChange,
+        notifications
+    )
 }
 
 @Composable
@@ -95,9 +117,20 @@ fun Title(title: String) {
 }
 
 @Composable
-fun Entries(nightModeEnabled: Boolean, onNightModeChanged: (Boolean) -> Unit) {
+fun Entries(
+    nightModeEnabled: Boolean,
+    onNightModeChanged: (Boolean) -> Unit,
+    notificationsEnabled: Boolean,
+    onNotificationsChange: (Boolean) -> Unit,
+    notificationsList: List<String>
+) {
     Column {
         NightModeEntry(nightModeEnabled, onNightModeChanged)
+        NotificationsEntry(
+            notificationsEnabled = notificationsEnabled,
+            onNotificationsChange = onNotificationsChange,
+            notifications = notificationsList
+        )
     }
 }
 
@@ -105,7 +138,36 @@ fun Entries(nightModeEnabled: Boolean, onNightModeChanged: (Boolean) -> Unit) {
 fun NightModeEntry(nightModeEnabled: Boolean, onNightModeChanged: (Boolean) -> Unit) {
     EntryRow {
         Text(text = stringResource(id = R.string.night_mode))
-        Switch(checked = nightModeEnabled, onCheckedChange = onNightModeChanged)
+        Switch(
+            checked = nightModeEnabled,
+            onCheckedChange = onNightModeChanged,
+            modifier = Modifier.testTag("nightModeSwitch")
+        )
+    }
+}
+
+@Composable
+fun NotificationsEntry(
+    notificationsEnabled: Boolean,
+    onNotificationsChange: (Boolean) -> Unit,
+    notifications: List<String>,
+) {
+    EntryRow {
+        Text(text = stringResource(id = R.string.post_notifications))
+        Switch(
+            checked = notificationsEnabled,
+            onCheckedChange = onNotificationsChange,
+            modifier = Modifier.testTag("notificationsSwitch")
+        )
+    }
+    if (notificationsEnabled) {
+        EntryRow {
+            Text(
+                text = stringResource(id = R.string.saved_notifications) + " " + notifications.toString()
+                    .drop(1).dropLast(1),
+                modifier = Modifier.padding(start = 20.dp)
+            )
+        }
     }
 }
 
@@ -116,7 +178,8 @@ fun EntryRow(content: @Composable () -> Unit) {
             .padding(top = 10.dp, bottom = 10.dp, start = 20.dp, end = 20.dp)
             .height(50.dp)
             .fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         content()
     }

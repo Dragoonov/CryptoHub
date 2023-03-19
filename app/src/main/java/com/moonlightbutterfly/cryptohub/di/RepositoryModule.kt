@@ -1,6 +1,7 @@
 package com.moonlightbutterfly.cryptohub.di
 
 import android.content.Context
+import androidx.work.WorkManager
 import com.facebook.login.LoginManager
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
@@ -25,6 +26,8 @@ import com.moonlightbutterfly.cryptohub.data.database.daos.LocalPreferencesDao
 import com.moonlightbutterfly.cryptohub.data.localpreferences.LocalPreferencesDataSource
 import com.moonlightbutterfly.cryptohub.data.localpreferences.LocalPreferencesDataSourceImpl
 import com.moonlightbutterfly.cryptohub.data.localpreferences.LocalPreferencesRepository
+import com.moonlightbutterfly.cryptohub.data.notifications.Notifier
+import com.moonlightbutterfly.cryptohub.data.notifications.NotifierImpl
 import com.moonlightbutterfly.cryptohub.data.signin.FirebaseSignInHandler
 import com.moonlightbutterfly.cryptohub.data.signin.FirebaseSignInHandlerImpl
 import com.moonlightbutterfly.cryptohub.data.user.FirebaseAuthDataProvider
@@ -151,6 +154,15 @@ abstract class RepositoryModule {
                 AuthUI.IdpConfig.EmailBuilder().build(),
                 AuthUI.IdpConfig.PhoneBuilder().build()
             )
+        }
+
+        @Provides
+        fun provideNotifier(
+            @ApplicationContext context: Context,
+            localPreferencesRepository: LocalPreferencesRepository,
+            workManager: WorkManager
+        ): Notifier {
+            return NotifierImpl(context, localPreferencesRepository, workManager)
         }
     }
 }
