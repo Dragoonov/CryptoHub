@@ -1,6 +1,5 @@
 package com.moonlightbutterfly.cryptohub.presentation.list
 
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
@@ -39,19 +38,19 @@ class CryptoAssetsListViewModel @Inject constructor(
     }.flow.cachedIn(viewModelScope)
 
     private val favouriteAssets = getFavouritesUseCase()
-        .propagateErrors()
+        .prepareFlow(CryptoCollection.EMPTY)
         .map { it.unpack(CryptoCollection.EMPTY) }
 
     @FlowPreview
     val favourites = favouriteAssets.flatMapConcat { collection ->
-        getCryptoAssetsMarketInfoUseCase(symbols = collection.cryptoAssets.map { it.symbol })
+        getCryptoAssetsMarketInfoUseCase(collection.cryptoAssets.map { it.symbol })
     }
-        .propagateErrors()
+        .prepareFlow(emptyList())
         .map { it.unpack(emptyList()) }
 
     fun isCryptoInFavourites(asset: CryptoAsset) = favouriteAssets.map { collection ->
         collection.cryptoAssets.find { it.symbol == asset.symbol } != null
-    }.asLiveData()
+    }
 
     fun addToFavourites(cryptoAsset: CryptoAsset) {
         viewModelScope.launch {

@@ -43,164 +43,188 @@ class UseCasesModule {
     fun provideAddRecentUseCase(
         addAssetToCollectionUseCase: AddAssetToCollectionUseCase
     ): AddRecentUseCase {
-        return AddRecentUseCase(addAssetToCollectionUseCase)
+        return AddRecentUseCase {
+            addAssetToCollectionUseCase.invoke(
+                it,
+                UserCollectionsRepository.RECENTS_COLLECTION_NAME
+            )
+        }
     }
 
     @Provides
     fun provideGetRecentsUseCase(
         getCollectionUseCase: GetCollectionUseCase
     ): GetRecentsUseCase {
-        return GetRecentsUseCase(getCollectionUseCase)
+        return GetRecentsUseCase { getCollectionUseCase(UserCollectionsRepository.RECENTS_COLLECTION_NAME) }
     }
 
     @Provides
     fun provideRemoveRecentsUseCase(
         userCollectionsRepository: UserCollectionsRepository
     ): ClearRecentsUseCase {
-        return ClearRecentsUseCase(userCollectionsRepository)
+        return ClearRecentsUseCase {
+            userCollectionsRepository.clearCollection(
+                UserCollectionsRepository.RECENTS_COLLECTION_NAME
+            )
+        }
     }
 
     @Provides
     fun provideRemoveRecentUseCase(
         removeAssetFromCollectionUseCase: RemoveAssetFromCollectionUseCase
     ): RemoveRecentUseCase {
-        return RemoveRecentUseCase(removeAssetFromCollectionUseCase)
+        return RemoveRecentUseCase {
+            removeAssetFromCollectionUseCase(
+                it,
+                UserCollectionsRepository.RECENTS_COLLECTION_NAME
+            )
+        }
     }
 
     @Provides
     fun provideAddFavouriteUseCase(
         addAssetToCollectionUseCase: AddAssetToCollectionUseCase
     ): AddFavouriteUseCase {
-        return AddFavouriteUseCase(addAssetToCollectionUseCase)
+        return AddFavouriteUseCase {
+            addAssetToCollectionUseCase(
+                it,
+                UserCollectionsRepository.FAVOURITES_COLLECTION_NAME
+            )
+        }
     }
 
     @Provides
     fun provideGetAllCryptoAssetsMarketInfoUseCase(
         cryptoAssetsRepository: CryptoAssetsRepository
     ): GetAllCryptoAssetsMarketInfoUseCase {
-        return GetAllCryptoAssetsMarketInfoUseCase(cryptoAssetsRepository)
+        return GetAllCryptoAssetsMarketInfoUseCase(cryptoAssetsRepository::getCryptoAssetsMarketInfo)
     }
 
     @Provides
     fun provideGetCryptoAssetsMarketInfoUseCase(
         cryptoAssetsRepository: CryptoAssetsRepository
     ): GetCryptoAssetsMarketInfoUseCase {
-        return GetCryptoAssetsMarketInfoUseCase(cryptoAssetsRepository)
+        return GetCryptoAssetsMarketInfoUseCase(cryptoAssetsRepository::getCryptoAssetsMarketInfo)
     }
 
     @Provides
     fun provideGetFavouritesUseCase(
         getCollectionUseCase: GetCollectionUseCase
     ): GetFavouritesUseCase {
-        return GetFavouritesUseCase(getCollectionUseCase)
+        return GetFavouritesUseCase { getCollectionUseCase(UserCollectionsRepository.FAVOURITES_COLLECTION_NAME) }
     }
 
     @Provides
     fun provideGetLocalPreferencesUseCase(
         localPreferencesRepository: LocalPreferencesRepository
     ): GetLocalPreferencesUseCase {
-        return GetLocalPreferencesUseCase(localPreferencesRepository)
+        return GetLocalPreferencesUseCase(localPreferencesRepository::getLocalPreferences)
     }
 
     @Provides
     fun provideRemoveFavouriteUseCase(
         removeAssetFromCollectionUseCase: RemoveAssetFromCollectionUseCase
     ): RemoveFavouriteUseCase {
-        return RemoveFavouriteUseCase(removeAssetFromCollectionUseCase)
+        return RemoveFavouriteUseCase {
+            removeAssetFromCollectionUseCase(
+                it,
+                UserCollectionsRepository.FAVOURITES_COLLECTION_NAME
+            )
+        }
     }
 
     @Provides
     fun provideUpdateLocalPreferencesUseCase(
         localPreferencesRepository: LocalPreferencesRepository
     ): UpdateLocalPreferencesUseCase {
-        return UpdateLocalPreferencesUseCase(localPreferencesRepository)
+        return UpdateLocalPreferencesUseCase(localPreferencesRepository::updateLocalPreferences)
     }
 
     @Provides
     fun provideGetSignedInUserUseCase(
         userRepository: UserRepository
     ): GetSignedInUserUseCase {
-        return GetSignedInUserUseCase(userRepository)
+        return GetSignedInUserUseCase(userRepository::getUser)
     }
 
     @Provides
     fun provideGoogleSignInUseCase(userRepository: UserRepository): GoogleSignInUseCase {
-        return GoogleSignInUseCase(userRepository)
+        return GoogleSignInUseCase(userRepository::googleSignIn)
     }
 
     @Provides
     fun provideEmailSignInUseCase(userRepository: UserRepository): EmailSignInUseCase {
-        return EmailSignInUseCase(userRepository)
+        return EmailSignInUseCase(userRepository::emailSignIn)
     }
 
     @Provides
     fun provideFacebookSignInUseCase(userRepository: UserRepository): FacebookSignInUseCase {
-        return FacebookSignInUseCase(userRepository)
+        return FacebookSignInUseCase(userRepository::facebookSignIn)
     }
 
     @Provides
     fun providePhoneSignInUseCase(userRepository: UserRepository): PhoneSignInUseCase {
-        return PhoneSignInUseCase(userRepository)
+        return PhoneSignInUseCase(userRepository::phoneSignIn)
     }
 
     @Provides
     fun provideTwitterSignInUseCase(userRepository: UserRepository): TwitterSignInUseCase {
-        return TwitterSignInUseCase(userRepository)
+        return TwitterSignInUseCase(userRepository::twitterSignIn)
     }
 
     @Provides
     fun provideSignOutUserUseCase(
         userRepository: UserRepository
     ): SignOutUseCase {
-        return SignOutUseCase(userRepository)
+        return SignOutUseCase(userRepository::signOut)
     }
 
     @Provides
     fun provideGetCollectionUseCase(
         userCollectionsRepository: UserCollectionsRepository
     ): GetCollectionUseCase {
-        return GetCollectionUseCase(userCollectionsRepository)
+        return GetCollectionUseCase(userCollectionsRepository::getCollection)
     }
 
     @Provides
     fun provideAddAssetToCollectionUseCase(
         userCollectionsRepository: UserCollectionsRepository
     ): AddAssetToCollectionUseCase {
-        return AddAssetToCollectionUseCase(userCollectionsRepository)
+        return AddAssetToCollectionUseCase(userCollectionsRepository::addToCollection)
     }
 
     @Provides
     fun provideCreateCollectionUseCase(
         userCollectionsRepository: UserCollectionsRepository
     ): CreateCollectionUseCase {
-        return CreateCollectionUseCase(userCollectionsRepository)
+        return CreateCollectionUseCase(userCollectionsRepository::createCollection)
     }
 
     @Provides
     fun provideRemoveAssetFromCollectionUseCase(
         userCollectionsRepository: UserCollectionsRepository
     ): RemoveAssetFromCollectionUseCase {
-        return RemoveAssetFromCollectionUseCase(userCollectionsRepository)
+        return RemoveAssetFromCollectionUseCase(userCollectionsRepository::removeFromCollection)
     }
 
     @Provides
     fun provideRemoveCollectionUseCase(
         userCollectionsRepository: UserCollectionsRepository
     ): RemoveCollectionUseCase {
-        return RemoveCollectionUseCase(userCollectionsRepository)
+        return RemoveCollectionUseCase(userCollectionsRepository::removeCollection)
     }
 
     @Provides
     fun provideIsUserSignedInUseCase(
         userRepository: UserRepository
     ): IsUserSignedInUseCase {
-        return IsUserSignedInUseCase(userRepository)
+        return IsUserSignedInUseCase(userRepository::isUserSignedIn)
     }
 
     @Provides
     fun provideConfigureNotificationsUseCase(
         notifier: Notifier
     ): ConfigureNotificationsUseCase {
-        return ConfigureNotificationsUseCase(notifier)
+        return ConfigureNotificationsUseCase(notifier::configure)
     }
 }

@@ -1,6 +1,6 @@
 package com.moonlightbutterfly.cryptohub.data.localpreferences
 
-import com.moonlightbutterfly.cryptohub.data.common.Result
+import com.moonlightbutterfly.cryptohub.data.common.Answer
 import com.moonlightbutterfly.cryptohub.data.common.getOrThrow
 import com.moonlightbutterfly.cryptohub.models.LocalPreferences
 import io.mockk.coEvery
@@ -18,9 +18,9 @@ import org.junit.Test
 @ExperimentalCoroutinesApi
 class LocalPreferencesRepositoryTest {
 
-    private val localPreferencesFlow = MutableStateFlow(Result.Success(LocalPreferences.DEFAULT))
+    private val localPreferencesFlow = MutableStateFlow(Answer.Success(LocalPreferences.DEFAULT))
     private val localPreferencesDataSource: LocalPreferencesDataSource = mockk {
-        coEvery { updateLocalPreferences(any()) } returns Result.Success(Unit)
+        coEvery { updateLocalPreferences(any()) } returns Answer.Success(Unit)
         every { getLocalPreferences() } returns localPreferencesFlow
     }
     private val repository = LocalPreferencesRepository(localPreferencesDataSource)

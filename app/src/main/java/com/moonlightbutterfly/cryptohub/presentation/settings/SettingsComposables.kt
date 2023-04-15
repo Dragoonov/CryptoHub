@@ -12,9 +12,7 @@ import androidx.compose.material.Switch
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -23,6 +21,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.firebase.ui.auth.AuthUI
 import com.moonlightbutterfly.cryptohub.R
 import com.moonlightbutterfly.cryptohub.presentation.core.ErrorHandler
@@ -30,15 +29,15 @@ import com.moonlightbutterfly.cryptohub.presentation.core.ErrorHandler
 @Composable
 fun SettingsScreen(onSignOutClicked: () -> Unit, viewModel: SettingsViewModel) {
 
-    val nightModeEnabled by viewModel.isNightModeEnabled.observeAsState(false)
-    val notificationsEnabled by viewModel.areNotificationsEnabled.observeAsState(false)
+    val nightModeEnabled by viewModel.isNightModeEnabled.collectAsStateWithLifecycle(false)
+    val notificationsEnabled by viewModel.areNotificationsEnabled.collectAsStateWithLifecycle(false)
 
-    val configurations by viewModel.notificationsSymbols.collectAsState(initial = emptyList())
+    val configurations by viewModel.notificationsSymbols.collectAsStateWithLifecycle(emptyList())
 
-    val error by viewModel.errorMessageFlow.collectAsState(null)
+    val error by viewModel.errorMessageFlow.collectAsStateWithLifecycle(null)
     error?.let { ErrorHandler(error) }
 
-    val isUserSignedIn by viewModel.isUserSignedIn.collectAsState(false)
+    val isUserSignedIn by viewModel.isUserSignedIn.collectAsStateWithLifecycle(false)
 
     val onSignedOut = {
         viewModel.onSignedOut()

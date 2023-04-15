@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.moonlightbutterfly.cryptohub.data.database.CryptoHubDatabase
-import com.moonlightbutterfly.cryptohub.models.CryptoAsset
+import com.moonlightbutterfly.cryptohub.data.database.dtos.CryptoAssetDto
 
 @Entity(tableName = CryptoHubDatabase.CRYPTO_COLLECTIONS_TABLE_NAME)
 data class CryptoCollectionEntity(
@@ -16,5 +16,5 @@ data class CryptoCollectionEntity(
     val name: String,
 
     @ColumnInfo(name = CryptoHubDatabase.CRYPTO_COLLECTIONS_ASSETS_COLUMN_NAME)
-    val assets: List<CryptoAsset>
+    val assets: List<CryptoAssetDto>
 )

@@ -1,6 +1,6 @@
 package com.moonlightbutterfly.cryptohub.data.assets
 
-import com.moonlightbutterfly.cryptohub.data.common.Result
+import com.moonlightbutterfly.cryptohub.data.common.Answer
 import com.moonlightbutterfly.cryptohub.models.CryptoAssetMarketInfo
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -17,7 +17,7 @@ class CryptoAssetsRepositoryTest {
     private val requestedSymbols2 = listOf("ETH")
 
     private val assets = flowOf(
-        Result.Success(
+        Answer.Success(
             listOf(
                 CryptoAssetMarketInfo(price = 12.1),
                 CryptoAssetMarketInfo(price = 12.2),
@@ -27,7 +27,7 @@ class CryptoAssetsRepositoryTest {
     )
 
     private val assets2 = flowOf(
-        Result.Success(
+        Answer.Success(
             listOf(
                 CryptoAssetMarketInfo(price = 10.1),
                 CryptoAssetMarketInfo(price = 10.2),

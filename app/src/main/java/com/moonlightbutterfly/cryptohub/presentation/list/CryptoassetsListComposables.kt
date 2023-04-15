@@ -26,9 +26,7 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -42,6 +40,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import coil.annotation.ExperimentalCoilApi
@@ -66,11 +65,11 @@ fun CryptoAssetsListScreen(
 
     val cryptoAssets = viewModel.cryptoAssets.collectAsLazyPagingItems()
 
-    val favourites by viewModel.favourites.collectAsState(initial = emptyList())
+    val favourites by viewModel.favourites.collectAsStateWithLifecycle(emptyList())
 
     var isFavouritesSelected by remember { mutableStateOf(false) }
 
-    val error by viewModel.errorMessageFlow.collectAsState(null)
+    val error by viewModel.errorMessageFlow.collectAsStateWithLifecycle(null)
     error?.let { ErrorHandler(error) }
 
     Scaffold(
@@ -148,7 +147,7 @@ private fun ListItemContent(
     viewModel: CryptoAssetsListViewModel,
     onItemClicked: (symbol: String) -> Unit
 ) {
-    val isLiked by viewModel.isCryptoInFavourites(item!!.asset).observeAsState(false)
+    val isLiked by viewModel.isCryptoInFavourites(item!!.asset).collectAsStateWithLifecycle(false)
     CryptoAssetListItem(
         asset = item!!,
         onItemClicked = onItemClicked,

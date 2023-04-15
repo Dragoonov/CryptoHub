@@ -2,6 +2,7 @@ package com.moonlightbutterfly.cryptohub.data.collections
 
 import com.moonlightbutterfly.cryptohub.data.common.getOrThrow
 import com.moonlightbutterfly.cryptohub.data.database.daos.CryptoCollectionsDao
+import com.moonlightbutterfly.cryptohub.data.database.dtos.CryptoAssetDto
 import com.moonlightbutterfly.cryptohub.data.database.entities.CryptoCollectionEntity
 import com.moonlightbutterfly.cryptohub.models.CryptoAsset
 import io.mockk.coEvery
@@ -15,7 +16,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.junit.Test
 
 @ExperimentalCoroutinesApi
@@ -28,9 +29,9 @@ class UserCollectionsLocalDataSourceImplTest {
                     name = "test",
                     assets =
                     listOf(
-                        CryptoAsset("Test1"),
-                        CryptoAsset("Test2"),
-                        CryptoAsset("Test3"),
+                        CryptoAssetDto("Test1", "", ""),
+                        CryptoAssetDto("Test2", "", ""),
+                        CryptoAssetDto("Test3", "", ""),
                     )
                 )
             )
@@ -54,7 +55,7 @@ class UserCollectionsLocalDataSourceImplTest {
         UserCollectionsLocalDataSourceImpl(cryptoCollectionsDao, mockk())
 
     @Test
-    fun `should get collection`() = runBlockingTest {
+    fun `should get collection`() = runTest {
         // WHEN
         val list = userConfigurationLocalDataSourceImpl
             .getCollection("").first().getOrThrow().cryptoAssets
@@ -67,7 +68,7 @@ class UserCollectionsLocalDataSourceImplTest {
     }
 
     @Test
-    fun `should get collection names`() = runBlockingTest {
+    fun `should get collection names`() = runTest {
         // WHEN
         val list = userConfigurationLocalDataSourceImpl.getAllCollectionNames().first().getOrThrow()
 
@@ -79,7 +80,7 @@ class UserCollectionsLocalDataSourceImplTest {
     }
 
     @Test
-    fun `should clear collection`() = runBlockingTest {
+    fun `should clear collection`() = runTest {
         // WHEN
         userConfigurationLocalDataSourceImpl.clearCollection("")
 
@@ -90,7 +91,7 @@ class UserCollectionsLocalDataSourceImplTest {
     }
 
     @Test
-    fun `should create collection`() = runBlockingTest {
+    fun `should create collection`() = runTest {
         // WHEN
         userConfigurationLocalDataSourceImpl.createCollection("")
 
@@ -101,7 +102,7 @@ class UserCollectionsLocalDataSourceImplTest {
     }
 
     @Test
-    fun `should remove collection`() = runBlockingTest {
+    fun `should remove collection`() = runTest {
         // WHEN
         userConfigurationLocalDataSourceImpl.removeCollection("")
 
@@ -112,7 +113,7 @@ class UserCollectionsLocalDataSourceImplTest {
     }
 
     @Test
-    fun `should add to collection`() = runBlockingTest {
+    fun `should add to collection`() = runTest {
         // GIVEN
         val asset = CryptoAsset("name")
 
@@ -126,7 +127,7 @@ class UserCollectionsLocalDataSourceImplTest {
     }
 
     @Test
-    fun `should create collection on adding to non existent collection`() = runBlockingTest {
+    fun `should create collection on adding to non existent collection`() = runTest {
         // GIVEN
         val asset = CryptoAsset("name")
         every {
@@ -144,7 +145,7 @@ class UserCollectionsLocalDataSourceImplTest {
     }
 
     @Test
-    fun `should remove from collection`() = runBlockingTest {
+    fun `should remove from collection`() = runTest {
         // GIVEN
         val asset = CryptoAsset("Test2")
 

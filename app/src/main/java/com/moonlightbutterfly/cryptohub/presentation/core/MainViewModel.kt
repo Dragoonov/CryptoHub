@@ -13,6 +13,6 @@ class MainViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     val isNightModeEnabled = getLocalPreferencesUseCase()
-        .propagateErrors()
+        .prepareFlow(LocalPreferences.DEFAULT)
         .map { it.unpack(LocalPreferences.DEFAULT).nightModeEnabled }
 }

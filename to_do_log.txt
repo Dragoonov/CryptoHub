@@ -1,3 +1,5 @@
 - migrate to another crypto service
 - refactor to clean modules
-- refactor panel viewmodel to get symbol in constructor
+- stateIn, initial Loading, implement loading, repeatOnLifecycle
+- convert flows to stateflows (and remove .first(), replace with value)
+- possibly take a look at simplifying dtos

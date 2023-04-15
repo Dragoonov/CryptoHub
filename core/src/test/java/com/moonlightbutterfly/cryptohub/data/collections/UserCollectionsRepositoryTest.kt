@@ -1,6 +1,6 @@
 package com.moonlightbutterfly.cryptohub.data.collections
 
-import com.moonlightbutterfly.cryptohub.data.common.Result
+import com.moonlightbutterfly.cryptohub.data.common.Answer
 import com.moonlightbutterfly.cryptohub.data.common.getOrThrow
 import com.moonlightbutterfly.cryptohub.data.user.UserDataSource
 import com.moonlightbutterfly.cryptohub.models.CryptoAsset
@@ -22,43 +22,43 @@ import org.junit.Test
 class UserCollectionsRepositoryTest {
 
     private val collectionLocal = flowOf(
-        Result.Success(
+        Answer.Success(
             CryptoCollection(cryptoAssets = listOf(CryptoAsset.EMPTY, CryptoAsset.EMPTY))
         )
     )
     private val collectionRemote = flowOf(
-        Result.Success(
+        Answer.Success(
             CryptoCollection(cryptoAssets = listOf(CryptoAsset.EMPTY))
         )
     )
-    private val collectionNamesLocal = flowOf(Result.Success(listOf("local", "test2")))
-    private val collectionNamesRemote = flowOf(Result.Success(listOf("remote", "test2")))
+    private val collectionNamesLocal = flowOf(Answer.Success(listOf("local", "test2")))
+    private val collectionNamesRemote = flowOf(Answer.Success(listOf("remote", "test2")))
 
     private val userConfigurationLocalDataSource = mockk<UserCollectionsLocalDataSource> {
         every { getCollection(any()) } returns collectionLocal
         every { getAllCollectionNames() } returns collectionNamesLocal
-        coEvery { createCollection(any()) } returns Result.Success(Unit)
-        coEvery { addToCollection(any(), any()) } returns Result.Success(Unit)
-        coEvery { removeCollection(any()) } returns Result.Success(Unit)
-        coEvery { clearCollection(any()) } returns Result.Success(Unit)
-        coEvery { removeFromCollection(any(), any()) } returns Result.Success(Unit)
+        coEvery { createCollection(any()) } returns Answer.Success(Unit)
+        coEvery { addToCollection(any(), any()) } returns Answer.Success(Unit)
+        coEvery { removeCollection(any()) } returns Answer.Success(Unit)
+        coEvery { clearCollection(any()) } returns Answer.Success(Unit)
+        coEvery { removeFromCollection(any(), any()) } returns Answer.Success(Unit)
     }
 
     private val userConfigurationRemoteDataSource = mockk<UserCollectionsRemoteDataSource> {
         every { getCollection(any(), any()) } returns collectionRemote
         every { getAllCollectionNames(any()) } returns collectionNamesRemote
-        coEvery { createCollection(any(), any()) } returns Result.Success(Unit)
-        coEvery { addToCollection(any(), any(), any()) } returns Result.Success(Unit)
-        coEvery { removeCollection(any(), any()) } returns Result.Success(Unit)
-        coEvery { clearCollection(any(), any()) } returns Result.Success(Unit)
-        coEvery { removeFromCollection(any(), any(), any()) } returns Result.Success(Unit)
+        coEvery { createCollection(any(), any()) } returns Answer.Success(Unit)
+        coEvery { addToCollection(any(), any(), any()) } returns Answer.Success(Unit)
+        coEvery { removeCollection(any(), any()) } returns Answer.Success(Unit)
+        coEvery { clearCollection(any(), any()) } returns Answer.Success(Unit)
+        coEvery { removeFromCollection(any(), any(), any()) } returns Answer.Success(Unit)
     }
 
     private val userDataSource = mockk<UserDataSource> {
         every {
             isUserSignedIn()
-        } returns Result.Success(false) andThen Result.Success(true)
-        every { getUser() } returns Result.Success(User("test"))
+        } returns Answer.Success(false) andThen Answer.Success(true)
+        every { getUser() } returns Answer.Success(User("test"))
     }
 
     private val repository = UserCollectionsRepository(

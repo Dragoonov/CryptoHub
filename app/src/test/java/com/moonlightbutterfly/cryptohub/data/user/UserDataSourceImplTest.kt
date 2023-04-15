@@ -1,7 +1,7 @@
 package com.moonlightbutterfly.cryptohub.data.user
 
 import com.google.firebase.auth.FirebaseAuth
-import com.moonlightbutterfly.cryptohub.data.common.Result
+import com.moonlightbutterfly.cryptohub.data.common.Answer
 import com.moonlightbutterfly.cryptohub.data.common.getOrThrow
 import com.moonlightbutterfly.cryptohub.data.signin.FirebaseSignInHandler
 import com.moonlightbutterfly.cryptohub.models.User
@@ -17,7 +17,7 @@ import org.junit.Test
 
 class UserDataSourceImplTest {
 
-    private val flow = MutableSharedFlow<Result<User>>()
+    private val flow = MutableSharedFlow<Answer<User>>()
     private val firebaseSignInHandler: FirebaseSignInHandler = mockk {
         every { signIn() } returns flow
     }
@@ -41,14 +41,14 @@ class UserDataSourceImplTest {
         var user = dataSource.getUser()
 
         // THEN
-        assertTrue(user is Result.Success)
+        assertTrue(user is Answer.Success)
         assertEquals("test", user.getOrThrow().userId)
 
         // WHEN
         user = dataSource.getUser()
 
         // THEN
-        assertTrue(user is Result.Failure)
+        assertTrue(user is Answer.Failure)
     }
 
     @Test

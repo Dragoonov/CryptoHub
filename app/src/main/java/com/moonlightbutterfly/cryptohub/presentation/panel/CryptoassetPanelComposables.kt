@@ -36,9 +36,7 @@ import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.rememberBottomSheetScaffoldState
 import androidx.compose.material.rememberBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -53,6 +51,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.annotation.ExperimentalCoilApi
 import com.moonlightbutterfly.cryptohub.R
 import com.moonlightbutterfly.cryptohub.models.CryptoAsset
@@ -73,12 +72,12 @@ import java.util.Calendar
 @OptIn(ExperimentalMaterialApi::class)
 @ExperimentalCoilApi
 @Composable
-fun CryptoAssetPanelScreen(cryptoAssetSymbol: String, viewModel: CryptoAssetPanelViewModel) {
-    val asset by viewModel.getCryptoAssetMarketInfo(cryptoAssetSymbol).observeAsState(CryptoAssetMarketInfo.EMPTY)
-    val isLiked by viewModel.isCryptoInFavourites().collectAsState(false)
-    val isSavedForNotifications by viewModel.isCryptoInNotifications().collectAsState(false)
-    val areNotificationsEnabled by viewModel.areNotificationsEnabled().collectAsState(false)
-    val error by viewModel.errorMessageFlow.collectAsState(null)
+fun CryptoAssetPanelScreen(viewModel: CryptoAssetPanelViewModel) {
+    val asset by viewModel.asset.collectAsStateWithLifecycle(CryptoAssetMarketInfo.EMPTY)
+    val isLiked by viewModel.isCryptoInFavourites().collectAsStateWithLifecycle(false)
+    val isSavedForNotifications by viewModel.isCryptoInNotifications().collectAsStateWithLifecycle(false)
+    val areNotificationsEnabled by viewModel.areNotificationsEnabled().collectAsStateWithLifecycle(false)
+    val error by viewModel.errorMessageFlow.collectAsStateWithLifecycle(null)
     error?.let { ErrorHandler(error) }
     val bottomSheetState = rememberBottomSheetScaffoldState(
         bottomSheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Collapsed)
@@ -185,7 +184,7 @@ fun BottomSheetContent(
     ) {
 
         val initialConfiguration by viewModel.getConfigurationForCrypto()
-            .collectAsState(initial = NotificationConfiguration(asset.asset.symbol))
+            .collectAsStateWithLifecycle(NotificationConfiguration(asset.asset.symbol))
 
         var selectedNotificationConfiguration: NotificationConfiguration by remember {
             mutableStateOf(initialConfiguration)

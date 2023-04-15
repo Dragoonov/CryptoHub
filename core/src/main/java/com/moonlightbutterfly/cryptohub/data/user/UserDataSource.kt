@@ -1,24 +1,24 @@
 package com.moonlightbutterfly.cryptohub.data.user
 
-import com.moonlightbutterfly.cryptohub.data.common.Result
+import com.moonlightbutterfly.cryptohub.data.common.Answer
 import com.moonlightbutterfly.cryptohub.models.User
 import kotlinx.coroutines.flow.Flow
 
 interface UserDataSource {
 
-    fun getUser(): Result<User>
+    fun getUser(): Answer<User>
 
-    fun googleSignIn(): Flow<Result<User>>
+    fun googleSignIn(): Flow<Answer<User>>
 
-    fun facebookSignIn(): Flow<Result<User>>
+    fun facebookSignIn(): Flow<Answer<User>>
 
-    fun twitterSignIn(): Flow<Result<User>>
+    fun twitterSignIn(): Flow<Answer<User>>
 
-    fun emailSignIn(): Flow<Result<User>>
+    fun emailSignIn(): Flow<Answer<User>>
 
-    fun phoneSignIn(): Flow<Result<User>>
+    fun phoneSignIn(): Flow<Answer<User>>
 
-    fun signOut(): Result<Unit>
+    fun signOut(): Answer<Unit>
 
-    fun isUserSignedIn(): Result<Boolean>
+    fun isUserSignedIn(): Answer<Boolean>
 }

@@ -1,7 +1,7 @@
 package com.moonlightbutterfly.cryptohub.presentation.list
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.moonlightbutterfly.cryptohub.data.common.Result
+import com.moonlightbutterfly.cryptohub.data.common.Answer
 import com.moonlightbutterfly.cryptohub.models.CryptoAsset
 import com.moonlightbutterfly.cryptohub.models.CryptoCollection
 import com.moonlightbutterfly.cryptohub.usecases.AddFavouriteUseCase
@@ -9,7 +9,6 @@ import com.moonlightbutterfly.cryptohub.usecases.GetAllCryptoAssetsMarketInfoUse
 import com.moonlightbutterfly.cryptohub.usecases.GetCryptoAssetsMarketInfoUseCase
 import com.moonlightbutterfly.cryptohub.usecases.GetFavouritesUseCase
 import com.moonlightbutterfly.cryptohub.usecases.RemoveFavouriteUseCase
-import com.moonlightbutterfly.cryptohub.utils.observeForTesting
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -18,9 +17,11 @@ import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
@@ -46,7 +47,7 @@ class CryptoAssetsListViewModelTest {
     fun setup() {
         Dispatchers.setMain(testDispatcher)
         every { getFavouritesUseCase() } returns flowOf(
-            Result.Success(
+            Answer.Success(
                 CryptoCollection(
                     cryptoAssets =
                     listOf(
@@ -58,9 +59,9 @@ class CryptoAssetsListViewModelTest {
                 )
             )
         )
-        coEvery { getCryptoAssetsMarketInfoUseCase(any()) } returns flowOf(Result.Success(listOf()))
-        coEvery { addFavouriteUseCase(any()) } returns Result.Success(Unit)
-        coEvery { removeFavouriteUseCase(any()) } returns Result.Success(Unit)
+        coEvery { getCryptoAssetsMarketInfoUseCase(any()) } returns flowOf(Answer.Success(listOf()))
+        coEvery { addFavouriteUseCase(any()) } returns Answer.Success(Unit)
+        coEvery { removeFavouriteUseCase(any()) } returns Answer.Success(Unit)
 
         viewModel = CryptoAssetsListViewModel(
             getAllCryptoAssetsMarketInfoUseCase,
@@ -77,7 +78,7 @@ class CryptoAssetsListViewModelTest {
     }
 
     @Test
-    fun `should check if in favourites`() {
+    fun `should check if in favourites`() = runTest {
         // GIVEN
         val isInFavourites = CryptoAsset(symbol = "ETH")
         val isNotInFavourites = CryptoAsset(symbol = "DOT")
@@ -87,12 +88,8 @@ class CryptoAssetsListViewModelTest {
         val check2 = viewModel.isCryptoInFavourites(isNotInFavourites)
 
         // THEN
-        check1.observeForTesting {
-            assertTrue(check1.value!!)
-        }
-        check2.observeForTesting {
-            assertFalse(check2.value!!)
-        }
+        assertTrue(check1.first())
+        assertFalse(check2.first())
     }
 
     @Test

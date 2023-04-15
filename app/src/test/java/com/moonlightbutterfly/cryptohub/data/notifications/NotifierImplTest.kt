@@ -5,7 +5,7 @@ import android.app.PendingIntent
 import android.content.Context
 import androidx.work.WorkManager
 import androidx.work.WorkRequest
-import com.moonlightbutterfly.cryptohub.data.common.Result
+import com.moonlightbutterfly.cryptohub.data.common.Answer
 import com.moonlightbutterfly.cryptohub.data.localpreferences.LocalPreferencesRepository
 import com.moonlightbutterfly.cryptohub.models.LocalPreferences
 import com.moonlightbutterfly.cryptohub.models.NotificationConfiguration
@@ -35,7 +35,7 @@ class NotifierImplTest {
     }
     private val localPreferencesRepository: LocalPreferencesRepository = mockk {
         every { getLocalPreferences() } returns flowOf(
-            Result.Success(
+            Answer.Success(
                 LocalPreferences(
                     notificationsConfiguration = setOf(
                         NotificationConfiguration("ETH", NotificationInterval.WEEK, null),

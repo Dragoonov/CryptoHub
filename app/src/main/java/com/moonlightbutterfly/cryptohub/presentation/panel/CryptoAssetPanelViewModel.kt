@@ -1,10 +1,8 @@
 package com.moonlightbutterfly.cryptohub.presentation.panel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.asFlow
-import androidx.lifecycle.asLiveData
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.moonlightbutterfly.cryptohub.data.common.Result
+import com.moonlightbutterfly.cryptohub.data.common.Answer
 import com.moonlightbutterfly.cryptohub.data.common.unpack
 import com.moonlightbutterfly.cryptohub.models.CryptoAssetMarketInfo
 import com.moonlightbutterfly.cryptohub.models.CryptoCollection
@@ -24,6 +22,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -31,67 +30,60 @@ import javax.inject.Inject
 @HiltViewModel
 @SuppressWarnings("LongParameterList")
 class CryptoAssetPanelViewModel @Inject constructor(
-    private val getCryptoAssetsMarketInfoUseCase: GetCryptoAssetsMarketInfoUseCase,
+    getCryptoAssetsMarketInfoUseCase: GetCryptoAssetsMarketInfoUseCase,
     getFavouritesUseCase: GetFavouritesUseCase,
     private val addFavouriteUseCase: AddFavouriteUseCase,
     private val removeFavouriteUseCase: RemoveFavouriteUseCase,
     private val getLocalPreferencesUseCase: GetLocalPreferencesUseCase,
     private val updateLocalPreferencesUseCase: UpdateLocalPreferencesUseCase,
     private val configureNotificationsUseCase: ConfigureNotificationsUseCase,
+    state: SavedStateHandle
 ) : BaseViewModel() {
 
-    private lateinit var asset: LiveData<CryptoAssetMarketInfo>
-
-    fun getCryptoAssetMarketInfo(symbol: String): LiveData<CryptoAssetMarketInfo> {
-        if (!this::asset.isInitialized) {
-            asset = getCryptoAssetsMarketInfoUseCase(listOf(symbol))
-                .propagateErrors()
-                .map {
-                    it
-                        .unpack(listOf(CryptoAssetMarketInfo.EMPTY))
-                        .getOrElse(0) { CryptoAssetMarketInfo.EMPTY }
-                }
-                .asLiveData()
+    val asset = getCryptoAssetsMarketInfoUseCase(listOf(state.get<String>(SAVE_STATE_SYMBOL_KEY)!!))
+        .prepareFlow(emptyList())
+        .map {
+            it
+                .unpack(listOf(CryptoAssetMarketInfo.EMPTY))
+                .getOrElse(0) { CryptoAssetMarketInfo.EMPTY }
         }
-        return asset
-    }
 
     private val favourites = getFavouritesUseCase()
-        .propagateErrors()
+        .prepareFlow(CryptoCollection.EMPTY)
         .map { it.unpack(CryptoCollection.EMPTY) }
 
     fun areNotificationsEnabled() =
         getLocalPreferencesUseCase().map { it.unpack(LocalPreferences.DEFAULT).notificationsEnabled }
 
-    fun isCryptoInFavourites() = favourites.combine(asset.asFlow()) { collection, asset ->
+    fun isCryptoInFavourites() = favourites.combine(asset) { collection, asset ->
         collection.cryptoAssets.find { it.symbol == asset.asset.symbol } != null
     }
 
     fun isCryptoInNotifications() =
-        getLocalPreferencesUseCase().combine(asset.asFlow()) { preferences, asset ->
+        getLocalPreferencesUseCase().combine(asset) { preferences, asset ->
             preferences.unpack(LocalPreferences.DEFAULT).notificationsConfiguration.find {
                 it.symbol == asset.asset.symbol
             } != null
         }
 
     fun getConfigurationForCrypto() =
-        getLocalPreferencesUseCase().combine(asset.asFlow()) { preferences, asset ->
+        getLocalPreferencesUseCase().combine(asset) { preferences, asset ->
             preferences.unpack(LocalPreferences.DEFAULT).notificationsConfiguration.find {
                 it.symbol == asset.asset.symbol
             }
         }.filterNotNull()
 
     fun addCryptoToFavourites() {
-        asset.value?.let {
-            viewModelScope.launch {
+        viewModelScope.launch {
+            asset.firstOrNull()?.let {
                 addFavouriteUseCase(it.asset).propagateErrors()
             }
         }
     }
 
     fun removeCryptoFromFavourites() {
-        asset.value?.let {
-            viewModelScope.launch {
+        viewModelScope.launch {
+            asset.firstOrNull()?.let {
                 removeFavouriteUseCase(it.asset).propagateErrors()
             }
         }
@@ -105,11 +97,11 @@ class CryptoAssetPanelViewModel @Inject constructor(
             getLocalPreferencesUseCase().first()
                 .propagateErrors()
                 .let {
-                    if (it is Result.Success) {
+                    if (it is Answer.Success) {
                         val newSet = it.data.notificationsConfiguration.filter { crypto ->
-                            crypto.symbol != asset.value?.asset?.symbol
+                            crypto.symbol != asset.firstOrNull()?.asset?.symbol
                         }.toSet() + NotificationConfiguration(
-                            asset.value!!.asset.symbol,
+                            asset.firstOrNull()!!.asset.symbol,
                             notificationInterval,
                             notificationTime
                         )
@@ -128,9 +120,9 @@ class CryptoAssetPanelViewModel @Inject constructor(
             getLocalPreferencesUseCase().first()
                 .propagateErrors()
                 .let {
-                    if (it is Result.Success) {
+                    if (it is Answer.Success) {
                         val newSet = it.data.notificationsConfiguration.filter { notification ->
-                            notification.symbol != asset.value?.asset?.symbol
+                            notification.symbol != asset.firstOrNull()?.asset?.symbol
                         }.toSet()
                         updateLocalPreferencesUseCase(
                             it.data.copy(
@@ -141,5 +133,9 @@ class CryptoAssetPanelViewModel @Inject constructor(
                     }
                 }
         }
+    }
+
+    private companion object {
+        private const val SAVE_STATE_SYMBOL_KEY = "symbol"
     }
 }

@@ -1,6 +1,6 @@
 package com.moonlightbutterfly.cryptohub.data.signin
 
-import com.moonlightbutterfly.cryptohub.data.common.Result
+import com.moonlightbutterfly.cryptohub.data.common.Answer
 import com.moonlightbutterfly.cryptohub.models.User
 import kotlinx.coroutines.flow.Flow
 
@@ -9,5 +9,5 @@ import kotlinx.coroutines.flow.Flow
  * sign in method.
  */
 interface FirebaseSignInHandler {
-    fun signIn(): Flow<Result<User>>
+    fun signIn(): Flow<Answer<User>>
 }

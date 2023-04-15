@@ -19,9 +19,7 @@ import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -34,6 +32,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.annotation.ExperimentalCoilApi
 import com.moonlightbutterfly.cryptohub.R
 import com.moonlightbutterfly.cryptohub.models.CryptoAsset
@@ -46,13 +45,13 @@ import com.moonlightbutterfly.cryptohub.presentation.list.CryptoAssetNameColumnF
 @Composable
 fun SearchScreen(onCancelSearch: () -> Unit, onItemClicked: (asset: String) -> Unit, viewModel: SearchViewModel) {
 
-    val error by viewModel.errorMessageFlow.collectAsState(null)
+    val error by viewModel.errorMessageFlow.collectAsStateWithLifecycle(null)
     error?.let { ErrorHandler(error) }
 
-    val query by viewModel.currentSearchQuery.observeAsState(stringResource(id = R.string.search))
-    val results by viewModel.cryptoAssetsResults.observeAsState(emptyList())
-    val recents by viewModel.recents.observeAsState(emptyList())
-    val isLoading by viewModel.isLoading.observeAsState(false)
+    val query by viewModel.currentSearchQuery.collectAsStateWithLifecycle(stringResource(id = R.string.search))
+    val results by viewModel.cryptoAssetsResults.collectAsStateWithLifecycle(emptyList())
+    val recents by viewModel.recents.collectAsStateWithLifecycle(emptyList())
+    val isLoading by viewModel.isLoading.collectAsStateWithLifecycle(false)
     val searchFocusRequester = FocusRequester()
 
     Scaffold(

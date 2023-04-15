@@ -1,9 +1,11 @@
 package com.moonlightbutterfly.cryptohub.data.localpreferences
 
+import com.moonlightbutterfly.cryptohub.data.common.Answer
 import com.moonlightbutterfly.cryptohub.data.common.Error
 import com.moonlightbutterfly.cryptohub.data.common.ErrorMapper
-import com.moonlightbutterfly.cryptohub.data.common.Result
 import com.moonlightbutterfly.cryptohub.data.database.daos.LocalPreferencesDao
+import com.moonlightbutterfly.cryptohub.data.database.dtos.toLocalPreferences
+import com.moonlightbutterfly.cryptohub.data.database.dtos.toLocalPreferencesDto
 import com.moonlightbutterfly.cryptohub.data.database.entities.LocalPreferencesEntity
 import com.moonlightbutterfly.cryptohub.models.LocalPreferences
 import kotlinx.coroutines.flow.Flow
@@ -19,23 +21,23 @@ class LocalPreferencesDataSourceImpl @Inject constructor(
     private val errorMapper: ErrorMapper
 ) : LocalPreferencesDataSource {
 
-    override fun getLocalPreferences(): Flow<Result<LocalPreferences>> =
+    override fun getLocalPreferences(): Flow<Answer<LocalPreferences>> =
         localPreferencesDao.getAll()
             .map {
-                Result.Success(it.first().preferences) as Result<LocalPreferences>
+                Answer.Success(it.first().preferences.toLocalPreferences()) as Answer<LocalPreferences>
             }
             .catch {
-                emit(Result.Failure(errorMapper.mapError(it)))
+                emit(Answer.Failure(errorMapper.mapError(it)))
             }
 
-    override suspend fun updateLocalPreferences(localPreferences: LocalPreferences): Result<Unit> {
+    override suspend fun updateLocalPreferences(localPreferences: LocalPreferences): Answer<Unit> {
         return localPreferencesDao.update(
-            LocalPreferencesEntity(preferences = localPreferences)
+            LocalPreferencesEntity(preferences = localPreferences.toLocalPreferencesDto())
         ).let {
             if (it > 0) {
-                Result.Success(Unit)
+                Answer.Success(Unit)
             } else {
-                Result.Failure(Error.NotFound("Local preferences not found"))
+                Answer.Failure(Error.NotFound("Local preferences not found"))
             }
         }
     }

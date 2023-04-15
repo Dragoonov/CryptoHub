@@ -1,7 +1,8 @@
 package com.moonlightbutterfly.cryptohub.presentation.panel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.moonlightbutterfly.cryptohub.data.common.Result
+import androidx.lifecycle.SavedStateHandle
+import com.moonlightbutterfly.cryptohub.data.common.Answer
 import com.moonlightbutterfly.cryptohub.models.CryptoAsset
 import com.moonlightbutterfly.cryptohub.models.CryptoAssetMarketInfo
 import com.moonlightbutterfly.cryptohub.models.CryptoCollection
@@ -14,7 +15,6 @@ import com.moonlightbutterfly.cryptohub.usecases.GetFavouritesUseCase
 import com.moonlightbutterfly.cryptohub.usecases.GetLocalPreferencesUseCase
 import com.moonlightbutterfly.cryptohub.usecases.RemoveFavouriteUseCase
 import com.moonlightbutterfly.cryptohub.usecases.UpdateLocalPreferencesUseCase
-import com.moonlightbutterfly.cryptohub.utils.observeForTesting
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -26,6 +26,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -54,6 +55,7 @@ class CryptoAssetPanelViewModelTest {
 
     private val marketAsset = CryptoAssetMarketInfo(asset = asset)
     private val marketAsset2 = CryptoAssetMarketInfo(asset = asset2)
+    private val stateHandle = mockk<SavedStateHandle>()
 
     @get:Rule
     val rule = InstantTaskExecutorRule()
@@ -62,7 +64,7 @@ class CryptoAssetPanelViewModelTest {
     fun setup() {
         Dispatchers.setMain(testDispatcher)
         every { getFavouritesUseCase() } returns flowOf(
-            Result.Success(
+            Answer.Success(
                 CryptoCollection(
                     cryptoAssets =
                     listOf(
@@ -75,24 +77,24 @@ class CryptoAssetPanelViewModelTest {
             )
         )
         every { getCryptoAssetsMarketInfoUseCase(any()) } returns flowOf(
-            Result.Success(
+            Answer.Success(
                 listOf(
                     marketAsset
                 )
             )
         )
-        coEvery { addFavouriteUseCase(any()) } returns Result.Success(Unit)
-        coEvery { removeFavouriteUseCase(any()) } returns Result.Success(Unit)
+        coEvery { addFavouriteUseCase(any()) } returns Answer.Success(Unit)
+        coEvery { removeFavouriteUseCase(any()) } returns Answer.Success(Unit)
         every { getLocalPreferencesUseCase() } returns flowOf(
-            Result.Success(
+            Answer.Success(
                 LocalPreferences(
                     notificationsConfiguration = configuration
                 )
             )
         )
-        coEvery { updateLocalPreferencesUseCase(any()) } returns Result.Success(Unit)
-        coEvery { configureNotificationsUseCase(any()) } returns Result.Success(Unit)
-
+        coEvery { updateLocalPreferencesUseCase(any()) } returns Answer.Success(Unit)
+        coEvery { configureNotificationsUseCase(any()) } returns Answer.Success(Unit)
+        every { stateHandle.get<String>("symbol") } returns asset.symbol
         viewModel = CryptoAssetPanelViewModel(
             getCryptoAssetsMarketInfoUseCase,
             getFavouritesUseCase,
@@ -100,7 +102,8 @@ class CryptoAssetPanelViewModelTest {
             removeFavouriteUseCase,
             getLocalPreferencesUseCase,
             updateLocalPreferencesUseCase,
-            configureNotificationsUseCase
+            configureNotificationsUseCase,
+            stateHandle
         )
     }
 
@@ -110,134 +113,130 @@ class CryptoAssetPanelViewModelTest {
     }
 
     @Test
-    fun `should be in favourites`() {
+    fun `should be in favourites`() = runTest {
         // GIVEN
         coEvery { getCryptoAssetsMarketInfoUseCase(any()) } returns flowOf(
-            Result.Success(
+            Answer.Success(
                 listOf(
                     marketAsset2
                 )
             )
         )
-        val assetLiveData2 = viewModel.getCryptoAssetMarketInfo(asset2.symbol)
-        assetLiveData2.observeForTesting {
-            runTest {
-                // WHEN
-                val check1 = viewModel.isCryptoInFavourites().first()
-                // THEN
-                assertTrue(check1)
-            }
-        }
+        every { stateHandle.get<String>("symbol") } returns asset2.symbol
+        viewModel = CryptoAssetPanelViewModel(
+            getCryptoAssetsMarketInfoUseCase,
+            getFavouritesUseCase,
+            addFavouriteUseCase,
+            removeFavouriteUseCase,
+            getLocalPreferencesUseCase,
+            updateLocalPreferencesUseCase,
+            configureNotificationsUseCase,
+            stateHandle
+        )
+        // WHEN
+        val check1 = viewModel.isCryptoInFavourites().first()
+        // THEN
+        assertTrue(check1)
     }
 
     @Test
-    fun `should not be in favourites`() {
+    fun `should not be in favourites`() = runTest {
         // GIVEN
         coEvery { getCryptoAssetsMarketInfoUseCase(any()) } returns flowOf(
-            Result.Success(
+            Answer.Success(
                 listOf(
                     marketAsset
                 )
             )
         )
-        val assetLiveData = viewModel.getCryptoAssetMarketInfo(asset.symbol)
-        assetLiveData.observeForTesting {
-            runTest {
-                // WHEN
-                val check1 = viewModel.isCryptoInFavourites().first()
-                // THEN
-                assertFalse(check1)
-            }
+        // WHEN
+        val check1 = viewModel.isCryptoInFavourites().first()
+        // THEN
+        assertFalse(check1)
+    }
+
+    @Test
+    fun `should add to favourites`() = runTest {
+        // GIVEN
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
+            viewModel.asset.collect {}
+        }
+        // WHEN
+        viewModel.addCryptoToFavourites()
+        // THEN
+        coVerify {
+            addFavouriteUseCase(asset)
         }
     }
 
     @Test
-    fun `should add to favourites`() {
+    fun `should remove from favourites`() = runTest {
         // GIVEN
-        val assetLiveData = viewModel.getCryptoAssetMarketInfo(asset.symbol)
-        assetLiveData.observeForTesting {
-            // WHEN
-            viewModel.addCryptoToFavourites()
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
+            viewModel.asset.collect {}
+        }
+        // WHEN
+        viewModel.removeCryptoFromFavourites()
 
-            // THEN
-            coVerify {
-                addFavouriteUseCase(asset)
-            }
+        // THEN
+        coVerify {
+            removeFavouriteUseCase(asset)
         }
     }
 
     @Test
-    fun `should remove from favourites`() {
-        // GIVEN
-        val assetLiveData = viewModel.getCryptoAssetMarketInfo(asset.symbol)
-        assetLiveData.observeForTesting {
-            // WHEN
-            viewModel.removeCryptoFromFavourites()
+    fun `should notifications be enabled`() = runTest {
+        // GIVEN WHEN
+        val enabled = viewModel.areNotificationsEnabled().first()
+        // THEN
+        assertTrue(enabled)
+    }
 
-            // THEN
-            coVerify {
-                removeFavouriteUseCase(asset)
-            }
+    @Test
+    fun `should get configuration for crypto`() = runTest {
+        // GIVEN WHEN
+        val conf = viewModel.getConfigurationForCrypto().first()
+        // THEN
+        assertEquals(configuration.first(), conf)
+    }
+
+    @Test
+    fun `should add crypto to notifications`() = runTest {
+        // GIVEN
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
+            viewModel.asset.collect {}
+        }
+        // WHEN
+        viewModel.addCryptoToNotifications(null, null)
+        // THEN
+        coVerify {
+            getLocalPreferencesUseCase()
+            updateLocalPreferencesUseCase(any())
+            configureNotificationsUseCase(
+                setOf(
+                    NotificationConfiguration(
+                        asset.symbol,
+                        null,
+                        null
+                    )
+                )
+            )
         }
     }
 
     @Test
-    fun `should notifications be enabled`() {
+    fun `should remove crypto from notifications`() = runTest {
         // GIVEN
-        val assetLiveData = viewModel.getCryptoAssetMarketInfo(asset.symbol)
-        assetLiveData.observeForTesting {
-            runTest {
-                // WHEN
-                val enabled = viewModel.areNotificationsEnabled().first()
-                // THEN
-                assertTrue(enabled)
-            }
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
+            viewModel.asset.collect {}
         }
-    }
-
-    @Test
-    fun `should get configuration for crypto`() {
-        // GIVEN
-        val assetLiveData = viewModel.getCryptoAssetMarketInfo(asset.symbol)
-        assetLiveData.observeForTesting {
-            runTest {
-                // WHEN
-                val conf = viewModel.getConfigurationForCrypto().first()
-                // THEN
-                assertEquals(configuration.first(), conf)
-            }
-        }
-    }
-
-    @Test
-    fun `should add crypto to notifications`() {
-        // GIVEN
-        val assetLiveData = viewModel.getCryptoAssetMarketInfo(asset.symbol)
-        assetLiveData.observeForTesting {
-            // WHEN
-            viewModel.addCryptoToNotifications(null, null)
-            // THEN
-            coVerify {
-                getLocalPreferencesUseCase()
-                updateLocalPreferencesUseCase(any())
-                configureNotificationsUseCase(setOf(NotificationConfiguration(asset.symbol, null, null)))
-            }
-        }
-    }
-
-    @Test
-    fun `should remove crypto from notifications`() {
-        // GIVEN
-        val assetLiveData = viewModel.getCryptoAssetMarketInfo(asset.symbol)
-        assetLiveData.observeForTesting {
-            // WHEN
-            viewModel.removeCryptoFromNotifications()
-            // THEN
-            coVerify {
-                getLocalPreferencesUseCase()
-                updateLocalPreferencesUseCase(any())
-                configureNotificationsUseCase(emptySet())
-            }
+        // WHEN
+        viewModel.removeCryptoFromNotifications()
+        // THEN
+        coVerify {
+            getLocalPreferencesUseCase()
+            updateLocalPreferencesUseCase(any())
+            configureNotificationsUseCase(emptySet())
         }
     }
 }
