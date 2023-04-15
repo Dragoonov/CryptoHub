@@ -1,8 +1,9 @@
 package com.moonlightbutterfly.cryptohub.data.database.dtos
 
 import com.moonlightbutterfly.cryptohub.models.CryptoAsset
+import kotlinx.serialization.Serializable
 
-@kotlinx.serialization.Serializable
+@Serializable
 data class CryptoAssetDto(
     val name: String,
     val symbol: String,

@@ -1,8 +1,9 @@
 package com.moonlightbutterfly.cryptohub.data.database.dtos
 
 import com.moonlightbutterfly.cryptohub.models.NotificationInterval
+import kotlinx.serialization.Serializable
 
-@kotlinx.serialization.Serializable
+@Serializable
 enum class NotificationIntervalDto {
     MINUTES_30,
     HOUR,

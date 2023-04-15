@@ -1,8 +1,9 @@
 package com.moonlightbutterfly.cryptohub.data.database.dtos
 
 import com.moonlightbutterfly.cryptohub.models.NotificationConfiguration
+import kotlinx.serialization.Serializable
 
-@kotlinx.serialization.Serializable
+@Serializable
 data class NotificationConfigurationDto(
     val symbol: String,
     val notificationInterval: NotificationIntervalDto? = null,

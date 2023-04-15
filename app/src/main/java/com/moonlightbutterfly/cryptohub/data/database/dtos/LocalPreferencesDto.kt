@@ -1,8 +1,9 @@
 package com.moonlightbutterfly.cryptohub.data.database.dtos
 
 import com.moonlightbutterfly.cryptohub.models.LocalPreferences
+import kotlinx.serialization.Serializable
 
-@kotlinx.serialization.Serializable
+@Serializable
 data class LocalPreferencesDto(
     val nightModeEnabled: Boolean,
     val notificationsConfiguration: Set<NotificationConfigurationDto>,
