@@ -93,8 +93,13 @@ abstract class RepositoryModule {
         @Singleton
         fun provideCoinMarketCapService(): CoinMarketCapService = Retrofit.Builder()
             .baseUrl(API_ADDRESS)
-            .addConverterFactory(json.asConverterFactory(MediaType.get(
-                APPLICATION_JSON)))
+            .addConverterFactory(
+                json.asConverterFactory(
+                    MediaType.get(
+                        APPLICATION_JSON
+                    )
+                )
+            )
             .build().create(CoinMarketCapService::class.java)
 
         @Provides

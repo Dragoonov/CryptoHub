@@ -178,11 +178,11 @@ class CryptoAssetPanelViewModelTest {
         // WHEN
         viewModel.removeCryptoFromFavourites()
 
-            // THEN
-            coVerify {
-                removeFavouriteUseCase(asset)
-            }
+        // THEN
+        coVerify {
+            removeFavouriteUseCase(asset)
         }
+    }
 
     @Test
     fun `should notifications be enabled`() = runTest {
@@ -191,7 +191,6 @@ class CryptoAssetPanelViewModelTest {
         // THEN
         assertTrue(enabled)
     }
-
 
     @Test
     fun `should get configuration for crypto`() = runTest {

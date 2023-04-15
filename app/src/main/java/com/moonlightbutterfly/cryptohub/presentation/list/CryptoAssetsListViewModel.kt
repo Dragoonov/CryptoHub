@@ -16,11 +16,9 @@ import com.moonlightbutterfly.cryptohub.usecases.GetFavouritesUseCase
 import com.moonlightbutterfly.cryptohub.usecases.RemoveFavouriteUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -42,11 +40,6 @@ class CryptoAssetsListViewModel @Inject constructor(
     private val favouriteAssets = getFavouritesUseCase()
         .prepareFlow(CryptoCollection.EMPTY)
         .map { it.unpack(CryptoCollection.EMPTY) }
-        .stateIn(
-            initialValue = CryptoCollection.EMPTY,
-            scope = viewModelScope,
-            started = WhileSubscribed(5000L)
-        )
 
     @FlowPreview
     val favourites = favouriteAssets.flatMapConcat { collection ->

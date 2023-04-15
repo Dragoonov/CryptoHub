@@ -93,7 +93,7 @@ class SearchViewModel @Inject constructor(
 
     fun onResultClicked(cryptoAsset: CryptoAsset) {
         viewModelScope.launch {
-        recents.firstOrNull()?.let {
+            recents.firstOrNull()?.let {
                 if (it.contains(cryptoAsset)) {
                     removeRecentUseCase(cryptoAsset).propagateErrors()
                 } else if (it.size >= MAX_RECENTS) {

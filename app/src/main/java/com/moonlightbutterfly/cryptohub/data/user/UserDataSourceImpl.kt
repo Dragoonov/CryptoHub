@@ -1,8 +1,8 @@
 package com.moonlightbutterfly.cryptohub.data.user
 
 import com.google.firebase.auth.FirebaseAuth
-import com.moonlightbutterfly.cryptohub.data.common.Error
 import com.moonlightbutterfly.cryptohub.data.common.Answer
+import com.moonlightbutterfly.cryptohub.data.common.Error
 import com.moonlightbutterfly.cryptohub.data.signin.FirebaseSignInHandler
 import com.moonlightbutterfly.cryptohub.models.User
 import com.moonlightbutterfly.cryptohub.utils.toUser

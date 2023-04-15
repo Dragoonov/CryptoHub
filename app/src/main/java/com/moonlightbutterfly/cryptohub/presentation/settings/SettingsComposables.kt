@@ -34,10 +34,10 @@ fun SettingsScreen(onSignOutClicked: () -> Unit, viewModel: SettingsViewModel) {
 
     val configurations by viewModel.notificationsSymbols.collectAsStateWithLifecycle(emptyList())
 
-    val error by viewModel.errorMessageFlow.collectAsStateWithLifecycle (null)
+    val error by viewModel.errorMessageFlow.collectAsStateWithLifecycle(null)
     error?.let { ErrorHandler(error) }
 
-    val isUserSignedIn by viewModel.isUserSignedIn.collectAsStateWithLifecycle (false)
+    val isUserSignedIn by viewModel.isUserSignedIn.collectAsStateWithLifecycle(false)
 
     val onSignedOut = {
         viewModel.onSignedOut()

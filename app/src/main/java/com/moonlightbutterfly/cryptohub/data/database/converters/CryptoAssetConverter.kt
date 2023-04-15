@@ -20,5 +20,4 @@ class CryptoAssetConverter {
     fun stringToCryptoAssetList(serializedAsset: String): List<CryptoAssetDto> {
         return Json.decodeFromString(serializedAsset)
     }
-
 }

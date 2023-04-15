@@ -103,7 +103,6 @@ class SearchViewModelTest {
         }
     }
 
-
     @Test
     fun `should just add crypto asset to recents`() = runTest {
         // GIVEN

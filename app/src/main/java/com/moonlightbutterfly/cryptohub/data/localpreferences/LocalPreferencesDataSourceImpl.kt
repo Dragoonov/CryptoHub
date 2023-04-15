@@ -1,8 +1,8 @@
 package com.moonlightbutterfly.cryptohub.data.localpreferences
 
+import com.moonlightbutterfly.cryptohub.data.common.Answer
 import com.moonlightbutterfly.cryptohub.data.common.Error
 import com.moonlightbutterfly.cryptohub.data.common.ErrorMapper
-import com.moonlightbutterfly.cryptohub.data.common.Answer
 import com.moonlightbutterfly.cryptohub.data.database.daos.LocalPreferencesDao
 import com.moonlightbutterfly.cryptohub.data.database.dtos.toLocalPreferences
 import com.moonlightbutterfly.cryptohub.data.database.dtos.toLocalPreferencesDto

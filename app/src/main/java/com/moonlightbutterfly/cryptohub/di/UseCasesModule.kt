@@ -73,7 +73,12 @@ class UseCasesModule {
     fun provideRemoveRecentUseCase(
         removeAssetFromCollectionUseCase: RemoveAssetFromCollectionUseCase
     ): RemoveRecentUseCase {
-        return RemoveRecentUseCase { removeAssetFromCollectionUseCase(it, UserCollectionsRepository.RECENTS_COLLECTION_NAME) }
+        return RemoveRecentUseCase {
+            removeAssetFromCollectionUseCase(
+                it,
+                UserCollectionsRepository.RECENTS_COLLECTION_NAME
+            )
+        }
     }
 
     @Provides

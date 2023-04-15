@@ -25,7 +25,7 @@ abstract class BaseViewModel : ViewModel() {
         }.stateIn(
             initialValue = Answer.Success(initialValue),
             scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000L)
+            started = SharingStarted.WhileSubscribed(CONFIGURATION_TIMEOUT)
         )
     }
 
@@ -36,5 +36,9 @@ abstract class BaseViewModel : ViewModel() {
                 Timber.e(error.message)
             }
         }
+    }
+
+    private companion object {
+        private const val CONFIGURATION_TIMEOUT = 5000L
     }
 }

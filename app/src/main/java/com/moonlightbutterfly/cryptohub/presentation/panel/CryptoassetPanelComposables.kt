@@ -74,10 +74,10 @@ import java.util.Calendar
 @Composable
 fun CryptoAssetPanelScreen(viewModel: CryptoAssetPanelViewModel) {
     val asset by viewModel.asset.collectAsStateWithLifecycle(CryptoAssetMarketInfo.EMPTY)
-    val isLiked by viewModel.isCryptoInFavourites().collectAsStateWithLifecycle (false)
-    val isSavedForNotifications by viewModel.isCryptoInNotifications().collectAsStateWithLifecycle (false)
-    val areNotificationsEnabled by viewModel.areNotificationsEnabled().collectAsStateWithLifecycle (false)
-    val error by viewModel.errorMessageFlow.collectAsStateWithLifecycle (null)
+    val isLiked by viewModel.isCryptoInFavourites().collectAsStateWithLifecycle(false)
+    val isSavedForNotifications by viewModel.isCryptoInNotifications().collectAsStateWithLifecycle(false)
+    val areNotificationsEnabled by viewModel.areNotificationsEnabled().collectAsStateWithLifecycle(false)
+    val error by viewModel.errorMessageFlow.collectAsStateWithLifecycle(null)
     error?.let { ErrorHandler(error) }
     val bottomSheetState = rememberBottomSheetScaffoldState(
         bottomSheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Collapsed)
@@ -184,7 +184,7 @@ fun BottomSheetContent(
     ) {
 
         val initialConfiguration by viewModel.getConfigurationForCrypto()
-            .collectAsStateWithLifecycle (NotificationConfiguration(asset.asset.symbol))
+            .collectAsStateWithLifecycle(NotificationConfiguration(asset.asset.symbol))
 
         var selectedNotificationConfiguration: NotificationConfiguration by remember {
             mutableStateOf(initialConfiguration)

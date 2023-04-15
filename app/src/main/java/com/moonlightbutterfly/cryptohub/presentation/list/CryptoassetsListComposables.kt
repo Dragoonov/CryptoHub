@@ -65,11 +65,11 @@ fun CryptoAssetsListScreen(
 
     val cryptoAssets = viewModel.cryptoAssets.collectAsLazyPagingItems()
 
-    val favourites by viewModel.favourites.collectAsStateWithLifecycle (emptyList())
+    val favourites by viewModel.favourites.collectAsStateWithLifecycle(emptyList())
 
     var isFavouritesSelected by remember { mutableStateOf(false) }
 
-    val error by viewModel.errorMessageFlow.collectAsStateWithLifecycle (null)
+    val error by viewModel.errorMessageFlow.collectAsStateWithLifecycle(null)
     error?.let { ErrorHandler(error) }
 
     Scaffold(
