@@ -1,6 +1,6 @@
 package com.moonlightbutterfly.cryptohub.data.notifications
 
-import com.moonlightbutterfly.cryptohub.data.common.Result
+import com.moonlightbutterfly.cryptohub.data.common.Answer
 import com.moonlightbutterfly.cryptohub.models.NotificationConfiguration
 
 /**
@@ -8,5 +8,5 @@ import com.moonlightbutterfly.cryptohub.models.NotificationConfiguration
  * passed to [configure].
  */
 interface Notifier {
-    fun configure(notificationConfiguration: Set<NotificationConfiguration>): Result<Unit>
+    fun configure(notificationConfiguration: Set<NotificationConfiguration>): Answer<Unit>
 }

@@ -9,7 +9,6 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.google.gson.Gson
 import com.moonlightbutterfly.cryptohub.data.database.converters.CryptoAssetConverter
 import com.moonlightbutterfly.cryptohub.data.database.converters.LocalPreferencesConverter
 import com.moonlightbutterfly.cryptohub.data.database.daos.CryptoCollectionsDao
@@ -17,6 +16,8 @@ import com.moonlightbutterfly.cryptohub.data.database.daos.LocalPreferencesDao
 import com.moonlightbutterfly.cryptohub.data.database.entities.CryptoCollectionEntity
 import com.moonlightbutterfly.cryptohub.data.database.entities.LocalPreferencesEntity
 import com.moonlightbutterfly.cryptohub.models.LocalPreferences
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 @Database(entities = [LocalPreferencesEntity::class, CryptoCollectionEntity::class], version = 1)
 @TypeConverters(LocalPreferencesConverter::class, CryptoAssetConverter::class)
@@ -71,7 +72,7 @@ abstract class CryptoHubDatabase : RoomDatabase() {
                             "$CRYPTO_COLLECTIONS_ASSETS_COLUMN_NAME TEXT)"
 
                     val values = ContentValues().apply {
-                        put(LOCAL_PREFERENCES_COLUMN_NAME, Gson().toJson(LocalPreferences.DEFAULT))
+                        put(LOCAL_PREFERENCES_COLUMN_NAME, Json.encodeToString(LocalPreferences.DEFAULT))
                     }
 
                     db.execSQL(createLocalPreferences)

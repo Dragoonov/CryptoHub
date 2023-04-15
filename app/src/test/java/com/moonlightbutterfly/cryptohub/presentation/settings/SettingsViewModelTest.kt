@@ -1,6 +1,6 @@
 package com.moonlightbutterfly.cryptohub.presentation.settings
 
-import com.moonlightbutterfly.cryptohub.data.common.Result
+import com.moonlightbutterfly.cryptohub.data.common.Answer
 import com.moonlightbutterfly.cryptohub.models.LocalPreferences
 import com.moonlightbutterfly.cryptohub.usecases.ConfigureNotificationsUseCase
 import com.moonlightbutterfly.cryptohub.usecases.GetLocalPreferencesUseCase
@@ -41,11 +41,11 @@ class SettingsViewModelTest {
 
     @Before
     fun setup() {
-        every { getLocalPreferencesUseCase() } returns flowOf(Result.Success(LocalPreferences.DEFAULT))
-        coEvery { updateLocalPreferencesUseCase(any()) } returns Result.Success(Unit)
-        every { signOutUserUseCase() } returns Result.Success(Unit)
-        every { getSignedInUserUseCase() } returns Result.Success(true) andThen Result.Success(false)
-        every { configureNotificationsUseCase(any()) } returns Result.Success(Unit)
+        every { getLocalPreferencesUseCase() } returns flowOf(Answer.Success(LocalPreferences.DEFAULT))
+        coEvery { updateLocalPreferencesUseCase(any()) } returns Answer.Success(Unit)
+        every { signOutUserUseCase() } returns Answer.Success(Unit)
+        every { getSignedInUserUseCase() } returns Answer.Success(true) andThen Answer.Success(false)
+        every { configureNotificationsUseCase(any()) } returns Answer.Success(Unit)
         Dispatchers.setMain(testDispatcher)
         viewModel = SettingsViewModel(
             getLocalPreferencesUseCase,
@@ -64,7 +64,7 @@ class SettingsViewModelTest {
     @Test
     fun `should update local preferences`() {
         // GIVEN
-        every { getLocalPreferencesUseCase() } answers { flowOf(Result.Success(LocalPreferences.DEFAULT)) }
+        every { getLocalPreferencesUseCase() } answers { flowOf(Answer.Success(LocalPreferences.DEFAULT)) }
         // WHEN
         viewModel.onNightModeChanged(true)
         // THEN
@@ -102,7 +102,7 @@ class SettingsViewModelTest {
     @Test
     fun `should enable notifications`() {
         // GIVEN
-        every { getLocalPreferencesUseCase() } answers { flowOf(Result.Success(LocalPreferences.DEFAULT)) }
+        every { getLocalPreferencesUseCase() } answers { flowOf(Answer.Success(LocalPreferences.DEFAULT)) }
         // WHEN
         viewModel.onEnabledNotifications()
         // THEN
@@ -116,7 +116,7 @@ class SettingsViewModelTest {
     @Test
     fun `should disable notifications`() {
         // GIVEN
-        every { getLocalPreferencesUseCase() } answers { flowOf(Result.Success(LocalPreferences.DEFAULT)) }
+        every { getLocalPreferencesUseCase() } answers { flowOf(Answer.Success(LocalPreferences.DEFAULT)) }
         // WHEN
         viewModel.onDisabledNotifications()
         // THEN

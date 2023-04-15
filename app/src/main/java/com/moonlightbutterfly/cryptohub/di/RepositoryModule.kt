@@ -8,7 +8,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.google.gson.GsonBuilder
+import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.moonlightbutterfly.cryptohub.data.assets.CoinMarketCapService
 import com.moonlightbutterfly.cryptohub.data.assets.CryptoAssetsDataSource
 import com.moonlightbutterfly.cryptohub.data.assets.CryptoAssetsDataSourceImpl
@@ -41,8 +41,10 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.json.Json
+import okhttp3.MediaType
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 @Module
@@ -82,12 +84,17 @@ abstract class RepositoryModule {
     companion object {
 
         private const val API_ADDRESS = "https://pro-api.coinmarketcap.com/"
+        private const val APPLICATION_JSON = "application/json"
 
+        private val json = Json { ignoreUnknownKeys = true }
+
+        @OptIn(ExperimentalSerializationApi::class)
         @Provides
         @Singleton
         fun provideCoinMarketCapService(): CoinMarketCapService = Retrofit.Builder()
             .baseUrl(API_ADDRESS)
-            .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
+            .addConverterFactory(json.asConverterFactory(MediaType.get(
+                APPLICATION_JSON)))
             .build().create(CoinMarketCapService::class.java)
 
         @Provides

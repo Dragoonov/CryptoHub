@@ -1,8 +1,5 @@
 package com.moonlightbutterfly.cryptohub.presentation.search
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.moonlightbutterfly.cryptohub.data.common.unpack
 import com.moonlightbutterfly.cryptohub.models.CryptoAsset
@@ -16,7 +13,10 @@ import com.moonlightbutterfly.cryptohub.usecases.RemoveRecentUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -30,21 +30,20 @@ class SearchViewModel @Inject constructor(
     private val removeRecentUseCase: RemoveRecentUseCase,
 ) : BaseViewModel() {
 
-    private val _currentSearchQuery = MutableLiveData("")
-    val currentSearchQuery: LiveData<String> = _currentSearchQuery
+    private val _currentSearchQuery = MutableStateFlow("")
+    val currentSearchQuery: StateFlow<String> = _currentSearchQuery
 
-    private val _cryptoAssetsResults = MutableLiveData<List<CryptoAsset>>()
-    val cryptoAssetsResults: LiveData<List<CryptoAsset>> = _cryptoAssetsResults
+    private val _cryptoAssetsResults = MutableStateFlow<List<CryptoAsset>>(emptyList())
+    val cryptoAssetsResults: StateFlow<List<CryptoAsset>> = _cryptoAssetsResults
 
-    private val _isLoading = MutableLiveData(false)
-    val isLoading: LiveData<Boolean> = _isLoading
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading
 
     val recents = getRecentsUseCase()
-        .propagateErrors()
+        .prepareFlow(CryptoCollection.EMPTY)
         .map {
             it.unpack(CryptoCollection.EMPTY).cryptoAssets
         }
-        .asLiveData()
 
     private var searchPage = 1
 
@@ -62,14 +61,14 @@ class SearchViewModel @Inject constructor(
         currentSearchJob = viewModelScope.launch {
             if (query.isLongEnough()) {
                 delay(WAITING_TIME_MS)
-                _isLoading.postValue(true)
+                _isLoading.value = true
                 fetchResultsToFilter()
                 val results = filterSavedResultsByQuery(query)
-                _cryptoAssetsResults.postValue(results)
+                _cryptoAssetsResults.value = results
             } else {
-                _cryptoAssetsResults.postValue(emptyList())
+                _cryptoAssetsResults.value = emptyList()
             }
-            _isLoading.postValue(false)
+            _isLoading.value = false
         }
     }
 
@@ -77,7 +76,7 @@ class SearchViewModel @Inject constructor(
 
     private suspend fun fetchResultsToFilter() {
         while (searchPage <= THRESHOLD_PAGES_FOR_FILTERING) {
-            val newResults = getAllCryptoAssetsMarketInfoUseCase(searchPage).propagateErrors().first()
+            val newResults = getAllCryptoAssetsMarketInfoUseCase(searchPage).first()
             searchPage += 1
             allResults += newResults.unpack(emptyList()).map { it.asset }
         }
@@ -93,8 +92,8 @@ class SearchViewModel @Inject constructor(
     }
 
     fun onResultClicked(cryptoAsset: CryptoAsset) {
-        recents.value?.let {
-            viewModelScope.launch {
+        viewModelScope.launch {
+        recents.firstOrNull()?.let {
                 if (it.contains(cryptoAsset)) {
                     removeRecentUseCase(cryptoAsset).propagateErrors()
                 } else if (it.size >= MAX_RECENTS) {

@@ -8,8 +8,8 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.findNavController
 import coil.annotation.ExperimentalCoilApi
 import com.moonlightbutterfly.cryptohub.R
@@ -51,8 +51,8 @@ class MainActivity : AppCompatActivity() {
         }
         val initialMode = runBlocking { viewModel.isNightModeEnabled.first() }
         setContent {
-            val isNightMode by viewModel.isNightModeEnabled.collectAsState(initialMode)
-            val error by viewModel.errorMessageFlow.collectAsState(null)
+            val isNightMode by viewModel.isNightModeEnabled.collectAsStateWithLifecycle(initialMode)
+            val error by viewModel.errorMessageFlow.collectAsStateWithLifecycle (null)
             error?.let { ErrorHandler(error) }
             CryptoHubTheme(darkTheme = isNightMode) {
                 AppLayout(getCurrentDestinationId, onCryptoListClicked, onSettingsClicked)

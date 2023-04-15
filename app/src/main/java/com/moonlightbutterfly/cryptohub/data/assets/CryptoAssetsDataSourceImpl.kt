@@ -1,9 +1,9 @@
 package com.moonlightbutterfly.cryptohub.data.assets
 
 import com.moonlightbutterfly.cryptohub.BuildConfig
+import com.moonlightbutterfly.cryptohub.data.common.Answer
 import com.moonlightbutterfly.cryptohub.data.common.Error
 import com.moonlightbutterfly.cryptohub.data.common.ErrorMapper
-import com.moonlightbutterfly.cryptohub.data.common.Result
 import com.moonlightbutterfly.cryptohub.models.CryptoAsset
 import com.moonlightbutterfly.cryptohub.models.CryptoAssetMarketInfo
 import kotlinx.coroutines.flow.Flow
@@ -23,7 +23,7 @@ class CryptoAssetsDataSourceImpl @Inject constructor(
 
     override fun getCryptoAssetsMarketInfo(
         symbols: List<String>,
-    ): Flow<Result<List<CryptoAssetMarketInfo>>> {
+    ): Flow<Answer<List<CryptoAssetMarketInfo>>> {
         val metaDataFlow = flow {
             service.getMetadata(
                 apiKey = BuildConfig.API_KEY,
@@ -46,19 +46,19 @@ class CryptoAssetsDataSourceImpl @Inject constructor(
                 it.marketCap
             }
             if (symbols.isNotEmpty() && resultData.isEmpty()) {
-                Result.Failure(Error.NotFound("Results for: $symbols not found"))
+                Answer.Failure(Error.NotFound("Results for: $symbols not found"))
             } else {
-                Result.Success(resultData)
+                Answer.Success(resultData)
             }
         }.catch {
-            emit(Result.Failure(errorMapper.mapError(it)))
+            emit(Answer.Failure(errorMapper.mapError(it)))
         }
     }
 
-    override fun getCryptoAssetsMarketInfo(page: Int): Flow<Result<List<CryptoAssetMarketInfo>>> {
+    override fun getCryptoAssetsMarketInfo(page: Int): Flow<Answer<List<CryptoAssetMarketInfo>>> {
         val firstIndex = CryptoAssetsDataSource.ITEMS_PER_PAGE * (page - 1) + 1
         val assetAmountPerCall = CryptoAssetsDataSource.ITEMS_PER_PAGE
-        return flow<Result<List<CryptoAssetMarketInfo>>> {
+        return flow {
             try {
                 val listing = service.getListings(
                     apiKey = BuildConfig.API_KEY,
@@ -76,12 +76,12 @@ class CryptoAssetsDataSourceImpl @Inject constructor(
                     mergeToCryptoAssetMarketInfo(marketInfo, metadata)
                 }.sortedByDescending { it.marketCap }
 
-                emit(Result.Success(resultData))
+                emit(Answer.Success(resultData))
             } catch (exception: Exception) {
                 if (exception is CancellationException) {
                     throw exception
                 } else {
-                    emit(Result.Failure(errorMapper.mapError(exception)))
+                    emit(Answer.Failure(errorMapper.mapError(exception)))
                 }
             }
         }

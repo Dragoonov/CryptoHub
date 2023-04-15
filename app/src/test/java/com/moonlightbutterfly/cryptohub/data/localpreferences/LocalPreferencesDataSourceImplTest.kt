@@ -2,6 +2,7 @@ package com.moonlightbutterfly.cryptohub.data.localpreferences
 
 import com.moonlightbutterfly.cryptohub.data.common.getOrThrow
 import com.moonlightbutterfly.cryptohub.data.database.daos.LocalPreferencesDao
+import com.moonlightbutterfly.cryptohub.data.database.dtos.LocalPreferencesDto
 import com.moonlightbutterfly.cryptohub.data.database.entities.LocalPreferencesEntity
 import com.moonlightbutterfly.cryptohub.models.LocalPreferences
 import io.mockk.coEvery
@@ -14,7 +15,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.junit.Test
 
 @ExperimentalCoroutinesApi
@@ -22,7 +23,7 @@ class LocalPreferencesDataSourceImplTest {
 
     private val flow: Flow<List<LocalPreferencesEntity>> = MutableStateFlow(
         listOf(
-            LocalPreferencesEntity(1, LocalPreferences(true))
+            LocalPreferencesEntity(1, LocalPreferencesDto(true, emptySet(), true))
         )
     )
     private val localPreferencesDao = mockk<LocalPreferencesDao> {
@@ -36,7 +37,7 @@ class LocalPreferencesDataSourceImplTest {
     )
 
     @Test
-    fun `should get local preferences`() = runBlockingTest {
+    fun `should get local preferences`() = runTest {
         // WHEN
         val preferences = localPreferencesDataSourceImpl.getLocalPreferences()
 
@@ -48,7 +49,7 @@ class LocalPreferencesDataSourceImplTest {
     }
 
     @Test
-    fun `should update the local preferences`() = runBlockingTest {
+    fun `should update the local preferences`() = runTest {
         // GIVEN
         val preferences = LocalPreferences(true)
 

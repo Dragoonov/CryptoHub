@@ -1,6 +1,6 @@
 package com.moonlightbutterfly.cryptohub.data.user
 
-import com.moonlightbutterfly.cryptohub.data.common.Result
+import com.moonlightbutterfly.cryptohub.data.common.Answer
 import com.moonlightbutterfly.cryptohub.data.common.getOrThrow
 import com.moonlightbutterfly.cryptohub.models.User
 import io.mockk.every
@@ -16,16 +16,16 @@ import org.junit.Test
 
 class UserRepositoryTest {
 
-    private val userFlow = flowOf(Result.Success(User("test")))
+    private val userFlow = flowOf(Answer.Success(User("test")))
     private val userDataSource = mockk<UserDataSource> {
         every { googleSignIn() } returns userFlow
         every { facebookSignIn() } returns userFlow
         every { twitterSignIn() } returns userFlow
         every { emailSignIn() } returns userFlow
         every { phoneSignIn() } returns userFlow
-        every { signOut() } returns Result.Success(Unit)
-        every { isUserSignedIn() } returns Result.Success(true)
-        every { getUser() } returns Result.Success(User("test"))
+        every { signOut() } returns Answer.Success(Unit)
+        every { isUserSignedIn() } returns Answer.Success(true)
+        every { getUser() } returns Answer.Success(User("test"))
     }
 
     private val userRepository = UserRepository(userDataSource)
@@ -103,7 +103,7 @@ class UserRepositoryTest {
         verify {
             userDataSource.signOut()
         }
-        assertTrue(result is Result.Success)
+        assertTrue(result is Answer.Success)
     }
 
     @Test

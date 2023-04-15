@@ -1,8 +1,7 @@
 package com.moonlightbutterfly.cryptohub.presentation.settings
 
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import com.moonlightbutterfly.cryptohub.data.common.Result
+import com.moonlightbutterfly.cryptohub.data.common.Answer
 import com.moonlightbutterfly.cryptohub.data.common.unpack
 import com.moonlightbutterfly.cryptohub.models.LocalPreferences
 import com.moonlightbutterfly.cryptohub.presentation.core.BaseViewModel
@@ -27,17 +26,17 @@ class SettingsViewModel @Inject constructor(
     private val configureNotificationsUseCase: ConfigureNotificationsUseCase,
 ) : BaseViewModel() {
 
-    val isNightModeEnabled = getLocalPreferencesUseCase().propagateErrors()
-        .map { it.unpack(LocalPreferences.DEFAULT).nightModeEnabled }.asLiveData()
+    val isNightModeEnabled = getLocalPreferencesUseCase().prepareFlow(LocalPreferences.DEFAULT)
+        .map { it.unpack(LocalPreferences.DEFAULT).nightModeEnabled }
 
-    val areNotificationsEnabled = getLocalPreferencesUseCase().propagateErrors()
-        .map { it.unpack(LocalPreferences.DEFAULT).notificationsEnabled }.asLiveData()
+    val areNotificationsEnabled = getLocalPreferencesUseCase().prepareFlow(LocalPreferences.DEFAULT)
+        .map { it.unpack(LocalPreferences.DEFAULT).notificationsEnabled }
 
     val isUserSignedIn = flow {
         emit(isUserSignedInUseCase().propagateErrors().unpack(false))
     }
 
-    val notificationsSymbols = getLocalPreferencesUseCase().propagateErrors()
+    val notificationsSymbols = getLocalPreferencesUseCase().prepareFlow(LocalPreferences.DEFAULT)
         .map {
             it.unpack(LocalPreferences.DEFAULT).notificationsConfiguration
                 .map { crypto -> crypto.symbol }
@@ -48,7 +47,7 @@ class SettingsViewModel @Inject constructor(
             getLocalPreferencesUseCase().first()
                 .propagateErrors()
                 .let {
-                    if (it is Result.Success) {
+                    if (it is Answer.Success) {
                         updateLocalPreferencesUseCase(it.data.copy(nightModeEnabled = nightModeEnabled))
                             .propagateErrors()
                     }
@@ -67,7 +66,7 @@ class SettingsViewModel @Inject constructor(
             getLocalPreferencesUseCase().first()
                 .propagateErrors()
                 .let {
-                    if (it is Result.Success) {
+                    if (it is Answer.Success) {
                         configureNotificationsUseCase(it.data.notificationsConfiguration).propagateErrors()
                         updateLocalPreferencesUseCase(it.data.copy(notificationsEnabled = true)).propagateErrors()
                     }
@@ -80,7 +79,7 @@ class SettingsViewModel @Inject constructor(
             getLocalPreferencesUseCase().first()
                 .propagateErrors()
                 .let {
-                    if (it is Result.Success) {
+                    if (it is Answer.Success) {
                         configureNotificationsUseCase(emptySet()).propagateErrors()
                         updateLocalPreferencesUseCase(it.data.copy(notificationsEnabled = false)).propagateErrors()
                     }

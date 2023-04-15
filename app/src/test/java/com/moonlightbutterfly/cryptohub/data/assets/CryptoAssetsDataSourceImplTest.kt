@@ -7,7 +7,7 @@ import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.junit.Test
 
 @ExperimentalCoroutinesApi
@@ -55,7 +55,7 @@ class CryptoAssetsDataSourceImplTest {
     )
 
     @Test
-    fun `should return proper market info`() = runBlockingTest {
+    fun `should return proper market info`() = runTest {
         // WHEN
         val list = cryptoAssetsDataSourceImpl.getCryptoAssetsMarketInfo(listOf("test")).first().getOrThrow()
 
@@ -70,7 +70,7 @@ class CryptoAssetsDataSourceImplTest {
     }
 
     @Test
-    fun `should return proper market info by page`() = runBlockingTest {
+    fun `should return proper market info by page`() = runTest {
         // WHEN
         val list = cryptoAssetsDataSourceImpl.getCryptoAssetsMarketInfo(1).first().getOrThrow()
 

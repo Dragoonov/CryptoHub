@@ -1,11 +1,8 @@
 package com.moonlightbutterfly.cryptohub.usecases
 
-import com.moonlightbutterfly.cryptohub.data.assets.CryptoAssetsRepository
+import com.moonlightbutterfly.cryptohub.data.common.Answer
+import com.moonlightbutterfly.cryptohub.models.CryptoAssetMarketInfo
+import kotlinx.coroutines.flow.Flow
 
-class GetAllCryptoAssetsMarketInfoUseCase(private val cryptoAssetsRepository: CryptoAssetsRepository) {
-    operator fun invoke(page: Int) = cryptoAssetsRepository.getCryptoAssetsMarketInfo(page)
-}
-
-class GetCryptoAssetsMarketInfoUseCase(private val cryptoAssetsRepository: CryptoAssetsRepository) {
-    operator fun invoke(symbols: List<String>) = cryptoAssetsRepository.getCryptoAssetsMarketInfo(symbols)
-}
+fun interface GetAllCryptoAssetsMarketInfoUseCase: (Int) -> Flow<Answer<List<CryptoAssetMarketInfo>>>
+fun interface GetCryptoAssetsMarketInfoUseCase: (List<String>) -> Flow<Answer<List<CryptoAssetMarketInfo>>>

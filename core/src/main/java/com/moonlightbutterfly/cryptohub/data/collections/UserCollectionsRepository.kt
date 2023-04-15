@@ -1,6 +1,6 @@
 package com.moonlightbutterfly.cryptohub.data.collections
 
-import com.moonlightbutterfly.cryptohub.data.common.Result
+import com.moonlightbutterfly.cryptohub.data.common.Answer
 import com.moonlightbutterfly.cryptohub.data.common.getOrThrow
 import com.moonlightbutterfly.cryptohub.data.user.UserDataSource
 import com.moonlightbutterfly.cryptohub.models.CryptoAsset
@@ -54,7 +54,7 @@ class UserCollectionsRepository(
         userCollectionsLocalDataSource.removeCollection(name)
     }
 
-    suspend fun addToCollection(asset: CryptoAsset, collectionName: String): Result<Unit> {
+    suspend fun addToCollection(asset: CryptoAsset, collectionName: String): Answer<Unit> {
         return if (userDataSource.isUserSignedIn().getOrThrow()) {
             userCollectionsRemoteDataSource.addToCollection(
                 userDataSource.getUser().getOrThrow().userId, asset, collectionName
@@ -64,7 +64,7 @@ class UserCollectionsRepository(
         }
     }
 
-    suspend fun removeFromCollection(asset: CryptoAsset, collectionName: String): Result<Unit> {
+    suspend fun removeFromCollection(asset: CryptoAsset, collectionName: String): Answer<Unit> {
         return if (userDataSource.isUserSignedIn().getOrThrow()) {
             userCollectionsRemoteDataSource.removeFromCollection(
                 userDataSource.getUser().getOrThrow().userId, asset, collectionName

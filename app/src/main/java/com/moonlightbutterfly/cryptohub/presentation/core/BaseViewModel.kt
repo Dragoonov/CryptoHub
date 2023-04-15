@@ -1,32 +1,39 @@
 package com.moonlightbutterfly.cryptohub.presentation.core
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.moonlightbutterfly.cryptohub.data.common.Answer
 import com.moonlightbutterfly.cryptohub.data.common.Error
-import com.moonlightbutterfly.cryptohub.data.common.Result
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.stateIn
+import timber.log.Timber
 
 abstract class BaseViewModel : ViewModel() {
 
     private val messageFlow = MutableSharedFlow<Error>()
     val errorMessageFlow: Flow<Error> = messageFlow
 
-    fun <T> Flow<Result<T>>.propagateErrors(): Flow<Result<T>> {
+    fun <T> Flow<Answer<T>>.prepareFlow(initialValue: T): Flow<Answer<T>> {
         return onEach {
-            if (it is Result.Failure) {
+            if (it is Answer.Failure) {
                 messageFlow.emit(it.error)
-                Log.e(this::class.java.name, it.error.message)
+                Timber.e(it.error.message)
             }
-        }
+        }.stateIn(
+            initialValue = Answer.Success(initialValue),
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000L)
+        )
     }
 
-    suspend fun <T> Result<T>.propagateErrors(): Result<T> {
+    suspend fun <T> Answer<T>.propagateErrors(): Answer<T> {
         return apply {
-            if (this is Result.Failure) {
+            if (this is Answer.Failure) {
                 messageFlow.emit(this.error)
-                Log.e(this::class.java.name, error.message)
+                Timber.e(error.message)
             }
         }
     }

@@ -4,14 +4,14 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.moonlightbutterfly.cryptohub.data.common.Answer
 import com.moonlightbutterfly.cryptohub.data.common.Error
 import com.moonlightbutterfly.cryptohub.data.common.ErrorMapper
-import com.moonlightbutterfly.cryptohub.data.common.Result
 import com.moonlightbutterfly.cryptohub.data.common.unpack
 import com.moonlightbutterfly.cryptohub.models.CryptoAsset
 import com.moonlightbutterfly.cryptohub.models.CryptoCollection
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
@@ -25,10 +25,10 @@ class UserCollectionsRemoteDataSourceImpl @Inject constructor(
 ) : UserCollectionsRemoteDataSource {
 
     private val subscribedUsersCollections =
-        mutableMapOf<String, MutableMap<String, MutableStateFlow<Result<CryptoCollection>>>>()
+        mutableMapOf<String, MutableMap<String, MutableStateFlow<Answer<CryptoCollection>>>>()
     private val usersDocuments = mutableMapOf<String, DocumentReference>()
     private val allUsersCollectionNames =
-        mutableMapOf<String, MutableStateFlow<Result<List<String>>>>()
+        mutableMapOf<String, MutableStateFlow<Answer<List<String>>>>()
     private val trackedUserIds = mutableListOf<String>()
 
     private fun initializeForUser(userId: String) {
@@ -42,13 +42,13 @@ class UserCollectionsRemoteDataSourceImpl @Inject constructor(
                 db.collection(USERS_COLLECTION).document(userId)
             }
             val collections = allUsersCollectionNames.getOrPut(userId) {
-                MutableStateFlow(Result.Success(emptyList()))
+                MutableStateFlow(Answer.Success(emptyList()))
             }
 
             userDocument.addSnapshotListener { value, _ ->
                 value?.data?.keys?.toList()?.let {
                     if (collections.value != it) {
-                        collections.value = Result.Success(it)
+                        collections.value = Answer.Success(it)
                     }
                 }
                 userCollections.keys.forEach { key ->
@@ -63,7 +63,7 @@ class UserCollectionsRemoteDataSourceImpl @Inject constructor(
                         val collection = CryptoCollection(name = key, assets)
                         val unpacked = userCollections[key]?.value?.unpack(CryptoCollection.EMPTY)
                         if (unpacked != collection) {
-                            userCollections[key]?.value = Result.Success(collection)
+                            userCollections[key]?.value = Answer.Success(collection)
                         }
                     }
                 }
@@ -71,19 +71,19 @@ class UserCollectionsRemoteDataSourceImpl @Inject constructor(
         }
     }
 
-    override fun getAllCollectionNames(userId: String): Flow<Result<List<String>>> {
+    override fun getAllCollectionNames(userId: String): StateFlow<Answer<List<String>>> {
         initializeForUser(userId)
         return allUsersCollectionNames.getValue(userId)
     }
 
-    override fun getCollection(userId: String, name: String): Flow<Result<CryptoCollection>> {
+    override fun getCollection(userId: String, name: String): StateFlow<Answer<CryptoCollection>> {
         initializeForUser(userId)
         return subscribedUsersCollections.getValue(userId).getOrPut(name) {
-            MutableStateFlow(Result.Success(CryptoCollection.EMPTY))
+            MutableStateFlow(Answer.Success(CryptoCollection.EMPTY))
         }
     }
 
-    override suspend fun clearCollection(userId: String, name: String): Result<Unit> {
+    override suspend fun clearCollection(userId: String, name: String): Answer<Unit> {
         initializeForUser(userId)
         return usersDocuments
             .getValue(userId)
@@ -91,7 +91,7 @@ class UserCollectionsRemoteDataSourceImpl @Inject constructor(
             .getTaskResult()
     }
 
-    override suspend fun createCollection(userId: String, name: String): Result<Unit> {
+    override suspend fun createCollection(userId: String, name: String): Answer<Unit> {
         initializeForUser(userId)
         return usersDocuments
             .getValue(userId)
@@ -99,7 +99,7 @@ class UserCollectionsRemoteDataSourceImpl @Inject constructor(
             .getTaskResult()
     }
 
-    override suspend fun removeCollection(userId: String, name: String): Result<Unit> {
+    override suspend fun removeCollection(userId: String, name: String): Answer<Unit> {
         initializeForUser(userId)
         return usersDocuments.getValue(userId).update(name, FieldValue.delete()).getTaskResult()
     }
@@ -108,7 +108,7 @@ class UserCollectionsRemoteDataSourceImpl @Inject constructor(
         userId: String,
         asset: CryptoAsset,
         collectionName: String
-    ): Result<Unit> {
+    ): Answer<Unit> {
         initializeForUser(userId)
         return usersDocuments
             .getValue(userId)
@@ -120,7 +120,7 @@ class UserCollectionsRemoteDataSourceImpl @Inject constructor(
         userId: String,
         asset: CryptoAsset,
         collectionName: String
-    ): Result<Unit> {
+    ): Answer<Unit> {
         initializeForUser(userId)
         return usersDocuments
             .getValue(userId)
@@ -128,14 +128,14 @@ class UserCollectionsRemoteDataSourceImpl @Inject constructor(
             .getTaskResult()
     }
 
-    private suspend fun Task<Void>.getTaskResult(): Result<Unit> {
+    private suspend fun Task<Void>.getTaskResult(): Answer<Unit> {
         await()
         return if (isSuccessful) {
-            Result.Success(Unit)
+            Answer.Success(Unit)
         } else {
             exception?.let {
-                Result.Failure(errorMapper.mapError(it))
-            } ?: Result.Failure(Error.Unknown("Unknown error getting task"))
+                Answer.Failure(errorMapper.mapError(it))
+            } ?: Answer.Failure(Error.Unknown("Unknown error getting task"))
         }
     }
 

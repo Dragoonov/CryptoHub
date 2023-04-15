@@ -9,7 +9,7 @@ import androidx.work.Data
 import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
-import com.moonlightbutterfly.cryptohub.data.common.Result
+import com.moonlightbutterfly.cryptohub.data.common.Answer
 import com.moonlightbutterfly.cryptohub.data.common.getOrNull
 import com.moonlightbutterfly.cryptohub.data.localpreferences.LocalPreferencesRepository
 import com.moonlightbutterfly.cryptohub.models.NotificationConfiguration
@@ -39,13 +39,13 @@ class NotifierImpl @Inject constructor(
         NotificationInterval.MINUTES_30 to Pair(THIRTY, TimeUnit.MINUTES),
     )
 
-    override fun configure(notificationConfiguration: Set<NotificationConfiguration>): Result<Unit> {
+    override fun configure(notificationConfiguration: Set<NotificationConfiguration>): Answer<Unit> {
         cancelCurrentWork()
         notificationConfiguration.forEach { configuration ->
             handleDateRequest(configuration)
             handleIntervalRequest(configuration)
         }
-        return Result.Success(Unit)
+        return Answer.Success(Unit)
     }
 
     private fun cancelCurrentWork() {

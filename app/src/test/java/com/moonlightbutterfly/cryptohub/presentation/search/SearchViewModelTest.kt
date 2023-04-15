@@ -1,7 +1,7 @@
 package com.moonlightbutterfly.cryptohub.presentation.search
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.moonlightbutterfly.cryptohub.data.common.Result
+import com.moonlightbutterfly.cryptohub.data.common.Answer
 import com.moonlightbutterfly.cryptohub.models.CryptoAsset
 import com.moonlightbutterfly.cryptohub.models.CryptoAssetMarketInfo
 import com.moonlightbutterfly.cryptohub.models.CryptoCollection
@@ -10,7 +10,6 @@ import com.moonlightbutterfly.cryptohub.usecases.ClearRecentsUseCase
 import com.moonlightbutterfly.cryptohub.usecases.GetAllCryptoAssetsMarketInfoUseCase
 import com.moonlightbutterfly.cryptohub.usecases.GetRecentsUseCase
 import com.moonlightbutterfly.cryptohub.usecases.RemoveRecentUseCase
-import com.moonlightbutterfly.cryptohub.utils.observeForTesting
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -20,6 +19,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.resetMain
@@ -33,7 +33,7 @@ import org.junit.Test
 @ExperimentalCoroutinesApi
 class SearchViewModelTest {
 
-    private val recentsFlow = MutableStateFlow(Result.Success(CryptoCollection.EMPTY))
+    private val recentsFlow = MutableStateFlow(Answer.Success(CryptoCollection.EMPTY))
     private val getRecentsUseCase: GetRecentsUseCase = mockk()
     private val addRecentUseCase: AddRecentUseCase = mockk()
     private val removeRecentUseCase: RemoveRecentUseCase = mockk()
@@ -51,7 +51,7 @@ class SearchViewModelTest {
     fun setup() {
         every { getRecentsUseCase() } returns recentsFlow
         coEvery { getAllCryptoAssetsMarketInfoUseCase(1) } returns flowOf(
-            Result.Success(
+            Answer.Success(
                 listOf(
                     CryptoAssetMarketInfo(asset = CryptoAsset(symbol = "ada")),
                     CryptoAssetMarketInfo(asset = CryptoAsset(name = "cadard")),
@@ -59,10 +59,10 @@ class SearchViewModelTest {
                 )
             )
         )
-        coEvery { getAllCryptoAssetsMarketInfoUseCase(not(1)) } returns flowOf(Result.Success(listOf()))
-        coEvery { addRecentUseCase(any()) } returns Result.Success(Unit)
-        coEvery { removeRecentUseCase(any()) } returns Result.Success(Unit)
-        coEvery { clearRecentsUseCase() } returns Result.Success(Unit)
+        coEvery { getAllCryptoAssetsMarketInfoUseCase(not(1)) } returns flowOf(Answer.Success(listOf()))
+        coEvery { addRecentUseCase(any()) } returns Answer.Success(Unit)
+        coEvery { removeRecentUseCase(any()) } returns Answer.Success(Unit)
+        coEvery { clearRecentsUseCase() } returns Answer.Success(Unit)
         Dispatchers.setMain(testDispatcher)
         viewModel = SearchViewModel(
             getRecentsUseCase,
@@ -80,109 +80,103 @@ class SearchViewModelTest {
 
     @Test
     fun `should not search by query less than 3 characters`() {
-        viewModel.cryptoAssetsResults.observeForTesting {
-            // GIVEN WHEN
-            viewModel.onQueryChange("as")
+        // GIVEN WHEN
+        viewModel.onQueryChange("as")
 
-            // THEN
-            assertEquals(0, viewModel.cryptoAssetsResults.value!!.size)
-            coVerify(exactly = 0) {
-                getAllCryptoAssetsMarketInfoUseCase(any())
-            }
+        // THEN
+        assertEquals(0, viewModel.cryptoAssetsResults.value.size)
+        coVerify(exactly = 0) {
+            getAllCryptoAssetsMarketInfoUseCase(any())
         }
     }
 
     @Test
-    fun `should search and filter by query of 3 characters`() =
-        viewModel.cryptoAssetsResults.observeForTesting {
-            runTest(testDispatcher) {
-                // WHEN
-                viewModel.onQueryChange("ada")
-                advanceTimeBy(1500)
+    fun `should search and filter by query of 3 characters`() = runTest(testDispatcher) {
+        // WHEN
+        viewModel.onQueryChange("ada")
+        advanceTimeBy(1500)
 
-                // THEN
-                assertEquals(2, viewModel.cryptoAssetsResults.value!!.size)
-                coVerify(exactly = 10) {
-                    getAllCryptoAssetsMarketInfoUseCase(any())
-                }
-            }
+        // THEN
+        assertEquals(2, viewModel.cryptoAssetsResults.value.size)
+        coVerify(exactly = 10) {
+            getAllCryptoAssetsMarketInfoUseCase(any())
         }
+    }
+
 
     @Test
-    fun `should just add crypto asset to recents`() = viewModel.recents.observeForTesting {
-        runTest {
-            // GIVEN
-            recentsFlow.emit(Result.Success(CryptoCollection.EMPTY))
+    fun `should just add crypto asset to recents`() = runTest {
+        // GIVEN
+        recentsFlow.emit(Answer.Success(CryptoCollection.EMPTY))
 
-            // WHEN
-            viewModel.onResultClicked(CryptoAsset.EMPTY)
+        // WHEN
+        viewModel.onResultClicked(CryptoAsset.EMPTY)
 
-            // THEN
-            coVerify {
-                addRecentUseCase(CryptoAsset.EMPTY)
-            }
-            coVerify(exactly = 0) {
-                removeRecentUseCase(any())
-            }
+        // THEN
+        coVerify {
+            addRecentUseCase(CryptoAsset.EMPTY)
+        }
+        coVerify(exactly = 0) {
+            removeRecentUseCase(any())
         }
     }
 
     @Test
-    fun `should add crypto asset to recents and remove the same asset`() =
-        viewModel.recents.observeForTesting {
-            runTest {
-                // GIVEN
-                val asset = CryptoAsset(name = "test")
-                recentsFlow.emit(Result.Success(CryptoCollection(cryptoAssets = listOf(asset))))
-
-                // WHEN
-                viewModel.onResultClicked(asset)
-
-                // THEN
-                coVerify {
-                    removeRecentUseCase(asset)
-                    addRecentUseCase(asset)
-                }
-            }
+    fun `should add crypto asset to recents and remove the same asset`() = runTest {
+        // GIVEN
+        val asset = CryptoAsset(name = "test")
+        recentsFlow.emit(Answer.Success(CryptoCollection(cryptoAssets = listOf(asset))))
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
+            viewModel.recents.collect {}
         }
 
+        // WHEN
+        viewModel.onResultClicked(asset)
+
+        // THEN
+        coVerify {
+            removeRecentUseCase(asset)
+            addRecentUseCase(asset)
+        }
+    }
+
     @Test
-    fun `should add crypto asset to recents and remove last asset`() =
-        viewModel.recents.observeForTesting {
-            runTest {
-                // GIVEN
-                val asset = CryptoAsset(name = "test")
-                val asset2 = CryptoAsset(name = "test2")
-                recentsFlow.emit(
-                    Result.Success(
-                        CryptoCollection(
-                            cryptoAssets =
-                            listOf(
-                                asset,
-                                CryptoAsset.EMPTY,
-                                CryptoAsset.EMPTY,
-                                CryptoAsset.EMPTY,
-                                CryptoAsset.EMPTY,
-                                CryptoAsset.EMPTY,
-                                CryptoAsset.EMPTY,
-                                CryptoAsset.EMPTY,
-                                CryptoAsset.EMPTY,
-                                CryptoAsset.EMPTY,
-                            )
-                        )
+    fun `should add crypto asset to recents and remove last asset`() = runTest {
+        // GIVEN
+        val asset = CryptoAsset(name = "test")
+        val asset2 = CryptoAsset(name = "test2")
+        recentsFlow.emit(
+            Answer.Success(
+                CryptoCollection(
+                    cryptoAssets =
+                    listOf(
+                        asset,
+                        CryptoAsset.EMPTY,
+                        CryptoAsset.EMPTY,
+                        CryptoAsset.EMPTY,
+                        CryptoAsset.EMPTY,
+                        CryptoAsset.EMPTY,
+                        CryptoAsset.EMPTY,
+                        CryptoAsset.EMPTY,
+                        CryptoAsset.EMPTY,
+                        CryptoAsset.EMPTY,
                     )
                 )
-
-                // WHEN
-                viewModel.onResultClicked(asset2)
-
-                // THEN
-                coVerify {
-                    removeRecentUseCase(asset)
-                    addRecentUseCase(asset2)
-                }
-            }
+            )
+        )
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
+            viewModel.recents.collect {}
         }
+
+        // WHEN
+        viewModel.onResultClicked(asset2)
+
+        // THEN
+        coVerify {
+            removeRecentUseCase(asset)
+            addRecentUseCase(asset2)
+        }
+    }
 
     @Test
     fun `should remove recents`() {

@@ -15,9 +15,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,6 +24,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.moonlightbutterfly.cryptohub.R
 import com.moonlightbutterfly.cryptohub.presentation.core.ErrorHandler
 
@@ -36,11 +35,11 @@ fun SignInScreen(
     onSignedIn: () -> Unit,
     viewModel: SignInViewModel
 ) {
+    if (viewModel.isUserSignedIn()) {
+        onSignedIn()
+    }
 
-    val user by viewModel.user.observeAsState()
-    user?.let { onSignedIn() }
-
-    val error by viewModel.errorMessageFlow.collectAsState(null)
+    val error by viewModel.errorMessageFlow.collectAsStateWithLifecycle(null)
     error?.let { ErrorHandler(error) }
 
     Column(
