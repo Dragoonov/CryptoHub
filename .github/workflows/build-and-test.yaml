@@ -6,7 +6,7 @@ on:
 jobs:
   build-and-test:
     name: Build and test
-    runs-on: macos-latest
+    runs-on: macos-11.0
     steps:
       - name: Checkout current repository
         uses: actions/checkout@v1
