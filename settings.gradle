@@ -1,3 +1,5 @@
 include ':app'
 rootProject.name = "CryptoHub"
 include ':domain'
+include ':data'
+include ':presentation'
