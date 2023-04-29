@@ -1,0 +1,3 @@
+<resources>
+    <string name="notification_data">Current %s price is %.2f </string>
+</resources>

@@ -45,7 +45,6 @@
     <string name="million_abbr">mln</string>
     <string name="channel_name">Crypto info</string>
     <string name="channel_description">Informations about cryptocurrencies</string>
-    <string name="notification_data">Current %s price is %.2f </string>
     <string name="notification_interval_30_minutes">30 Minutes</string>
     <string name="notification_interval_hour">1 hour</string>
     <string name="notification_interval_2_hours">2 hours</string>
