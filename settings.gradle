@@ -3,3 +3,4 @@ rootProject.name = "CryptoHub"
 include ':domain'
 include ':data'
 include ':presentation'
+include ':core'
