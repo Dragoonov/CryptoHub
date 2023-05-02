@@ -2,39 +2,38 @@ package com.moonlightbutterfly.cryptohub.di
 
 import android.content.Context
 import androidx.work.WorkManager
-import com.facebook.login.LoginManager
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
-import com.moonlightbutterfly.cryptohub.data.assets.CoinMarketCapService
+import com.moonlightbutterfly.cryptohub.FirebaseAuthDataProvider
+import com.moonlightbutterfly.cryptohub.FirebaseAuthDataProviderImpl
+import com.moonlightbutterfly.cryptohub.assets.CoinMarketCapService
+import com.moonlightbutterfly.cryptohub.assets.CryptoAssetsDataSourceImpl
+import com.moonlightbutterfly.cryptohub.collections.UserCollectionsLocalDataSourceImpl
+import com.moonlightbutterfly.cryptohub.collections.UserCollectionsRemoteDataSourceImpl
+import com.moonlightbutterfly.cryptohub.common.ErrorMapperImpl
 import com.moonlightbutterfly.cryptohub.data.assets.CryptoAssetsDataSource
-import com.moonlightbutterfly.cryptohub.data.assets.CryptoAssetsDataSourceImpl
 import com.moonlightbutterfly.cryptohub.data.assets.CryptoAssetsRepository
 import com.moonlightbutterfly.cryptohub.data.collections.UserCollectionsLocalDataSource
-import com.moonlightbutterfly.cryptohub.data.collections.UserCollectionsLocalDataSourceImpl
 import com.moonlightbutterfly.cryptohub.data.collections.UserCollectionsRemoteDataSource
-import com.moonlightbutterfly.cryptohub.data.collections.UserCollectionsRemoteDataSourceImpl
 import com.moonlightbutterfly.cryptohub.data.collections.UserCollectionsRepository
 import com.moonlightbutterfly.cryptohub.data.common.ErrorMapper
-import com.moonlightbutterfly.cryptohub.data.common.ErrorMapperImpl
-import com.moonlightbutterfly.cryptohub.data.database.CryptoHubDatabase
-import com.moonlightbutterfly.cryptohub.data.database.daos.CryptoCollectionsDao
-import com.moonlightbutterfly.cryptohub.data.database.daos.LocalPreferencesDao
 import com.moonlightbutterfly.cryptohub.data.localpreferences.LocalPreferencesDataSource
-import com.moonlightbutterfly.cryptohub.data.localpreferences.LocalPreferencesDataSourceImpl
 import com.moonlightbutterfly.cryptohub.data.localpreferences.LocalPreferencesRepository
 import com.moonlightbutterfly.cryptohub.data.notifications.Notifier
-import com.moonlightbutterfly.cryptohub.data.notifications.NotifierImpl
-import com.moonlightbutterfly.cryptohub.data.signin.FirebaseSignInHandler
-import com.moonlightbutterfly.cryptohub.data.signin.FirebaseSignInHandlerImpl
-import com.moonlightbutterfly.cryptohub.data.user.FirebaseAuthDataProvider
-import com.moonlightbutterfly.cryptohub.data.user.FirebaseAuthDataProviderImpl
 import com.moonlightbutterfly.cryptohub.data.user.UserDataSource
-import com.moonlightbutterfly.cryptohub.data.user.UserDataSourceImpl
 import com.moonlightbutterfly.cryptohub.data.user.UserRepository
+import com.moonlightbutterfly.cryptohub.database.CryptoHubDatabase
+import com.moonlightbutterfly.cryptohub.database.daos.CryptoCollectionsDao
+import com.moonlightbutterfly.cryptohub.database.daos.LocalPreferencesDao
+import com.moonlightbutterfly.cryptohub.localpreferences.LocalPreferencesDataSourceImpl
+import com.moonlightbutterfly.cryptohub.notifications.NotifierImpl
+import com.moonlightbutterfly.cryptohub.signin.FirebaseSignInHandler
+import com.moonlightbutterfly.cryptohub.signin.FirebaseSignInHandlerImpl
+import com.moonlightbutterfly.cryptohub.user.UserDataSourceImpl
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -154,8 +153,8 @@ abstract class RepositoryModule {
         @Provides
         fun provideFirebaseAuth(): FirebaseAuth = FirebaseAuth.getInstance()
 
-        @Provides
-        fun provideLoginManager(): LoginManager = LoginManager.getInstance()
+//        @Provides
+//        fun provideLoginManager(): LoginManager = LoginManager.getInstance()
 
         @Provides
         fun provideAuthProviders(): List<AuthUI.IdpConfig> {
