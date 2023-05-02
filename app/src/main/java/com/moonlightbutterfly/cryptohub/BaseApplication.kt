@@ -1,8 +1,7 @@
-package com.moonlightbutterfly.cryptohub.presentation.core
+package com.moonlightbutterfly.cryptohub
 
 import android.app.Application
 import androidx.hilt.work.HiltWorkerFactory
-import com.moonlightbutterfly.cryptohub.BuildConfig
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent

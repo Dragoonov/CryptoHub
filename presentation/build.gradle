@@ -45,19 +45,20 @@ android {
 }
 
 dependencies {
-
-    implementation 'androidx.core:core-ktx:1.7.0'
-    implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.8.0'
-    implementation 'androidx.hilt:hilt-work:1.0.0'
     implementation project(path: ':domain')
     implementation project(path: ':core')
+
+    implementation 'androidx.core:core-ktx:1.9.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.6.0'
+    implementation 'androidx.hilt:hilt-work:1.0.0'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.6.1"
     implementation "androidx.lifecycle:lifecycle-runtime-compose:2.6.1"
+    implementation 'com.facebook.android:facebook-login:latest.release'
 
     // Integration with activities
     implementation 'androidx.activity:activity-compose:1.6.1'
@@ -90,6 +91,7 @@ dependencies {
     implementation "com.google.accompanist:accompanist-flowlayout:0.29.1-alpha"
     implementation "io.coil-kt:coil-svg:1.1.1"
     implementation 'androidx.navigation:navigation-fragment-ktx:2.5.3'
+    implementation platform('com.google.firebase:firebase-bom:29.3.1')
     implementation 'androidx.navigation:navigation-ui-ktx:2.5.3'
     implementation 'com.firebaseui:firebase-ui-auth:7.2.0'
     implementation("androidx.core:core-splashscreen:1.0.0")
