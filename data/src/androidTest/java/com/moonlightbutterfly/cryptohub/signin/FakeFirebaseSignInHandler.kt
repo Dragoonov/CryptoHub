@@ -1,4 +1,4 @@
-package com.moonlightbutterfly.cryptohub.data.signin
+package com.moonlightbutterfly.cryptohub.signin
 
 import com.moonlightbutterfly.cryptohub.data.common.Answer
 import com.moonlightbutterfly.cryptohub.models.User

@@ -1,5 +1,6 @@
-package com.moonlightbutterfly.cryptohub.data.collections
+package com.moonlightbutterfly.cryptohub.collections
 
+import com.moonlightbutterfly.cryptohub.data.collections.UserCollectionsLocalDataSource
 import com.moonlightbutterfly.cryptohub.data.common.Answer
 import com.moonlightbutterfly.cryptohub.models.CryptoAsset
 import com.moonlightbutterfly.cryptohub.models.CryptoCollection
@@ -10,7 +11,8 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class FakeUserCollectionsLocalDataSourceImpl @Inject constructor() : UserCollectionsLocalDataSource {
+class FakeUserCollectionsLocalDataSourceImpl @Inject constructor() :
+    UserCollectionsLocalDataSource {
 
     private val collections = mutableMapOf(
         "favourites" to MutableStateFlow(Answer.Success(CryptoCollection.EMPTY)),

@@ -1,6 +1,7 @@
-package com.moonlightbutterfly.cryptohub.data.localpreferences
+package com.moonlightbutterfly.cryptohub.localpreferences
 
 import com.moonlightbutterfly.cryptohub.data.common.Answer
+import com.moonlightbutterfly.cryptohub.data.localpreferences.LocalPreferencesDataSource
 import com.moonlightbutterfly.cryptohub.models.LocalPreferences
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow

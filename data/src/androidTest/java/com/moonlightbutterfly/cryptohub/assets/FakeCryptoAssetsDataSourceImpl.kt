@@ -1,5 +1,6 @@
-package com.moonlightbutterfly.cryptohub.data.assets
+package com.moonlightbutterfly.cryptohub.assets
 
+import com.moonlightbutterfly.cryptohub.data.assets.CryptoAssetsDataSource
 import com.moonlightbutterfly.cryptohub.data.common.Answer
 import com.moonlightbutterfly.cryptohub.models.CryptoAsset
 import com.moonlightbutterfly.cryptohub.models.CryptoAssetMarketInfo
