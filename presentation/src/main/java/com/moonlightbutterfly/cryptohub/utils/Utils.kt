@@ -3,7 +3,7 @@ package com.moonlightbutterfly.cryptohub.utils
 import android.content.Context
 import com.google.firebase.auth.FirebaseUser
 import com.moonlightbutterfly.cryptohub.models.User
-import com.moonlightbutterfly.presentation.R
+import com.moonlightbutterfly.cryptohub.presentation.R
 
 @SuppressWarnings("MagicNumber")
 fun Double.round(decimals: Int): Double {

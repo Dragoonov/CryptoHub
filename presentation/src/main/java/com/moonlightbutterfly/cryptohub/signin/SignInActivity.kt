@@ -12,8 +12,8 @@ import coil.annotation.ExperimentalCoilApi
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.moonlightbutterfly.cryptohub.FirebaseAuthDataProvider
 import com.moonlightbutterfly.cryptohub.core.MainActivity
-import com.moonlightbutterfly.presentation.R
-import com.moonlightbutterfly.presentation.databinding.ActivitySignInBinding
+import com.moonlightbutterfly.cryptohub.presentation.R
+import com.moonlightbutterfly.cryptohub.presentation.databinding.ActivitySignInBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking

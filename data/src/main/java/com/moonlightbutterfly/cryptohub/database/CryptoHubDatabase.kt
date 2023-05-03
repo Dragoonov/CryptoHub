@@ -13,9 +13,9 @@ import com.moonlightbutterfly.cryptohub.database.converters.CryptoAssetConverter
 import com.moonlightbutterfly.cryptohub.database.converters.LocalPreferencesConverter
 import com.moonlightbutterfly.cryptohub.database.daos.CryptoCollectionsDao
 import com.moonlightbutterfly.cryptohub.database.daos.LocalPreferencesDao
+import com.moonlightbutterfly.cryptohub.database.dtos.LocalPreferencesDto
 import com.moonlightbutterfly.cryptohub.database.entities.CryptoCollectionEntity
 import com.moonlightbutterfly.cryptohub.database.entities.LocalPreferencesEntity
-import com.moonlightbutterfly.cryptohub.models.LocalPreferences
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
@@ -72,7 +72,7 @@ abstract class CryptoHubDatabase : RoomDatabase() {
                             "$CRYPTO_COLLECTIONS_ASSETS_COLUMN_NAME TEXT)"
 
                     val values = ContentValues().apply {
-                        put(LOCAL_PREFERENCES_COLUMN_NAME, Json.encodeToString(LocalPreferences.DEFAULT))
+                        put(LOCAL_PREFERENCES_COLUMN_NAME, Json.encodeToString(LocalPreferencesDto(false, emptySet(), true)))
                     }
 
                     db.execSQL(createLocalPreferences)

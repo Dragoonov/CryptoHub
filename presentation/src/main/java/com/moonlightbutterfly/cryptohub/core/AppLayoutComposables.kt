@@ -16,7 +16,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.viewinterop.AndroidViewBinding
 import coil.annotation.ExperimentalCoilApi
 import com.moonlightbutterfly.cryptohub.navigation.Screen
-import com.moonlightbutterfly.presentation.databinding.ActivityMainBinding
+import com.moonlightbutterfly.cryptohub.presentation.databinding.ActivityMainBinding
 import kotlinx.coroutines.FlowPreview
 
 @FlowPreview

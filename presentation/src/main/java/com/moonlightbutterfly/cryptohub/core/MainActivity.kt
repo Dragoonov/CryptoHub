@@ -12,8 +12,8 @@ import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.findNavController
 import coil.annotation.ExperimentalCoilApi
-import com.moonlightbutterfly.cryptohub.Dupa
-import com.moonlightbutterfly.presentation.R
+import com.moonlightbutterfly.cryptohub.Constants
+import com.moonlightbutterfly.cryptohub.presentation.R
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
@@ -66,7 +66,7 @@ class MainActivity : AppCompatActivity() {
             val name = getString(R.string.channel_name)
             val descriptionText = getString(R.string.channel_description)
             val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel(Dupa.NOTIFICATION_CHANNEL_ID, name, importance).apply {
+            val channel = NotificationChannel(Constants.NOTIFICATION_CHANNEL_ID, name, importance).apply {
                 description = descriptionText
             }
             val notificationManager: NotificationManager =

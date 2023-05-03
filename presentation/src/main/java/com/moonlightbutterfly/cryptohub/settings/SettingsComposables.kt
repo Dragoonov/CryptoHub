@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.firebase.ui.auth.AuthUI
 import com.moonlightbutterfly.cryptohub.core.ErrorHandler
-import com.moonlightbutterfly.presentation.R
+import com.moonlightbutterfly.cryptohub.presentation.R
 
 @Composable
 fun SettingsScreen(onSignOutClicked: () -> Unit, viewModel: SettingsViewModel) {

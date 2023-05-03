@@ -49,8 +49,8 @@ import com.moonlightbutterfly.cryptohub.models.CryptoAssetMarketInfo
 import com.moonlightbutterfly.cryptohub.core.ErrorHandler
 import com.moonlightbutterfly.cryptohub.core.Favourite
 import com.moonlightbutterfly.cryptohub.core.getImagePainterFor
+import com.moonlightbutterfly.cryptohub.presentation.R
 import com.moonlightbutterfly.cryptohub.utils.round
-import com.moonlightbutterfly.presentation.R
 import kotlinx.coroutines.FlowPreview
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")

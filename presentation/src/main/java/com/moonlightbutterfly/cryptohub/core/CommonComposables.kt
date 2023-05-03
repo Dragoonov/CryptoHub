@@ -26,7 +26,7 @@ import coil.size.Scale
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.moonlightbutterfly.cryptohub.data.common.Error
 import com.moonlightbutterfly.cryptohub.models.CryptoAsset
-import com.moonlightbutterfly.presentation.R
+import com.moonlightbutterfly.cryptohub.presentation.R
 
 @Composable
 fun SetStatusBarColor() {

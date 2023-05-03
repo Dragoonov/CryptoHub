@@ -9,7 +9,7 @@ import android.content.pm.PackageManager
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import com.moonlightbutterfly.cryptohub.Dupa
+import com.moonlightbutterfly.cryptohub.Constants
 import com.moonlightbutterfly.cryptohub.data.R
 import com.moonlightbutterfly.cryptohub.models.CryptoAssetMarketInfo
 import com.moonlightbutterfly.cryptohub.models.NotificationTime
@@ -17,7 +17,7 @@ import java.util.Calendar
 
 fun postNotification(cryptoGetter: () -> CryptoAssetMarketInfo?, context: Context) {
     val info = cryptoGetter() ?: return
-    val builder = NotificationCompat.Builder(context, Dupa.NOTIFICATION_CHANNEL_ID)
+    val builder = NotificationCompat.Builder(context, Constants.NOTIFICATION_CHANNEL_ID)
         .setSmallIcon(R.drawable.launcher_foreground)
         .setContentTitle(info.asset.name)
         .setContentText(

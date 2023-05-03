@@ -38,7 +38,7 @@ import com.moonlightbutterfly.cryptohub.core.ErrorHandler
 import com.moonlightbutterfly.cryptohub.list.CryptoAssetLogoFor
 import com.moonlightbutterfly.cryptohub.list.CryptoAssetNameColumnForAsset
 import com.moonlightbutterfly.cryptohub.models.CryptoAsset
-import com.moonlightbutterfly.presentation.R
+import com.moonlightbutterfly.cryptohub.presentation.R
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @ExperimentalCoilApi

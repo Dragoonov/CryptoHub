@@ -9,7 +9,7 @@ import androidx.compose.material.icons.filled.ViewList
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.ViewList
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.moonlightbutterfly.presentation.R
+import com.moonlightbutterfly.cryptohub.presentation.R
 
 enum class Screen(
     @NavigationRes val destinationId: Int,
