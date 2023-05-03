@@ -12,7 +12,7 @@ import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class RebootBroadcastReceiver : BroadcastReceiver() {
+internal class RebootBroadcastReceiver : BroadcastReceiver() {
 
     @Inject
     lateinit var localPreferencesRepository: LocalPreferencesRepository

@@ -4,7 +4,7 @@ import com.moonlightbutterfly.cryptohub.models.NotificationTime
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class NotificationTimeDto(val hour: Int, val minute: Int)
+internal data class NotificationTimeDto(val hour: Int, val minute: Int)
 
-fun NotificationTimeDto.toNotificationTime() = NotificationTime(hour, minute)
-fun NotificationTime.toNotificationTimeDto() = NotificationTimeDto(hour, minute)
+internal fun NotificationTimeDto.toNotificationTime() = NotificationTime(hour, minute)
+internal fun NotificationTime.toNotificationTimeDto() = NotificationTimeDto(hour, minute)

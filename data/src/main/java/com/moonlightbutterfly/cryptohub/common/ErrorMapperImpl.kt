@@ -5,7 +5,7 @@ import com.moonlightbutterfly.cryptohub.data.common.ErrorMapper
 import retrofit2.HttpException
 import javax.inject.Inject
 
-class ErrorMapperImpl @Inject constructor() : ErrorMapper {
+internal class ErrorMapperImpl @Inject constructor() : ErrorMapper {
     override fun mapError(throwable: Throwable): Error {
         return when (throwable) {
             is HttpException -> Error.Network(throwable.toString())

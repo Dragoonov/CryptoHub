@@ -3,10 +3,10 @@ package com.moonlightbutterfly.cryptohub.assets
 import com.moonlightbutterfly.cryptohub.data.BuildConfig
 import com.moonlightbutterfly.cryptohub.data.assets.CryptoAssetsDataSource
 import com.moonlightbutterfly.cryptohub.data.common.Answer
+import com.moonlightbutterfly.cryptohub.data.common.Error
 import com.moonlightbutterfly.cryptohub.data.common.ErrorMapper
 import com.moonlightbutterfly.cryptohub.models.CryptoAsset
 import com.moonlightbutterfly.cryptohub.models.CryptoAssetMarketInfo
-import com.moonlightbutterfly.cryptohub.data.common.Error
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
@@ -17,7 +17,7 @@ import javax.inject.Inject
 /**
  * Data source interacting with CoinMarketCap service for info.
  */
-class CryptoAssetsDataSourceImpl @Inject constructor(
+internal class CryptoAssetsDataSourceImpl @Inject constructor(
     private val service: CoinMarketCapService,
     private val errorMapper: ErrorMapper,
 ) : CryptoAssetsDataSource {

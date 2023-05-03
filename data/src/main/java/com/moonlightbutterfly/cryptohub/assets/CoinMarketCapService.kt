@@ -4,7 +4,7 @@ import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Query
 
-interface CoinMarketCapService {
+internal interface CoinMarketCapService {
     @GET("v1/cryptocurrency/info")
     suspend fun getMetadata(
         @Header("X-CMC_PRO_API_KEY") apiKey: String,

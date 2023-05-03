@@ -21,7 +21,7 @@ import kotlinx.serialization.json.Json
 
 @Database(entities = [LocalPreferencesEntity::class, CryptoCollectionEntity::class], version = 1)
 @TypeConverters(LocalPreferencesConverter::class, CryptoAssetConverter::class)
-abstract class CryptoHubDatabase : RoomDatabase() {
+internal abstract class CryptoHubDatabase : RoomDatabase() {
 
     abstract fun localPreferencesDao(): LocalPreferencesDao
     abstract fun cryptoCollectionsDao(): CryptoCollectionsDao

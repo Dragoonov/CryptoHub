@@ -4,19 +4,19 @@ import com.moonlightbutterfly.cryptohub.models.LocalPreferences
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class LocalPreferencesDto(
+internal data class LocalPreferencesDto(
     val nightModeEnabled: Boolean,
     val notificationsConfiguration: Set<NotificationConfigurationDto>,
     val notificationsEnabled: Boolean
 )
 
-fun LocalPreferencesDto.toLocalPreferences(): LocalPreferences = LocalPreferences(
+internal fun LocalPreferencesDto.toLocalPreferences(): LocalPreferences = LocalPreferences(
     nightModeEnabled,
     notificationsConfiguration.map { it.toNotificationConfiguration() }.toSet(),
     notificationsEnabled
 )
 
-fun LocalPreferences.toLocalPreferencesDto(): LocalPreferencesDto = LocalPreferencesDto(
+internal fun LocalPreferences.toLocalPreferencesDto(): LocalPreferencesDto = LocalPreferencesDto(
     nightModeEnabled,
     notificationsConfiguration.map { it.toNotificationConfigurationDto() }.toSet(),
     notificationsEnabled

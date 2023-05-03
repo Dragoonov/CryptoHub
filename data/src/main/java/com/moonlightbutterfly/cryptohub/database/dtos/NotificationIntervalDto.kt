@@ -4,7 +4,7 @@ import com.moonlightbutterfly.cryptohub.models.NotificationInterval
 import kotlinx.serialization.Serializable
 
 @Serializable
-enum class NotificationIntervalDto {
+internal enum class NotificationIntervalDto {
     MINUTES_30,
     HOUR,
     HOURS_2,
@@ -13,5 +13,5 @@ enum class NotificationIntervalDto {
     WEEK
 }
 
-fun NotificationIntervalDto.toNotificationInterval() = NotificationInterval.valueOf(this.name)
-fun NotificationInterval.toNotificationIntervalDto() = NotificationIntervalDto.valueOf(this.name)
+internal fun NotificationIntervalDto.toNotificationInterval() = NotificationInterval.valueOf(this.name)
+internal fun NotificationInterval.toNotificationIntervalDto() = NotificationIntervalDto.valueOf(this.name)

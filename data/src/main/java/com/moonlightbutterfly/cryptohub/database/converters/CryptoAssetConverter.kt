@@ -9,7 +9,7 @@ import kotlinx.serialization.json.Json
 /**
  * Class used for converting objects to Room database types and vice versa.
  */
-class CryptoAssetConverter {
+internal class CryptoAssetConverter {
 
     @TypeConverter
     fun fromCryptoAssetList(assets: List<CryptoAssetDto>): String {

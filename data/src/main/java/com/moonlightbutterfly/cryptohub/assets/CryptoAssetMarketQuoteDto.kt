@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
  * Represents the asset market data returned by the CoinMarketCap API.
  */
 @Serializable
-data class CryptoAssetMarketQuoteDto(
+internal data class CryptoAssetMarketQuoteDto(
     val name: String? = null,
     val symbol: String? = null,
     @SerialName("circulating_supply")val circulatingSupply: Double? = .0,

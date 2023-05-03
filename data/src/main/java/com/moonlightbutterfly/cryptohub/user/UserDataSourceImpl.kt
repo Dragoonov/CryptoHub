@@ -10,7 +10,7 @@ import com.moonlightbutterfly.cryptohub.toUser
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class UserDataSourceImpl @Inject constructor(
+internal class UserDataSourceImpl @Inject constructor(
     private val firebaseSignInHandler: FirebaseSignInHandler,
     private val firebaseAuth: FirebaseAuth
 ) : UserDataSource {

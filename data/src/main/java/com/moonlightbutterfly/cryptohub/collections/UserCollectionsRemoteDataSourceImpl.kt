@@ -20,7 +20,7 @@ import javax.inject.Inject
  * Data source using the Firestore database. It registers to the database and converts the
  * incoming data into flows.
  */
-class UserCollectionsRemoteDataSourceImpl @Inject constructor(
+internal class UserCollectionsRemoteDataSourceImpl @Inject constructor(
     private val db: FirebaseFirestore,
     private val errorMapper: ErrorMapper
 ) : UserCollectionsRemoteDataSource {

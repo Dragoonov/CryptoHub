@@ -19,7 +19,7 @@ import javax.inject.Inject
 /**
  * Data source using the Room database.
  */
-class UserCollectionsLocalDataSourceImpl @Inject constructor(
+internal class UserCollectionsLocalDataSourceImpl @Inject constructor(
     private val cryptoCollectionsDao: CryptoCollectionsDao,
     private val errorMapper: ErrorMapper,
 ) : UserCollectionsLocalDataSource {

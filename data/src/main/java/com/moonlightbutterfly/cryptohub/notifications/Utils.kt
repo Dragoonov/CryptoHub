@@ -15,7 +15,7 @@ import com.moonlightbutterfly.cryptohub.models.CryptoAssetMarketInfo
 import com.moonlightbutterfly.cryptohub.models.NotificationTime
 import java.util.Calendar
 
-fun postNotification(cryptoGetter: () -> CryptoAssetMarketInfo?, context: Context) {
+internal fun postNotification(cryptoGetter: () -> CryptoAssetMarketInfo?, context: Context) {
     val info = cryptoGetter() ?: return
     val builder = NotificationCompat.Builder(context, Constants.NOTIFICATION_CHANNEL_ID)
         .setSmallIcon(R.drawable.launcher_foreground)
@@ -41,7 +41,7 @@ fun postNotification(cryptoGetter: () -> CryptoAssetMarketInfo?, context: Contex
     }
 }
 
-fun calculateNotificationTime(time: NotificationTime): Long {
+internal fun calculateNotificationTime(time: NotificationTime): Long {
     val calendar = Calendar.getInstance()
     val hourOfDay = calendar.get(Calendar.HOUR_OF_DAY)
     val currentMinute = calendar.get(Calendar.MINUTE)
@@ -59,7 +59,7 @@ fun calculateNotificationTime(time: NotificationTime): Long {
     }
 }
 
-fun setAlarm(symbol: String, startingTime: Long, context: Context) {
+internal fun setAlarm(symbol: String, startingTime: Long, context: Context) {
     val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
     val intent = Intent(context, AlarmReceiver::class.java)
     intent.putExtra(AlarmReceiver.SYMBOL_KEY, symbol)

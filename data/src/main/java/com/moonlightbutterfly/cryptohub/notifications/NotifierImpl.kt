@@ -20,7 +20,7 @@ import kotlinx.coroutines.runBlocking
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class NotifierImpl @Inject constructor(
+internal class NotifierImpl @Inject constructor(
     private val context: Context,
     private val localPreferencesRepository: LocalPreferencesRepository,
     private val workManager: WorkManager

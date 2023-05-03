@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import javax.inject.Inject
 
-class FirebaseSignInHandlerImpl @Inject constructor(
+internal class FirebaseSignInHandlerImpl @Inject constructor(
     private val firebaseAuthDataProvider: FirebaseAuthDataProvider,
     private val firebaseAuth: FirebaseAuth,
     private val authProviders: List<AuthUI.IdpConfig>

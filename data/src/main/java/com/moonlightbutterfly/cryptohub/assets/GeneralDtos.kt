@@ -3,8 +3,8 @@ package com.moonlightbutterfly.cryptohub.assets
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class GeneralListingDto(val data: List<CryptoAssetMarketQuoteDto>)
+internal data class GeneralListingDto(val data: List<CryptoAssetMarketQuoteDto>)
 @Serializable
-data class GeneralMarketQuoteDto(val data: Map<String, CryptoAssetMarketQuoteDto>)
+internal data class GeneralMarketQuoteDto(val data: Map<String, CryptoAssetMarketQuoteDto>)
 @Serializable
-data class GeneralMetadataDto(val data: Map<String, CryptoAssetMetadataDto>)
+internal data class GeneralMetadataDto(val data: Map<String, CryptoAssetMetadataDto>)

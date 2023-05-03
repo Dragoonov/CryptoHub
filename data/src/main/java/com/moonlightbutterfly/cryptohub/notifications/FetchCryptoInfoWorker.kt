@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 
 @HiltWorker
-class FetchCryptoInfoWorker @AssistedInject constructor(
+internal class FetchCryptoInfoWorker @AssistedInject constructor(
     @Assisted appContext: Context,
     @Assisted workerParams: WorkerParameters,
     private val cryptoAssetsDataSource: CryptoAssetsDataSource,

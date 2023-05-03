@@ -9,7 +9,7 @@ import com.moonlightbutterfly.cryptohub.database.entities.LocalPreferencesEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface LocalPreferencesDao {
+internal interface LocalPreferencesDao {
 
     @Query("SELECT * FROM ${CryptoHubDatabase.LOCAL_PREFERENCES_TABLE_NAME}")
     fun getAll(): Flow<List<LocalPreferencesEntity>>

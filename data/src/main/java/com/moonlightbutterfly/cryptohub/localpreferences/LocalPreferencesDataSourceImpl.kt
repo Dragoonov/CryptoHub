@@ -17,7 +17,7 @@ import javax.inject.Inject
 /**
  * Local data source using android's Room database, focusing on device specific preferences, eg. night mode.
  */
-class LocalPreferencesDataSourceImpl @Inject constructor(
+internal class LocalPreferencesDataSourceImpl @Inject constructor(
     private val localPreferencesDao: LocalPreferencesDao,
     private val errorMapper: ErrorMapper
 ) : LocalPreferencesDataSource {

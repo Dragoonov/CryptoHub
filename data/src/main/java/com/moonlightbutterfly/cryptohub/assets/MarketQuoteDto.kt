@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
  * Represents the asset market quote returned by the CoinMarketCap API.
  */
 @Serializable
-data class MarketQuoteDto(
+internal data class MarketQuoteDto(
     val price: Double,
     @SerialName("volume_24h") val volume24H: Double? = .0,
     @SerialName("volume_change_24h") val volumeChange24H: Double? = .0,

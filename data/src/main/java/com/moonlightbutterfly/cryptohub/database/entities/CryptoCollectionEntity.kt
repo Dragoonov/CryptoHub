@@ -7,7 +7,7 @@ import com.moonlightbutterfly.cryptohub.database.CryptoHubDatabase
 import com.moonlightbutterfly.cryptohub.database.dtos.CryptoAssetDto
 
 @Entity(tableName = CryptoHubDatabase.CRYPTO_COLLECTIONS_TABLE_NAME)
-data class CryptoCollectionEntity(
+internal data class CryptoCollectionEntity(
 
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,

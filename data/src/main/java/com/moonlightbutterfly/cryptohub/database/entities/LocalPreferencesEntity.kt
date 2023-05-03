@@ -7,7 +7,7 @@ import com.moonlightbutterfly.cryptohub.database.CryptoHubDatabase
 import com.moonlightbutterfly.cryptohub.database.dtos.LocalPreferencesDto
 
 @Entity(tableName = CryptoHubDatabase.LOCAL_PREFERENCES_TABLE_NAME)
-data class LocalPreferencesEntity(
+internal data class LocalPreferencesEntity(
 
     @PrimaryKey
     val id: Int = 1,

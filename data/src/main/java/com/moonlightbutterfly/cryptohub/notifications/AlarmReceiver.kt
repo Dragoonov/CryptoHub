@@ -11,7 +11,7 @@ import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class AlarmReceiver : BroadcastReceiver() {
+internal class AlarmReceiver : BroadcastReceiver() {
 
     @Inject
     lateinit var cryptoAssetsDataSource: CryptoAssetsDataSource

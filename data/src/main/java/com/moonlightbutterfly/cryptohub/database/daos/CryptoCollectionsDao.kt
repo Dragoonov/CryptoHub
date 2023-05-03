@@ -10,7 +10,7 @@ import com.moonlightbutterfly.cryptohub.database.entities.CryptoCollectionEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface CryptoCollectionsDao {
+internal interface CryptoCollectionsDao {
 
     @Query("SELECT name FROM ${CryptoHubDatabase.CRYPTO_COLLECTIONS_TABLE_NAME}")
     fun getAllCollectionNames(): Flow<List<String>>
