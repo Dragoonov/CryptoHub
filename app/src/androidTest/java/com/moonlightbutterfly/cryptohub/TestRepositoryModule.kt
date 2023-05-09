@@ -1,32 +1,25 @@
 package com.moonlightbutterfly.cryptohub
 
-import android.content.Context
-import androidx.work.WorkManager
-import com.firebase.ui.auth.AuthUI
-import com.google.firebase.auth.FirebaseAuth
-import com.moonlightbutterfly.cryptohub.assets.FakeCryptoAssetsDataSourceImpl
-import com.moonlightbutterfly.cryptohub.collections.FakeUserCollectionsLocalDataSourceImpl
-import com.moonlightbutterfly.cryptohub.collections.FakeUserCollectionsRemoteDataSourceImpl
 import com.moonlightbutterfly.cryptohub.data.assets.CryptoAssetsDataSource
 import com.moonlightbutterfly.cryptohub.data.assets.CryptoAssetsRepository
+import com.moonlightbutterfly.cryptohub.data.collections.FakeUserCollectionsLocalDataSourceImpl
+import com.moonlightbutterfly.cryptohub.data.collections.FakeUserCollectionsRemoteDataSourceImpl
 import com.moonlightbutterfly.cryptohub.data.collections.UserCollectionsLocalDataSource
 import com.moonlightbutterfly.cryptohub.data.collections.UserCollectionsRemoteDataSource
 import com.moonlightbutterfly.cryptohub.data.collections.UserCollectionsRepository
+import com.moonlightbutterfly.cryptohub.data.collections.assets.FakeCryptoAssetsDataSourceImpl
+import com.moonlightbutterfly.cryptohub.data.localpreferences.FakeLocalPreferencesDataSourceImpl
 import com.moonlightbutterfly.cryptohub.data.localpreferences.LocalPreferencesDataSource
 import com.moonlightbutterfly.cryptohub.data.localpreferences.LocalPreferencesRepository
+import com.moonlightbutterfly.cryptohub.data.notifications.FakeNotifierImpl
 import com.moonlightbutterfly.cryptohub.data.notifications.Notifier
+import com.moonlightbutterfly.cryptohub.data.user.FakeUserDataSourceImpl
 import com.moonlightbutterfly.cryptohub.data.user.UserDataSource
 import com.moonlightbutterfly.cryptohub.data.user.UserRepository
 import com.moonlightbutterfly.cryptohub.di.RepositoryModule
-import com.moonlightbutterfly.cryptohub.localpreferences.FakeLocalPreferencesDataSourceImpl
-import com.moonlightbutterfly.cryptohub.notifications.NotifierImpl
-import com.moonlightbutterfly.cryptohub.signin.FakeFirebaseSignInHandler
-import com.moonlightbutterfly.cryptohub.signin.FirebaseSignInHandler
-import com.moonlightbutterfly.cryptohub.user.FakeUserDataSourceImpl
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import dagger.hilt.testing.TestInstallIn
 
@@ -45,9 +38,6 @@ abstract class TestRepositoryModule {
 
     @Binds
     abstract fun provideUserConfigurationRemoteDataSource(impl: FakeUserCollectionsRemoteDataSourceImpl): UserCollectionsRemoteDataSource
-
-    @Binds
-    abstract fun bindFirebaseSignInHandler(firebaseSignInHandlerImpl: FakeFirebaseSignInHandler): FirebaseSignInHandler
 
     @Binds
     abstract fun provideLocalPreferencesDataSource(impl: FakeLocalPreferencesDataSourceImpl): LocalPreferencesDataSource
@@ -77,9 +67,6 @@ abstract class TestRepositoryModule {
         }
 
         @Provides
-        fun provideFirebaseAuth(): FirebaseAuth = FirebaseAuth.getInstance()
-
-        @Provides
         fun provideCryptoAssetsRepository(
             cryptoAssetsDataSource: CryptoAssetsDataSource
         ): CryptoAssetsRepository {
@@ -94,17 +81,8 @@ abstract class TestRepositoryModule {
         }
 
         @Provides
-        fun provideAuthProviders(): List<AuthUI.IdpConfig> {
-            return listOf()
-        }
-
-        @Provides
-        fun provideNotifier(
-            @ApplicationContext context: Context,
-            localPreferencesRepository: LocalPreferencesRepository,
-            workManager: WorkManager
-        ): Notifier {
-            return NotifierImpl(context, localPreferencesRepository, workManager)
+        fun provideNotifier(): Notifier {
+            return FakeNotifierImpl()
         }
     }
 }

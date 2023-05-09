@@ -1,4 +1,4 @@
-package com.moonlightbutterfly.cryptohub.localpreferences
+package com.moonlightbutterfly.cryptohub.data.localpreferences
 
 import com.moonlightbutterfly.cryptohub.data.common.Answer
 import com.moonlightbutterfly.cryptohub.data.localpreferences.LocalPreferencesDataSource

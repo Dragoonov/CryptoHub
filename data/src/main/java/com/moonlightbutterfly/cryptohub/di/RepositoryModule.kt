@@ -48,35 +48,35 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-internal abstract class RepositoryModule {
+abstract class RepositoryModule {
 
     @Binds
-    abstract fun bindFirebaseAuthDataProvider(provider: FirebaseAuthDataProviderImpl): FirebaseAuthDataProvider
+    internal abstract fun bindFirebaseAuthDataProvider(provider: FirebaseAuthDataProviderImpl): FirebaseAuthDataProvider
 
     @Binds
-    abstract fun bindErrorMapper(errorMapperImpl: ErrorMapperImpl): ErrorMapper
+    internal abstract fun bindErrorMapper(errorMapperImpl: ErrorMapperImpl): ErrorMapper
 
     @Binds
-    abstract fun bindFirebaseSignInHandler(firebaseSignInHandlerImpl: FirebaseSignInHandlerImpl): FirebaseSignInHandler
+    internal abstract fun bindFirebaseSignInHandler(firebaseSignInHandlerImpl: FirebaseSignInHandlerImpl): FirebaseSignInHandler
 
     @Binds
-    abstract fun bindUserDataSource(userDataSourceImpl: UserDataSourceImpl): UserDataSource
+    internal abstract fun bindUserDataSource(userDataSourceImpl: UserDataSourceImpl): UserDataSource
 
     @Binds
-    abstract fun bindsCryptoAssetsDataSource(impl: CryptoAssetsDataSourceImpl): CryptoAssetsDataSource
+    internal abstract fun bindsCryptoAssetsDataSource(impl: CryptoAssetsDataSourceImpl): CryptoAssetsDataSource
 
     @Binds
-    abstract fun bindUserCollectionsLocalDataSource(
+    internal abstract fun bindUserCollectionsLocalDataSource(
         impl: UserCollectionsLocalDataSourceImpl
     ): UserCollectionsLocalDataSource
 
     @Binds
-    abstract fun bindUserCollectionsRemoteDataSource(
+    internal abstract fun bindUserCollectionsRemoteDataSource(
         impl: UserCollectionsRemoteDataSourceImpl
     ): UserCollectionsRemoteDataSource
 
     @Binds
-    abstract fun bindLocalPreferencesDataSource(
+    internal abstract fun bindLocalPreferencesDataSource(
         impl: LocalPreferencesDataSourceImpl
     ): LocalPreferencesDataSource
 
@@ -90,7 +90,7 @@ internal abstract class RepositoryModule {
         @OptIn(ExperimentalSerializationApi::class)
         @Provides
         @Singleton
-        fun provideCoinMarketCapService(): CoinMarketCapService = Retrofit.Builder()
+        internal fun provideCoinMarketCapService(): CoinMarketCapService = Retrofit.Builder()
             .baseUrl(API_ADDRESS)
             .addConverterFactory(
                 json.asConverterFactory(
@@ -102,29 +102,29 @@ internal abstract class RepositoryModule {
             .build().create(CoinMarketCapService::class.java)
 
         @Provides
-        fun provideFirestoreDatabase(): FirebaseFirestore = Firebase.firestore
+        internal fun provideFirestoreDatabase(): FirebaseFirestore = Firebase.firestore
 
         @Provides
-        fun provideLocalPreferencesRepository(
+        internal fun provideLocalPreferencesRepository(
             localPreferencesDataSource: LocalPreferencesDataSource,
         ): LocalPreferencesRepository {
             return LocalPreferencesRepository(localPreferencesDataSource)
         }
 
         @Provides
-        fun provideLocalPreferencesDao(
+        internal fun provideLocalPreferencesDao(
             @ApplicationContext context: Context
         ): LocalPreferencesDao =
             CryptoHubDatabase.getInstance(context).localPreferencesDao()
 
         @Provides
-        fun provideCryptoCollectionsDao(
+        internal fun provideCryptoCollectionsDao(
             @ApplicationContext context: Context
         ): CryptoCollectionsDao =
             CryptoHubDatabase.getInstance(context).cryptoCollectionsDao()
 
         @Provides
-        fun provideUserCollectionsRepository(
+        internal fun provideUserCollectionsRepository(
             userCollectionsLocalDataSource: UserCollectionsLocalDataSource,
             userCollectionsRemoteDataSource: UserCollectionsRemoteDataSource,
             userDataSource: UserDataSource
@@ -137,27 +137,24 @@ internal abstract class RepositoryModule {
         }
 
         @Provides
-        fun provideCryptoAssetsRepository(
+        internal fun provideCryptoAssetsRepository(
             cryptoAssetsDataSource: CryptoAssetsDataSource,
         ): CryptoAssetsRepository {
             return CryptoAssetsRepository(cryptoAssetsDataSource)
         }
 
         @Provides
-        fun provideUserRepository(
+        internal fun provideUserRepository(
             userDataSource: UserDataSource,
         ): UserRepository {
             return UserRepository(userDataSource)
         }
 
         @Provides
-        fun provideFirebaseAuth(): FirebaseAuth = FirebaseAuth.getInstance()
-
-//        @Provides
-//        fun provideLoginManager(): LoginManager = LoginManager.getInstance()
+        internal fun provideFirebaseAuth(): FirebaseAuth = FirebaseAuth.getInstance()
 
         @Provides
-        fun provideAuthProviders(): List<AuthUI.IdpConfig> {
+        internal fun provideAuthProviders(): List<AuthUI.IdpConfig> {
             return arrayListOf(
                 AuthUI.IdpConfig.GoogleBuilder().build(),
                 AuthUI.IdpConfig.FacebookBuilder().build(),
@@ -168,7 +165,7 @@ internal abstract class RepositoryModule {
         }
 
         @Provides
-        fun provideNotifier(
+        internal fun provideNotifier(
             @ApplicationContext context: Context,
             localPreferencesRepository: LocalPreferencesRepository,
             workManager: WorkManager

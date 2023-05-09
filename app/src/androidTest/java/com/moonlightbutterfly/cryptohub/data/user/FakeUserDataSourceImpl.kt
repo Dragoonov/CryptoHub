@@ -1,8 +1,7 @@
-package com.moonlightbutterfly.cryptohub.user
+package com.moonlightbutterfly.cryptohub.data.user
 
 import com.moonlightbutterfly.cryptohub.data.common.Answer
 import com.moonlightbutterfly.cryptohub.data.common.Error
-import com.moonlightbutterfly.cryptohub.data.user.UserDataSource
 import com.moonlightbutterfly.cryptohub.models.User
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
