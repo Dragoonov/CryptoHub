@@ -58,7 +58,8 @@ fun SignInScreen(
             ProviderSignInButton(
                 onClicked = { viewModel.signIn() },
                 buttonBackgroundColor = MaterialTheme.colors.primary,
-                buttonText = R.string.sign_in)
+                buttonText = R.string.sign_in
+            )
             Text(text = stringResource(id = R.string.or), modifier = Modifier.padding(5.dp))
             AnonymousSignInButton(onSignedInIn = onSignedIn)
         }

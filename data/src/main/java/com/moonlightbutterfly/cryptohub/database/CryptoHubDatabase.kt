@@ -72,7 +72,16 @@ internal abstract class CryptoHubDatabase : RoomDatabase() {
                             "$CRYPTO_COLLECTIONS_ASSETS_COLUMN_NAME TEXT)"
 
                     val values = ContentValues().apply {
-                        put(LOCAL_PREFERENCES_COLUMN_NAME, Json.encodeToString(LocalPreferencesDto(false, emptySet(), true)))
+                        put(
+                            LOCAL_PREFERENCES_COLUMN_NAME,
+                            Json.encodeToString(
+                                LocalPreferencesDto(
+                                    false,
+                                    emptySet(),
+                                    true
+                                )
+                            )
+                        )
                     }
 
                     db.execSQL(createLocalPreferences)

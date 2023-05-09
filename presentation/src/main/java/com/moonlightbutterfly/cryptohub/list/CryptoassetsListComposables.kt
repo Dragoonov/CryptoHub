@@ -44,11 +44,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import coil.annotation.ExperimentalCoilApi
-import com.moonlightbutterfly.cryptohub.models.CryptoAsset
-import com.moonlightbutterfly.cryptohub.models.CryptoAssetMarketInfo
 import com.moonlightbutterfly.cryptohub.core.ErrorHandler
 import com.moonlightbutterfly.cryptohub.core.Favourite
 import com.moonlightbutterfly.cryptohub.core.getImagePainterFor
+import com.moonlightbutterfly.cryptohub.models.CryptoAsset
+import com.moonlightbutterfly.cryptohub.models.CryptoAssetMarketInfo
 import com.moonlightbutterfly.cryptohub.presentation.R
 import com.moonlightbutterfly.cryptohub.utils.round
 import kotlinx.coroutines.FlowPreview

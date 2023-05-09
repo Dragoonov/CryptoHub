@@ -57,7 +57,9 @@ abstract class RepositoryModule {
     internal abstract fun bindErrorMapper(errorMapperImpl: ErrorMapperImpl): ErrorMapper
 
     @Binds
-    internal abstract fun bindFirebaseSignInHandler(firebaseSignInHandlerImpl: FirebaseSignInHandlerImpl): FirebaseSignInHandler
+    internal abstract fun bindFirebaseSignInHandler(
+        firebaseSignInHandlerImpl: FirebaseSignInHandlerImpl
+    ): FirebaseSignInHandler
 
     @Binds
     internal abstract fun bindUserDataSource(userDataSourceImpl: UserDataSourceImpl): UserDataSource
@@ -80,7 +82,7 @@ abstract class RepositoryModule {
         impl: LocalPreferencesDataSourceImpl
     ): LocalPreferencesDataSource
 
-    companion object {
+    internal companion object {
 
         private const val API_ADDRESS = "https://pro-api.coinmarketcap.com/"
         private const val APPLICATION_JSON = "application/json"

@@ -1,6 +1,5 @@
 package com.moonlightbutterfly.cryptohub.data.collections
 
-import com.moonlightbutterfly.cryptohub.data.collections.UserCollectionsRemoteDataSource
 import com.moonlightbutterfly.cryptohub.data.common.Answer
 import com.moonlightbutterfly.cryptohub.models.CryptoAsset
 import com.moonlightbutterfly.cryptohub.models.CryptoCollection
