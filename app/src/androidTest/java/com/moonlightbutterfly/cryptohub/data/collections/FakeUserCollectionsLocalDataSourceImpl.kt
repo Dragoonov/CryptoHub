@@ -10,7 +10,8 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class FakeUserCollectionsLocalDataSourceImpl @Inject constructor() : UserCollectionsLocalDataSource {
+class FakeUserCollectionsLocalDataSourceImpl @Inject constructor() :
+    UserCollectionsLocalDataSource {
 
     private val collections = mutableMapOf(
         "favourites" to MutableStateFlow(Answer.Success(CryptoCollection.EMPTY)),

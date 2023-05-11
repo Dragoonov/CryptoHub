@@ -3,7 +3,7 @@ package com.moonlightbutterfly.cryptohub.presentation.navigation
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.onNodeWithText
 import coil.annotation.ExperimentalCoilApi
-import com.moonlightbutterfly.cryptohub.R
+import com.moonlightbutterfly.cryptohub.presentation.R
 import com.moonlightbutterfly.cryptohub.presentation.core.CryptoHubAndroidTest
 import com.moonlightbutterfly.cryptohub.string
 import dagger.hilt.android.testing.HiltAndroidTest

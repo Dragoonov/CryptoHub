@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.startup.Initializer
 import androidx.work.Configuration
 import androidx.work.WorkManager
-import com.moonlightbutterfly.cryptohub.presentation.core.BaseApplication
+import com.moonlightbutterfly.cryptohub.BaseApplication
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.EntryPoints

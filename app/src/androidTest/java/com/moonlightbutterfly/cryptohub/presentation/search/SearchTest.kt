@@ -7,7 +7,7 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import androidx.test.espresso.Espresso
 import coil.annotation.ExperimentalCoilApi
-import com.moonlightbutterfly.cryptohub.R
+import com.moonlightbutterfly.cryptohub.presentation.R
 import com.moonlightbutterfly.cryptohub.presentation.core.CryptoHubAndroidTest
 import com.moonlightbutterfly.cryptohub.string
 import dagger.hilt.android.testing.HiltAndroidTest

@@ -6,7 +6,8 @@ import androidx.compose.ui.test.performClick
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import coil.annotation.ExperimentalCoilApi
-import com.moonlightbutterfly.cryptohub.R
+import com.moonlightbutterfly.cryptohub.navigation.Screen
+import com.moonlightbutterfly.cryptohub.presentation.R
 import com.moonlightbutterfly.cryptohub.presentation.core.CryptoHubAndroidTest
 import com.moonlightbutterfly.cryptohub.string
 import dagger.hilt.android.testing.HiltAndroidTest

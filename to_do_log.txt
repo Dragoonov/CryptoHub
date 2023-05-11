@@ -1,5 +1,9 @@
 - migrate to another crypto service
-- refactor to clean modules
 - stateIn, initial Loading, implement loading, repeatOnLifecycle
 - convert flows to stateflows (and remove .first(), replace with value)
 - possibly take a look at simplifying dtos
+
+
+- check all the usages of resources and put in proper modules
+- check AndroidManifest for all unnecessary things
+- check unused dependencies in gradle modules

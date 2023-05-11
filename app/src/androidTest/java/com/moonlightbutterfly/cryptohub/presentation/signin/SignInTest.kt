@@ -3,7 +3,8 @@ package com.moonlightbutterfly.cryptohub.presentation.signin
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithText
-import com.moonlightbutterfly.cryptohub.R
+import com.moonlightbutterfly.cryptohub.presentation.R
+import com.moonlightbutterfly.cryptohub.signin.SignInActivity
 import com.moonlightbutterfly.cryptohub.string
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
