@@ -53,8 +53,6 @@ class MainActivity : AppCompatActivity() {
         val initialMode = runBlocking { viewModel.isNightModeEnabled.first() }
         setContent {
             val isNightMode by viewModel.isNightModeEnabled.collectAsStateWithLifecycle(initialMode)
-            val error by viewModel.errorMessageFlow.collectAsStateWithLifecycle(null)
-            error?.let { ErrorHandler(error) }
             CryptoHubTheme(darkTheme = isNightMode) {
                 AppLayout(getCurrentDestinationId, onCryptoListClicked, onSettingsClicked)
                 SetStatusBarColor()

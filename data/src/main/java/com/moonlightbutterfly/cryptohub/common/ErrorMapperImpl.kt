@@ -8,8 +8,8 @@ import javax.inject.Inject
 internal class ErrorMapperImpl @Inject constructor() : ErrorMapper {
     override fun mapError(throwable: Throwable): Error {
         return when (throwable) {
-            is HttpException -> Error.Network(throwable.toString())
-            else -> Error.Unknown(throwable.message ?: "")
+            is HttpException -> Error.Network(throwable.stackTraceToString())
+            else -> Error.Unknown(throwable.stackTraceToString())
         }
     }
 }

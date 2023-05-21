@@ -53,7 +53,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.annotation.ExperimentalCoilApi
-import com.moonlightbutterfly.cryptohub.core.ErrorHandler
 import com.moonlightbutterfly.cryptohub.core.Favourite
 import com.moonlightbutterfly.cryptohub.core.getImagePainterFor
 import com.moonlightbutterfly.cryptohub.list.Chip
@@ -77,8 +76,6 @@ fun CryptoAssetPanelScreen(viewModel: CryptoAssetPanelViewModel) {
     val isLiked by viewModel.isCryptoInFavourites().collectAsStateWithLifecycle(false)
     val isSavedForNotifications by viewModel.isCryptoInNotifications().collectAsStateWithLifecycle(false)
     val areNotificationsEnabled by viewModel.areNotificationsEnabled().collectAsStateWithLifecycle(false)
-    val error by viewModel.errorMessageFlow.collectAsStateWithLifecycle(null)
-    error?.let { ErrorHandler(error) }
     val bottomSheetState = rememberBottomSheetScaffoldState(
         bottomSheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Collapsed)
     )

@@ -23,7 +23,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.firebase.ui.auth.AuthUI
-import com.moonlightbutterfly.cryptohub.core.ErrorHandler
 import com.moonlightbutterfly.cryptohub.presentation.R
 
 @Composable
@@ -33,9 +32,6 @@ fun SettingsScreen(onSignOutClicked: () -> Unit, viewModel: SettingsViewModel) {
     val notificationsEnabled by viewModel.areNotificationsEnabled.collectAsStateWithLifecycle(false)
 
     val configurations by viewModel.notificationsSymbols.collectAsStateWithLifecycle(emptyList())
-
-    val error by viewModel.errorMessageFlow.collectAsStateWithLifecycle(null)
-    error?.let { ErrorHandler(error) }
 
     val isUserSignedIn by viewModel.isUserSignedIn.collectAsStateWithLifecycle(false)
 
