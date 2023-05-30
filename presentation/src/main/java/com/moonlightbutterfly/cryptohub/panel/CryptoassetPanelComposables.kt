@@ -1,8 +1,7 @@
-@file:Suppress("TooManyFunctions")
+@file:Suppress("TooManyFunctions", "LongMethod")
 
 package com.moonlightbutterfly.cryptohub.panel
 
-import android.annotation.SuppressLint
 import android.app.TimePickerDialog
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
