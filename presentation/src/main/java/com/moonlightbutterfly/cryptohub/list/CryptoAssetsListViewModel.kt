@@ -1,10 +1,10 @@
 package com.moonlightbutterfly.cryptohub.list
 
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
-import com.moonlightbutterfly.cryptohub.core.BaseViewModel
 import com.moonlightbutterfly.cryptohub.data.assets.CryptoAssetsDataSource
 import com.moonlightbutterfly.cryptohub.data.common.unpack
 import com.moonlightbutterfly.cryptohub.models.CryptoAsset
@@ -29,23 +29,21 @@ class CryptoAssetsListViewModel @Inject constructor(
     getFavouritesUseCase: GetFavouritesUseCase,
     private val addFavouriteUseCase: AddFavouriteUseCase,
     private val removeFavouriteUseCase: RemoveFavouriteUseCase
-) : BaseViewModel() {
+) : ViewModel() {
 
     val cryptoAssets = Pager(PagingConfig(CryptoAssetsDataSource.ITEMS_PER_PAGE)) {
         CryptoAssetPagingSource {
-            getAllCryptoAssetsMarketInfoUseCase(it).first().propagateErrors().unpack(emptyList())
+            getAllCryptoAssetsMarketInfoUseCase(it).first().unpack(emptyList())
         }
     }.flow.cachedIn(viewModelScope)
 
     private val favouriteAssets = getFavouritesUseCase()
-        .prepareFlow(CryptoCollection.EMPTY)
         .map { it.unpack(CryptoCollection.EMPTY) }
 
     @FlowPreview
     val favourites = favouriteAssets.flatMapConcat { collection ->
         getCryptoAssetsMarketInfoUseCase(collection.cryptoAssets.map { it.symbol })
     }
-        .prepareFlow(emptyList())
         .map { it.unpack(emptyList()) }
 
     fun isCryptoInFavourites(asset: CryptoAsset) = favouriteAssets.map { collection ->
@@ -54,13 +52,13 @@ class CryptoAssetsListViewModel @Inject constructor(
 
     fun addToFavourites(cryptoAsset: CryptoAsset) {
         viewModelScope.launch {
-            addFavouriteUseCase(cryptoAsset).propagateErrors()
+            addFavouriteUseCase(cryptoAsset)
         }
     }
 
     fun removeFromFavourites(cryptoAsset: CryptoAsset) {
         viewModelScope.launch {
-            removeFavouriteUseCase(cryptoAsset).propagateErrors()
+            removeFavouriteUseCase(cryptoAsset)
         }
     }
 }

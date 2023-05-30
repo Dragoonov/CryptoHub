@@ -1,11 +1,10 @@
 package com.moonlightbutterfly.cryptohub.panel
 
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.viewModelScope
 import com.moonlightbutterfly.cryptohub.core.BaseViewModel
 import com.moonlightbutterfly.cryptohub.data.common.Answer
-import com.moonlightbutterfly.cryptohub.data.common.unpack
-import com.moonlightbutterfly.cryptohub.models.CryptoAssetMarketInfo
+import com.moonlightbutterfly.cryptohub.data.common.getOrNull
+import com.moonlightbutterfly.cryptohub.data.common.getOrThrow
 import com.moonlightbutterfly.cryptohub.models.CryptoCollection
 import com.moonlightbutterfly.cryptohub.models.LocalPreferences
 import com.moonlightbutterfly.cryptohub.models.NotificationConfiguration
@@ -19,119 +18,137 @@ import com.moonlightbutterfly.cryptohub.usecases.GetLocalPreferencesUseCase
 import com.moonlightbutterfly.cryptohub.usecases.RemoveFavouriteUseCase
 import com.moonlightbutterfly.cryptohub.usecases.UpdateLocalPreferencesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 @HiltViewModel
 @SuppressWarnings("LongParameterList")
 class CryptoAssetPanelViewModel @Inject constructor(
-    getCryptoAssetsMarketInfoUseCase: GetCryptoAssetsMarketInfoUseCase,
-    getFavouritesUseCase: GetFavouritesUseCase,
+    private val getCryptoAssetsMarketInfoUseCase: GetCryptoAssetsMarketInfoUseCase,
+    private val getFavouritesUseCase: GetFavouritesUseCase,
     private val addFavouriteUseCase: AddFavouriteUseCase,
     private val removeFavouriteUseCase: RemoveFavouriteUseCase,
     private val getLocalPreferencesUseCase: GetLocalPreferencesUseCase,
     private val updateLocalPreferencesUseCase: UpdateLocalPreferencesUseCase,
     private val configureNotificationsUseCase: ConfigureNotificationsUseCase,
-    state: SavedStateHandle
-) : BaseViewModel() {
+    private val state: SavedStateHandle,
+    initialValue: CryptoAssetPanelUIState
+) : BaseViewModel<CryptoAssetPanelIntent, CryptoAssetPanelUIState>(initialValue) {
 
-    val asset = getCryptoAssetsMarketInfoUseCase(listOf(state.get<String>(SAVE_STATE_SYMBOL_KEY)!!))
-        .prepareFlow(emptyList())
-        .map {
-            it
-                .unpack(listOf(CryptoAssetMarketInfo.EMPTY))
-                .getOrElse(0) { CryptoAssetMarketInfo.EMPTY }
-        }
-
-    private val favourites = getFavouritesUseCase()
-        .prepareFlow(CryptoCollection.EMPTY)
-        .map { it.unpack(CryptoCollection.EMPTY) }
-
-    fun areNotificationsEnabled() =
-        getLocalPreferencesUseCase().map { it.unpack(LocalPreferences.DEFAULT).notificationsEnabled }
-
-    fun isCryptoInFavourites() = favourites.combine(asset) { collection, asset ->
-        collection.cryptoAssets.find { it.symbol == asset.asset.symbol } != null
+    init {
+        acceptIntent(CryptoAssetPanelIntent.GetData)
     }
 
-    fun isCryptoInNotifications() =
-        getLocalPreferencesUseCase().combine(asset) { preferences, asset ->
-            preferences.unpack(LocalPreferences.DEFAULT).notificationsConfiguration.find {
-                it.symbol == asset.asset.symbol
-            } != null
+    private val asset get() = uiState.value.model?.asset
+
+    private fun isCryptoInFavourites(favourites: CryptoCollection, symbol: String) =
+        favourites.cryptoAssets.find { it.symbol == symbol } != null
+
+    private fun isCryptoInNotifications(preferences: LocalPreferences, symbol: String) =
+        preferences.notificationsConfiguration.find {
+            it.symbol == symbol
+        } != null
+
+    private fun getConfigurationForCrypto(preferences: LocalPreferences, symbol: String) =
+        preferences.notificationsConfiguration.find {
+            it.symbol == symbol
         }
 
-    fun getConfigurationForCrypto() =
-        getLocalPreferencesUseCase().combine(asset) { preferences, asset ->
-            preferences.unpack(LocalPreferences.DEFAULT).notificationsConfiguration.find {
-                it.symbol == asset.asset.symbol
-            }
-        }.filterNotNull()
-
-    fun addCryptoToFavourites() {
-        viewModelScope.launch {
-            asset.firstOrNull()?.let {
-                addFavouriteUseCase(it.asset).propagateErrors()
+    private fun addCryptoToFavourites() = flow {
+        asset?.let {
+            addFavouriteUseCase(it).getOrNull()?.let {
+                emit(
+                    uiState.value.copy(isInFavourites = true)
+                )
             }
         }
     }
 
-    fun removeCryptoFromFavourites() {
-        viewModelScope.launch {
-            asset.firstOrNull()?.let {
-                removeFavouriteUseCase(it.asset).propagateErrors()
+    private fun removeCryptoFromFavourites() = flow {
+        asset?.let {
+            removeFavouriteUseCase(it).getOrNull()?.let {
+                emit(
+                    uiState.value.copy(isInFavourites = false)
+                )
             }
         }
     }
 
-    fun addCryptoToNotifications(
-        notificationTime: NotificationTime?,
-        notificationInterval: NotificationInterval?
-    ) {
-        viewModelScope.launch {
-            getLocalPreferencesUseCase().first()
-                .propagateErrors()
-                .let {
-                    if (it is Answer.Success) {
-                        val newSet = it.data.notificationsConfiguration.filter { crypto ->
-                            crypto.symbol != asset.firstOrNull()?.asset?.symbol
-                        }.toSet() + NotificationConfiguration(
-                            asset.firstOrNull()!!.asset.symbol,
-                            notificationInterval,
-                            notificationTime
+    private fun addCryptoToNotifications(time: NotificationTime?, interval: NotificationInterval?) =
+        flow {
+            asset?.let { asset ->
+                (getLocalPreferencesUseCase().first() as? Answer.Success)?.let { answer ->
+                    val cryptoConfiguration = NotificationConfiguration(asset.symbol, interval, time)
+                    val newSet = answer.freshConfiguration() + cryptoConfiguration
+                    updateLocalPreferencesUseCase(answer.data.copy(notificationsConfiguration = newSet))
+                    configureNotificationsUseCase(newSet)
+                    emit(
+                        uiState.value.copy(
+                            isInNotifications = true,
+                            notificationConfiguration = cryptoConfiguration
                         )
-                        updateLocalPreferencesUseCase(
-                            it.data.copy(notificationsConfiguration = newSet)
-                        )
-                            .propagateErrors()
-                        configureNotificationsUseCase(newSet).propagateErrors()
-                    }
+                    )
                 }
+            }
+        }
+
+    private fun removeCryptoFromNotifications() = flow {
+        asset?.let { asset ->
+            (getLocalPreferencesUseCase().first() as? Answer.Success)?.let { answer ->
+                val newSet = answer.freshConfiguration()
+                updateLocalPreferencesUseCase(answer.data.copy(notificationsConfiguration = newSet))
+                configureNotificationsUseCase(newSet)
+                emit(
+                    uiState.value.copy(
+                        isInNotifications = false,
+                        notificationConfiguration = NotificationConfiguration(asset.symbol)
+                    )
+                )
+            }
         }
     }
 
-    fun removeCryptoFromNotifications() {
-        viewModelScope.launch {
-            getLocalPreferencesUseCase().first()
-                .propagateErrors()
-                .let {
-                    if (it is Answer.Success) {
-                        val newSet = it.data.notificationsConfiguration.filter { notification ->
-                            notification.symbol != asset.firstOrNull()?.asset?.symbol
-                        }.toSet()
-                        updateLocalPreferencesUseCase(
-                            it.data.copy(
-                                notificationsConfiguration = newSet
-                            )
-                        ).propagateErrors()
-                        configureNotificationsUseCase(newSet).propagateErrors()
-                    }
-                }
+    private fun Answer.Success<LocalPreferences>.freshConfiguration(): Set<NotificationConfiguration> {
+        return data.notificationsConfiguration.filter { it.symbol != asset?.symbol }.toSet()
+    }
+
+    private fun getNewData(): Flow<CryptoAssetPanelUIState> = flow {
+        try {
+            val marketInfo = getCryptoAssetsMarketInfoUseCase(listOf(state.get<String>(SAVE_STATE_SYMBOL_KEY)!!))
+                .first().getOrThrow().first()
+            val favourites = getFavouritesUseCase().first().getOrNull()
+            val preferences = getLocalPreferencesUseCase().first().getOrThrow()
+            val isInNotifications = isCryptoInNotifications(preferences, marketInfo.asset.symbol)
+            val isInFavourites = isCryptoInFavourites(favourites ?: CryptoCollection.EMPTY, marketInfo.asset.symbol)
+            val configuration = getConfigurationForCrypto(preferences, marketInfo.asset.symbol)
+                ?: NotificationConfiguration(marketInfo.asset.symbol)
+            emit(
+                CryptoAssetPanelUIState(
+                    marketInfo,
+                    preferences.notificationsEnabled,
+                    isInNotifications,
+                    isInFavourites,
+                    configuration,
+                    isLoading = false
+                )
+            )
+        } catch (exception: java.lang.Exception) {
+            emit(CryptoAssetPanelUIState(error = exception))
+        }
+    }
+
+    override fun mapIntent(intent: CryptoAssetPanelIntent): Flow<CryptoAssetPanelUIState> {
+        return when (intent) {
+            is CryptoAssetPanelIntent.GetData -> getNewData()
+            is CryptoAssetPanelIntent.AddToFavourites -> addCryptoToFavourites()
+            is CryptoAssetPanelIntent.RemoveFromFavourites -> removeCryptoFromFavourites()
+            is CryptoAssetPanelIntent.ScheduleNotifications -> addCryptoToNotifications(
+                intent.configuration.notificationTime,
+                intent.configuration.notificationInterval
+            )
+            is CryptoAssetPanelIntent.ClearNotifications -> removeCryptoFromNotifications()
         }
     }
 

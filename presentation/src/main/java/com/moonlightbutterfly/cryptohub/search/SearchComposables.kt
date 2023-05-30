@@ -34,7 +34,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.annotation.ExperimentalCoilApi
-import com.moonlightbutterfly.cryptohub.core.ErrorHandler
 import com.moonlightbutterfly.cryptohub.list.CryptoAssetLogoFor
 import com.moonlightbutterfly.cryptohub.list.CryptoAssetNameColumnForAsset
 import com.moonlightbutterfly.cryptohub.models.CryptoAsset
@@ -44,9 +43,6 @@ import com.moonlightbutterfly.cryptohub.presentation.R
 @ExperimentalCoilApi
 @Composable
 fun SearchScreen(onCancelSearch: () -> Unit, onItemClicked: (asset: String) -> Unit, viewModel: SearchViewModel) {
-
-    val error by viewModel.errorMessageFlow.collectAsStateWithLifecycle(null)
-    error?.let { ErrorHandler(error) }
 
     val query by viewModel.currentSearchQuery.collectAsStateWithLifecycle(stringResource(id = R.string.search))
     val results by viewModel.cryptoAssetsResults.collectAsStateWithLifecycle(emptyList())

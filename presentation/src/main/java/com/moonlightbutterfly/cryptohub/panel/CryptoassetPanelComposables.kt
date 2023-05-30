@@ -1,4 +1,4 @@
-@file:Suppress("TooManyFunctions")
+@file:Suppress("TooManyFunctions", "LongMethod")
 
 package com.moonlightbutterfly.cryptohub.panel
 
@@ -53,8 +53,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.annotation.ExperimentalCoilApi
-import com.moonlightbutterfly.cryptohub.core.ErrorHandler
 import com.moonlightbutterfly.cryptohub.core.Favourite
+import com.moonlightbutterfly.cryptohub.core.LoadingBar
 import com.moonlightbutterfly.cryptohub.core.getImagePainterFor
 import com.moonlightbutterfly.cryptohub.list.Chip
 import com.moonlightbutterfly.cryptohub.models.CryptoAsset
@@ -73,12 +73,7 @@ import java.util.Calendar
 @ExperimentalCoilApi
 @Composable
 fun CryptoAssetPanelScreen(viewModel: CryptoAssetPanelViewModel) {
-    val asset by viewModel.asset.collectAsStateWithLifecycle(CryptoAssetMarketInfo.EMPTY)
-    val isLiked by viewModel.isCryptoInFavourites().collectAsStateWithLifecycle(false)
-    val isSavedForNotifications by viewModel.isCryptoInNotifications().collectAsStateWithLifecycle(false)
-    val areNotificationsEnabled by viewModel.areNotificationsEnabled().collectAsStateWithLifecycle(false)
-    val error by viewModel.errorMessageFlow.collectAsStateWithLifecycle(null)
-    error?.let { ErrorHandler(error) }
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val bottomSheetState = rememberBottomSheetScaffoldState(
         bottomSheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Collapsed)
     )
@@ -90,41 +85,54 @@ fun CryptoAssetPanelScreen(viewModel: CryptoAssetPanelViewModel) {
         }
     }
 
-    BottomSheetScaffold(
-        scaffoldState = bottomSheetState,
-        sheetShape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp),
-        sheetElevation = 15.dp,
-        sheetContent = {
-            BottomSheetContent(notificationTimes, selectedChips, viewModel, asset, scope, bottomSheetState)
-        },
-        sheetPeekHeight = 0.dp
-    ) {
-        Column(
-            Modifier
-                .padding(10.dp)
-                .fillMaxWidth()
-                .fillMaxHeight()
-                .verticalScroll(rememberScrollState())
-                .clickable(MutableInteractionSource(), null) {
-                    scope.launch { bottomSheetState.bottomSheetState.collapse() }
-                }
+    if (uiState.isLoading) {
+        LoadingBar()
+    } else {
+        BottomSheetScaffold(
+            scaffoldState = bottomSheetState,
+            sheetShape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp),
+            sheetElevation = 15.dp,
+            sheetContent = {
+                BottomSheetContent(
+                    notificationTimes,
+                    selectedChips,
+                    { viewModel.acceptIntent(CryptoAssetPanelIntent.ScheduleNotifications(it)) },
+                    { viewModel.acceptIntent(CryptoAssetPanelIntent.ClearNotifications) },
+                    uiState.model!!.asset.symbol,
+                    scope,
+                    bottomSheetState,
+                    uiState.notificationConfiguration!!
+                )
+            },
+            sheetPeekHeight = 0.dp
         ) {
-            Header(
-                asset.asset, isLiked,
-                {
-                    if (it) {
-                        viewModel.addCryptoToFavourites()
-                    } else {
-                        viewModel.removeCryptoFromFavourites()
+            Column(
+                Modifier
+                    .padding(10.dp)
+                    .fillMaxWidth()
+                    .fillMaxHeight()
+                    .verticalScroll(rememberScrollState())
+                    .clickable(MutableInteractionSource(), null) {
+                        scope.launch { bottomSheetState.bottomSheetState.collapse() }
                     }
-                },
-                isSavedForNotifications,
-                areNotificationsEnabled,
-                { scope.launch { bottomSheetState.bottomSheetState.expand() } }
-            )
-            PriceChangeRow(asset = asset)
-            DescriptionRow(asset = asset)
-            Statistics(asset = asset)
+            ) {
+                Header(
+                    uiState.model!!.asset, uiState.isInFavourites!!,
+                    {
+                        if (it) {
+                            viewModel.acceptIntent(CryptoAssetPanelIntent.AddToFavourites)
+                        } else {
+                            viewModel.acceptIntent(CryptoAssetPanelIntent.RemoveFromFavourites)
+                        }
+                    },
+                    uiState.isInNotifications!!,
+                    uiState.notificationsEnabled!!,
+                    { scope.launch { bottomSheetState.bottomSheetState.expand() } }
+                )
+                PriceChangeRow(uiState.model!!.price)
+                DescriptionRow(uiState.model!!.description)
+                Statistics(asset = uiState.model!!)
+            }
         }
     }
 }
@@ -171,10 +179,12 @@ fun Statistics(asset: CryptoAssetMarketInfo) {
 fun BottomSheetContent(
     notificationTimes: Map<NotificationInterval, String>,
     selectedChips: SnapshotStateMap<NotificationInterval, Boolean>,
-    viewModel: CryptoAssetPanelViewModel,
-    asset: CryptoAssetMarketInfo,
+    onScheduleNotificationsClicked: (NotificationConfiguration) -> Unit,
+    onClearNotificationsClicked: () -> Unit,
+    assetSymbol: String,
     coroutineScope: CoroutineScope,
-    bottomSheetScaffoldState: BottomSheetScaffoldState
+    bottomSheetScaffoldState: BottomSheetScaffoldState,
+    configuration: NotificationConfiguration
 ) {
     Column(
         Modifier
@@ -182,12 +192,8 @@ fun BottomSheetContent(
             .height(300.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
-        val initialConfiguration by viewModel.getConfigurationForCrypto()
-            .collectAsStateWithLifecycle(NotificationConfiguration(asset.asset.symbol))
-
         var selectedNotificationConfiguration: NotificationConfiguration by remember {
-            mutableStateOf(initialConfiguration)
+            mutableStateOf(configuration)
         }
 
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -197,7 +203,7 @@ fun BottomSheetContent(
                 selectedChips[it] = !wasSelected
                 selectedNotificationConfiguration =
                     selectedNotificationConfiguration.copy(
-                        symbol = asset.asset.symbol,
+                        symbol = assetSymbol,
                         notificationInterval = if (selectedChips[it] == true) it else null
                     )
             }
@@ -205,14 +211,14 @@ fun BottomSheetContent(
             TimePicker(
                 { hour, minute ->
                     selectedNotificationConfiguration = selectedNotificationConfiguration.copy(
-                        symbol = asset.asset.symbol,
+                        symbol = assetSymbol,
                         notificationTime = NotificationTime(hour, minute)
                     )
                     selectedChips.clearChips()
                 },
                 {
                     selectedNotificationConfiguration = selectedNotificationConfiguration.copy(
-                        symbol = asset.asset.symbol,
+                        symbol = assetSymbol,
                         notificationTime = null
                     )
                 }
@@ -220,16 +226,15 @@ fun BottomSheetContent(
             SummaryText(selectedNotificationConfiguration, notificationTimes)
             Row {
                 SaveButton(
-                    viewModel,
-                    selectedNotificationConfiguration,
                     coroutineScope,
-                    bottomSheetScaffoldState
-                )
+                    bottomSheetScaffoldState,
+                ) {
+                    onScheduleNotificationsClicked(selectedNotificationConfiguration)
+                }
                 Spacer(modifier = Modifier.padding(10.dp))
                 DisableButton {
-                    selectedNotificationConfiguration =
-                        NotificationConfiguration(asset.asset.symbol)
-                    viewModel.removeCryptoFromNotifications()
+                    selectedNotificationConfiguration = NotificationConfiguration(assetSymbol)
+                    onClearNotificationsClicked()
                     selectedChips.clearChips()
                     coroutineScope.launch { bottomSheetScaffoldState.bottomSheetState.collapse() }
                 }
@@ -267,17 +272,13 @@ fun SummaryText(
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SaveButton(
-    viewModel: CryptoAssetPanelViewModel,
-    selectedNotificationConfiguration: NotificationConfiguration,
     coroutineScope: CoroutineScope,
-    bottomSheetScaffoldState: BottomSheetScaffoldState
+    bottomSheetScaffoldState: BottomSheetScaffoldState,
+    onSaveClicked: () -> Unit
 ) {
     Button(
         onClick = {
-            viewModel.addCryptoToNotifications(
-                selectedNotificationConfiguration.notificationTime,
-                selectedNotificationConfiguration.notificationInterval
-            )
+            onSaveClicked()
             coroutineScope.launch { bottomSheetScaffoldState.bottomSheetState.collapse() }
         }
     ) {
@@ -327,7 +328,7 @@ fun Header(
             .fillMaxWidth()
             .padding(bottom = 10.dp)
     ) {
-        val painter = getImagePainterFor(asset)
+        val painter = getImagePainterFor(asset.logoUrl)
         Image(
             painter = painter,
             modifier = Modifier
@@ -415,7 +416,7 @@ fun Notification(isSavedForNotifications: Boolean, onSelectionChanged: () -> Uni
 }
 
 @Composable
-fun PriceChangeRow(asset: CryptoAssetMarketInfo) {
+fun PriceChangeRow(price: Double) {
     Row(
         Modifier
             .padding(bottom = 20.dp)
@@ -429,7 +430,7 @@ fun PriceChangeRow(asset: CryptoAssetMarketInfo) {
             Arrangement.Top
         ) {
             Text(
-                text = "${asset.price.round(2)} USD",
+                text = "${price.round(2)} USD",
                 fontSize = 30.sp
             )
         }
@@ -437,13 +438,13 @@ fun PriceChangeRow(asset: CryptoAssetMarketInfo) {
 }
 
 @Composable
-fun DescriptionRow(asset: CryptoAssetMarketInfo) {
+fun DescriptionRow(description: String) {
     Row(
         Modifier
             .padding(bottom = 20.dp)
             .fillMaxWidth()
     ) {
-        Text(text = asset.description)
+        Text(text = description)
     }
 }
 

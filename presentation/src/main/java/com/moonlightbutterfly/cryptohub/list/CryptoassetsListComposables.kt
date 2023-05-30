@@ -44,7 +44,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import coil.annotation.ExperimentalCoilApi
-import com.moonlightbutterfly.cryptohub.core.ErrorHandler
 import com.moonlightbutterfly.cryptohub.core.Favourite
 import com.moonlightbutterfly.cryptohub.core.getImagePainterFor
 import com.moonlightbutterfly.cryptohub.models.CryptoAsset
@@ -68,9 +67,6 @@ fun CryptoAssetsListScreen(
     val favourites by viewModel.favourites.collectAsStateWithLifecycle(emptyList())
 
     var isFavouritesSelected by remember { mutableStateOf(false) }
-
-    val error by viewModel.errorMessageFlow.collectAsStateWithLifecycle(null)
-    error?.let { ErrorHandler(error) }
 
     Scaffold(
         topBar = {
@@ -211,7 +207,7 @@ fun CryptoAssetListItem(
 @ExperimentalCoilApi
 @Composable
 fun CryptoAssetLogoFor(asset: CryptoAsset) {
-    val painter = getImagePainterFor(asset)
+    val painter = getImagePainterFor(asset.logoUrl)
     Image(
         painter = painter,
         modifier = Modifier

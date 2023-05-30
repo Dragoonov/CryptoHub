@@ -1,7 +1,7 @@
 package com.moonlightbutterfly.cryptohub.search
 
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.moonlightbutterfly.cryptohub.core.BaseViewModel
 import com.moonlightbutterfly.cryptohub.data.common.unpack
 import com.moonlightbutterfly.cryptohub.models.CryptoAsset
 import com.moonlightbutterfly.cryptohub.models.CryptoCollection
@@ -28,7 +28,7 @@ class SearchViewModel @Inject constructor(
     private val removeRecentsUseCase: ClearRecentsUseCase,
     private val getAllCryptoAssetsMarketInfoUseCase: GetAllCryptoAssetsMarketInfoUseCase,
     private val removeRecentUseCase: RemoveRecentUseCase,
-) : BaseViewModel() {
+) : ViewModel() {
 
     private val _currentSearchQuery = MutableStateFlow("")
     val currentSearchQuery: StateFlow<String> = _currentSearchQuery
@@ -40,7 +40,6 @@ class SearchViewModel @Inject constructor(
     val isLoading: StateFlow<Boolean> = _isLoading
 
     val recents = getRecentsUseCase()
-        .prepareFlow(CryptoCollection.EMPTY)
         .map {
             it.unpack(CryptoCollection.EMPTY).cryptoAssets
         }
@@ -95,18 +94,18 @@ class SearchViewModel @Inject constructor(
         viewModelScope.launch {
             recents.firstOrNull()?.let {
                 if (it.contains(cryptoAsset)) {
-                    removeRecentUseCase(cryptoAsset).propagateErrors()
+                    removeRecentUseCase(cryptoAsset)
                 } else if (it.size >= MAX_RECENTS) {
-                    removeRecentUseCase(it.first()).propagateErrors()
+                    removeRecentUseCase(it.first())
                 }
-                addRecentUseCase(cryptoAsset).propagateErrors()
+                addRecentUseCase(cryptoAsset)
             }
         }
     }
 
     fun onDeleteRecentsClicked() {
         viewModelScope.launch {
-            removeRecentsUseCase().propagateErrors()
+            removeRecentsUseCase()
         }
     }
 

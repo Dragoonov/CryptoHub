@@ -97,7 +97,8 @@ class CryptoAssetPanelViewModelTest {
             getLocalPreferencesUseCase,
             updateLocalPreferencesUseCase,
             configureNotificationsUseCase,
-            stateHandle
+            stateHandle,
+            CryptoAssetPanelUIState()
         )
     }
 
@@ -125,10 +126,11 @@ class CryptoAssetPanelViewModelTest {
             getLocalPreferencesUseCase,
             updateLocalPreferencesUseCase,
             configureNotificationsUseCase,
-            stateHandle
+            stateHandle,
+            CryptoAssetPanelUIState()
         )
         // WHEN
-        val check1 = viewModel.isCryptoInFavourites().first()
+        val check1 = viewModel.uiState.first().isInFavourites!!
         // THEN
         assertTrue(check1)
     }
@@ -144,7 +146,7 @@ class CryptoAssetPanelViewModelTest {
             )
         )
         // WHEN
-        val check1 = viewModel.isCryptoInFavourites().first()
+        val check1 = viewModel.uiState.first().isInFavourites!!
         // THEN
         assertFalse(check1)
     }
@@ -153,10 +155,10 @@ class CryptoAssetPanelViewModelTest {
     fun `should add to favourites`() = runTest {
         // GIVEN
         backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
-            viewModel.asset.collect {}
+            viewModel.uiState.collect {}
         }
         // WHEN
-        viewModel.addCryptoToFavourites()
+        viewModel.acceptIntent(CryptoAssetPanelIntent.AddToFavourites)
         // THEN
         coVerify {
             addFavouriteUseCase(asset)
@@ -167,10 +169,10 @@ class CryptoAssetPanelViewModelTest {
     fun `should remove from favourites`() = runTest {
         // GIVEN
         backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
-            viewModel.asset.collect {}
+            viewModel.uiState.collect {}
         }
         // WHEN
-        viewModel.removeCryptoFromFavourites()
+        viewModel.acceptIntent(CryptoAssetPanelIntent.RemoveFromFavourites)
 
         // THEN
         coVerify {
@@ -181,7 +183,7 @@ class CryptoAssetPanelViewModelTest {
     @Test
     fun `should notifications be enabled`() = runTest {
         // GIVEN WHEN
-        val enabled = viewModel.areNotificationsEnabled().first()
+        val enabled = viewModel.uiState.first().notificationsEnabled!!
         // THEN
         assertTrue(enabled)
     }
@@ -189,7 +191,7 @@ class CryptoAssetPanelViewModelTest {
     @Test
     fun `should get configuration for crypto`() = runTest {
         // GIVEN WHEN
-        val conf = viewModel.getConfigurationForCrypto().first()
+        val conf = viewModel.uiState.first().notificationConfiguration
         // THEN
         assertEquals(configuration.first(), conf)
     }
@@ -198,10 +200,14 @@ class CryptoAssetPanelViewModelTest {
     fun `should add crypto to notifications`() = runTest {
         // GIVEN
         backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
-            viewModel.asset.collect {}
+            viewModel.uiState.collect {}
         }
         // WHEN
-        viewModel.addCryptoToNotifications(null, null)
+        viewModel.acceptIntent(
+            CryptoAssetPanelIntent.ScheduleNotifications(
+                NotificationConfiguration("")
+            )
+        )
         // THEN
         coVerify {
             getLocalPreferencesUseCase()
@@ -222,10 +228,10 @@ class CryptoAssetPanelViewModelTest {
     fun `should remove crypto from notifications`() = runTest {
         // GIVEN
         backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
-            viewModel.asset.collect {}
+            viewModel.uiState.collect {}
         }
         // WHEN
-        viewModel.removeCryptoFromNotifications()
+        viewModel.acceptIntent(CryptoAssetPanelIntent.ClearNotifications)
         // THEN
         coVerify {
             getLocalPreferencesUseCase()

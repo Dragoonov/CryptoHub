@@ -1,7 +1,7 @@
 package com.moonlightbutterfly.cryptohub.settings
 
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.moonlightbutterfly.cryptohub.core.BaseViewModel
 import com.moonlightbutterfly.cryptohub.data.common.Answer
 import com.moonlightbutterfly.cryptohub.data.common.unpack
 import com.moonlightbutterfly.cryptohub.models.LocalPreferences
@@ -24,19 +24,19 @@ class SettingsViewModel @Inject constructor(
     private val signOutUserUseCase: SignOutUseCase,
     private val isUserSignedInUseCase: IsUserSignedInUseCase,
     private val configureNotificationsUseCase: ConfigureNotificationsUseCase,
-) : BaseViewModel() {
+) : ViewModel() {
 
-    val isNightModeEnabled = getLocalPreferencesUseCase().prepareFlow(LocalPreferences.DEFAULT)
+    val isNightModeEnabled = getLocalPreferencesUseCase()
         .map { it.unpack(LocalPreferences.DEFAULT).nightModeEnabled }
 
-    val areNotificationsEnabled = getLocalPreferencesUseCase().prepareFlow(LocalPreferences.DEFAULT)
+    val areNotificationsEnabled = getLocalPreferencesUseCase()
         .map { it.unpack(LocalPreferences.DEFAULT).notificationsEnabled }
 
     val isUserSignedIn = flow {
-        emit(isUserSignedInUseCase().propagateErrors().unpack(false))
+        emit(isUserSignedInUseCase().unpack(false))
     }
 
-    val notificationsSymbols = getLocalPreferencesUseCase().prepareFlow(LocalPreferences.DEFAULT)
+    val notificationsSymbols = getLocalPreferencesUseCase()
         .map {
             it.unpack(LocalPreferences.DEFAULT).notificationsConfiguration
                 .map { crypto -> crypto.symbol }
@@ -45,11 +45,9 @@ class SettingsViewModel @Inject constructor(
     fun onNightModeChanged(nightModeEnabled: Boolean) {
         viewModelScope.launch {
             getLocalPreferencesUseCase().first()
-                .propagateErrors()
                 .let {
                     if (it is Answer.Success) {
                         updateLocalPreferencesUseCase(it.data.copy(nightModeEnabled = nightModeEnabled))
-                            .propagateErrors()
                     }
                 }
         }
@@ -57,18 +55,17 @@ class SettingsViewModel @Inject constructor(
 
     fun onSignedOut() {
         viewModelScope.launch {
-            signOutUserUseCase().propagateErrors()
+            signOutUserUseCase()
         }
     }
 
     fun onEnabledNotifications() {
         viewModelScope.launch {
             getLocalPreferencesUseCase().first()
-                .propagateErrors()
                 .let {
                     if (it is Answer.Success) {
-                        configureNotificationsUseCase(it.data.notificationsConfiguration).propagateErrors()
-                        updateLocalPreferencesUseCase(it.data.copy(notificationsEnabled = true)).propagateErrors()
+                        configureNotificationsUseCase(it.data.notificationsConfiguration)
+                        updateLocalPreferencesUseCase(it.data.copy(notificationsEnabled = true))
                     }
                 }
         }
@@ -77,11 +74,10 @@ class SettingsViewModel @Inject constructor(
     fun onDisabledNotifications() {
         viewModelScope.launch {
             getLocalPreferencesUseCase().first()
-                .propagateErrors()
                 .let {
                     if (it is Answer.Success) {
-                        configureNotificationsUseCase(emptySet()).propagateErrors()
-                        updateLocalPreferencesUseCase(it.data.copy(notificationsEnabled = false)).propagateErrors()
+                        configureNotificationsUseCase(emptySet())
+                        updateLocalPreferencesUseCase(it.data.copy(notificationsEnabled = false))
                     }
                 }
         }

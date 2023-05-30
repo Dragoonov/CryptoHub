@@ -2,43 +2,24 @@ package com.moonlightbutterfly.cryptohub.core
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.moonlightbutterfly.cryptohub.data.common.Answer
-import com.moonlightbutterfly.cryptohub.data.common.Error
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
-abstract class BaseViewModel : ViewModel() {
+abstract class BaseViewModel<INTENT, UI_STATE>(initialValue: UI_STATE) : ViewModel() {
 
-    private val messageFlow = MutableSharedFlow<Error>()
-    val errorMessageFlow: Flow<Error> = messageFlow
+    val uiState = MutableStateFlow(initialValue)
 
-    fun <T> Flow<Answer<T>>.prepareFlow(initialValue: T): Flow<Answer<T>> {
-        return onEach {
-            if (it is Answer.Failure) {
-                messageFlow.emit(it.error)
-                Timber.e(it.error.message)
-            }
-        }.stateIn(
-            initialValue = Answer.Success(initialValue),
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(CONFIGURATION_TIMEOUT)
-        )
-    }
-
-    suspend fun <T> Answer<T>.propagateErrors(): Answer<T> {
-        return apply {
-            if (this is Answer.Failure) {
-                messageFlow.emit(this.error)
-                Timber.e(error.message)
-            }
+    fun acceptIntent(intent: INTENT) {
+        viewModelScope.launch {
+            mapIntent(intent)
+                .catch { Timber.e(it) }
+                .collect {
+                    uiState.emit(it)
+                }
         }
     }
-
-    private companion object {
-        private const val CONFIGURATION_TIMEOUT = 5000L
-    }
+    protected abstract fun mapIntent(intent: INTENT): Flow<UI_STATE>
 }
