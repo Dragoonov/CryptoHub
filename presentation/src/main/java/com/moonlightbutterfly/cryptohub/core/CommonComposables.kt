@@ -1,13 +1,21 @@
 package com.moonlightbutterfly.cryptohub.core
 
+import android.annotation.SuppressLint
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.selection.toggleable
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
@@ -25,7 +33,6 @@ import coil.compose.rememberImagePainter
 import coil.size.Scale
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.moonlightbutterfly.cryptohub.data.common.Error
-import com.moonlightbutterfly.cryptohub.models.CryptoAsset
 import com.moonlightbutterfly.cryptohub.presentation.R
 
 @Composable
@@ -42,10 +49,10 @@ fun SetStatusBarColor() {
 }
 @ExperimentalCoilApi
 @Composable
-fun getImagePainterFor(asset: CryptoAsset): ImagePainter {
+fun getImagePainterFor(logoUrl: String): ImagePainter {
     val imageLoader = LocalImageLoader.current
     return rememberImagePainter(
-        data = asset.logoUrl,
+        data = logoUrl,
         imageLoader = imageLoader,
         builder = {
             scale(Scale.FILL)
@@ -71,6 +78,26 @@ fun Favourite(modifier: Modifier, isInFavourites: Boolean, onSelectionChanged: (
             imageVector = if (isInFavourites) Icons.Outlined.Favorite else Icons.Outlined.FavoriteBorder,
             contentDescription = stringResource(id = R.string.favourites)
         )
+    }
+}
+
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
+@Composable
+fun LoadingBar() {
+    Scaffold(
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight()
+            .background(MaterialTheme.colors.onPrimary),
+    ) {
+        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            CircularProgressIndicator(
+                color = MaterialTheme.colors.primary,
+                modifier = Modifier
+                    .wrapContentWidth()
+                    .wrapContentHeight()
+            )
+        }
     }
 }
 

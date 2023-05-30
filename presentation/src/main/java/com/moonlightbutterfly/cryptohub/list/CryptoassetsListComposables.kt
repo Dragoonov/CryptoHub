@@ -207,7 +207,7 @@ fun CryptoAssetListItem(
 @ExperimentalCoilApi
 @Composable
 fun CryptoAssetLogoFor(asset: CryptoAsset) {
-    val painter = getImagePainterFor(asset)
+    val painter = getImagePainterFor(asset.logoUrl)
     Image(
         painter = painter,
         modifier = Modifier
