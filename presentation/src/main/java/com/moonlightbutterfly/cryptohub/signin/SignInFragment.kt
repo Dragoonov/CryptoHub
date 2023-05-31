@@ -13,11 +13,10 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.annotation.ExperimentalCoilApi
 import com.moonlightbutterfly.cryptohub.core.CryptoHubTheme
+import com.moonlightbutterfly.cryptohub.core.LoadingBar
 import com.moonlightbutterfly.cryptohub.core.MainActivity
 import com.moonlightbutterfly.cryptohub.core.SetStatusBarColor
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
 
 @AndroidEntryPoint
 class SignInFragment : Fragment() {
@@ -29,20 +28,23 @@ class SignInFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val viewModel: SignInViewModel by viewModels()
-        val initialMode = runBlocking { viewModel.isNightModeEnabled.first() }
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
-                val isNightMode by viewModel.isNightModeEnabled.collectAsStateWithLifecycle(initialMode)
-                CryptoHubTheme(darkTheme = isNightMode) {
-                    SignInScreen(
-                        onSignedIn = {
-                            startActivity(Intent(activity, MainActivity::class.java))
-                            activity?.finish()
-                        },
-                        viewModel
-                    )
-                    SetStatusBarColor()
+                val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+                if (uiState.isLoading) {
+                    LoadingBar()
+                } else {
+                    CryptoHubTheme(darkTheme = uiState.nightModeEnabled!!) {
+                        SignInScreen(
+                            onSignedIn = {
+                                startActivity(Intent(activity, MainActivity::class.java))
+                                activity?.finish()
+                            },
+                            viewModel
+                        )
+                        SetStatusBarColor()
+                    }
                 }
             }
         }

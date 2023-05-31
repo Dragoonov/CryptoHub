@@ -23,38 +23,41 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.firebase.ui.auth.AuthUI
+import com.moonlightbutterfly.cryptohub.core.LoadingBar
 import com.moonlightbutterfly.cryptohub.presentation.R
 
 @Composable
 fun SettingsScreen(onSignOutClicked: () -> Unit, viewModel: SettingsViewModel) {
 
-    val nightModeEnabled by viewModel.isNightModeEnabled.collectAsStateWithLifecycle(false)
-    val notificationsEnabled by viewModel.areNotificationsEnabled.collectAsStateWithLifecycle(false)
-
-    val configurations by viewModel.notificationsSymbols.collectAsStateWithLifecycle(emptyList())
-
-    val isUserSignedIn by viewModel.isUserSignedIn.collectAsStateWithLifecycle(false)
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     val onSignedOut = {
-        viewModel.onSignedOut()
+        viewModel.acceptIntent(SettingsIntent.SignOut)
         onSignOutClicked()
     }
-    Column(Modifier.fillMaxWidth()) {
-        DeviceSpecificSection(
-            nightModeEnabled = nightModeEnabled,
-            onNightModeChanged = viewModel::onNightModeChanged,
-            notificationsEnabled = notificationsEnabled,
-            onNotificationsChange = {
-                if (it) {
-                    viewModel.onEnabledNotifications()
-                } else {
-                    viewModel.onDisabledNotifications()
-                }
-            },
-            configurations
-        )
-        if (isUserSignedIn) {
-            SignOutButton(onSignedOut)
+
+    if (uiState.isLoading) {
+        LoadingBar()
+    } else {
+        Column(Modifier.fillMaxWidth()) {
+            DeviceSpecificSection(
+                nightModeEnabled = uiState.nightModeEnabled!!,
+                onNightModeChanged = { viewModel.acceptIntent(SettingsIntent.ChangeNightMode(it)) },
+                notificationsEnabled = uiState.notificationsEnabled!!,
+                onNotificationsChange = {
+                    viewModel.acceptIntent(
+                        if (it) {
+                            SettingsIntent.EnableNotifications
+                        } else {
+                            SettingsIntent.DisableNotifications
+                        }
+                    )
+                },
+                uiState.notificationSymbols
+            )
+            if (uiState.isUserSignedIn!!) {
+                SignOutButton(onSignedOut)
+            }
         }
     }
 }

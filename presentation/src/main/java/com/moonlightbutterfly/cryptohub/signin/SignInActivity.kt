@@ -15,8 +15,6 @@ import com.moonlightbutterfly.cryptohub.core.MainActivity
 import com.moonlightbutterfly.cryptohub.presentation.R
 import com.moonlightbutterfly.cryptohub.presentation.databinding.ActivitySignInBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -42,7 +40,8 @@ class SignInActivity : AppCompatActivity() {
             splashScreen.setSplashScreenTheme(firebaseAuthDataProvider.configurationData!!.theme)
         }
         installSplashScreen()
-        if (viewModel.isUserSignedIn()) {
+        val isUserSignedIn = viewModel.uiState.value.isUserSignedIn!!
+        if (isUserSignedIn) {
             startActivity(Intent(this, MainActivity::class.java))
             finish()
         }
@@ -52,7 +51,7 @@ class SignInActivity : AppCompatActivity() {
     }
 
     private fun getConfigurationData(): FirebaseAuthDataProvider.ConfigurationData {
-        val nightModeEnabled = runBlocking { viewModel.isNightModeEnabled.first() }
+        val nightModeEnabled = viewModel.uiState.value.nightModeEnabled!!
         val theme = if (nightModeEnabled) {
             R.style.Theme_CryptoHub_Night
         } else {
