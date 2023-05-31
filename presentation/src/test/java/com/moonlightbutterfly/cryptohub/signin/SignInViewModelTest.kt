@@ -38,7 +38,12 @@ class SignInViewModelTest {
         every { localPreferencesUseCase() } returns flowOf()
         every { isSignedInUser() } returns Answer.Success(true)
         Dispatchers.setMain(testDispatcher)
-        viewModel = SignInViewModel(signInFacade, isSignedInUser, localPreferencesUseCase)
+        viewModel = SignInViewModel(
+            signInFacade,
+            isSignedInUser,
+            localPreferencesUseCase,
+            SignInUIState(isUserSignedIn = true)
+        )
     }
 
     @After
@@ -49,7 +54,7 @@ class SignInViewModelTest {
     @Test
     fun `should sign in`() {
         // WHEN
-        viewModel.signIn()
+        viewModel.acceptIntent(SignInIntent.SignIn)
 
         // THEN
         verify {
@@ -60,7 +65,7 @@ class SignInViewModelTest {
     @Test
     fun `should check if user signed in`() {
         // GIVEN WHEN
-        val isSignedIn = viewModel.isUserSignedIn()
+        val isSignedIn = viewModel.uiState.value.isUserSignedIn!!
         // THEN
         assertTrue(isSignedIn)
     }

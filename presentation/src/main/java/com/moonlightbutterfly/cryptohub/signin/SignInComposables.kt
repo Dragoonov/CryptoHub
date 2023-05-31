@@ -15,6 +15,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,6 +24,8 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.moonlightbutterfly.cryptohub.core.LoadingBar
 import com.moonlightbutterfly.cryptohub.presentation.R
 
 val SIGN_IN_CONTENT_UNDER_LOGO_HEIGHT = 400.dp
@@ -32,30 +35,35 @@ fun SignInScreen(
     onSignedIn: () -> Unit,
     viewModel: SignInViewModel
 ) {
-    if (viewModel.isUserSignedIn()) {
-        onSignedIn()
-    }
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    Column(
-        Modifier
-            .fillMaxWidth()
-            .fillMaxHeight()
-            .background(MaterialTheme.colors.background),
-        verticalArrangement = Arrangement.SpaceAround,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Logo()
+    if (uiState.isLoading) {
+        LoadingBar()
+    } else {
+        if (uiState.isUserSignedIn!!) {
+            onSignedIn()
+        }
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.height(SIGN_IN_CONTENT_UNDER_LOGO_HEIGHT)
+            Modifier
+                .fillMaxWidth()
+                .fillMaxHeight()
+                .background(MaterialTheme.colors.background),
+            verticalArrangement = Arrangement.SpaceAround,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            ProviderSignInButton(
-                onClicked = { viewModel.signIn() },
-                buttonBackgroundColor = MaterialTheme.colors.primary,
-                buttonText = R.string.sign_in
-            )
-            Text(text = stringResource(id = R.string.or), modifier = Modifier.padding(5.dp))
-            AnonymousSignInButton(onSignedInIn = onSignedIn)
+            Logo()
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.height(SIGN_IN_CONTENT_UNDER_LOGO_HEIGHT)
+            ) {
+                ProviderSignInButton(
+                    onClicked = { viewModel.acceptIntent(SignInIntent.SignIn) },
+                    buttonBackgroundColor = MaterialTheme.colors.primary,
+                    buttonText = R.string.sign_in
+                )
+                Text(text = stringResource(id = R.string.or), modifier = Modifier.padding(5.dp))
+                AnonymousSignInButton(onSignedInIn = onSignedIn)
+            }
         }
     }
 }

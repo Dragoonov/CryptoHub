@@ -16,9 +16,7 @@ import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -44,7 +42,7 @@ class SettingsViewModelTest {
         every { getLocalPreferencesUseCase() } returns flowOf(Answer.Success(LocalPreferences.DEFAULT))
         coEvery { updateLocalPreferencesUseCase(any()) } returns Answer.Success(Unit)
         every { signOutUserUseCase() } returns Answer.Success(Unit)
-        every { getSignedInUserUseCase() } returns Answer.Success(true) andThen Answer.Success(false)
+        every { getSignedInUserUseCase() } returns Answer.Success(true)
         every { configureNotificationsUseCase(any()) } returns Answer.Success(Unit)
         Dispatchers.setMain(testDispatcher)
         viewModel = SettingsViewModel(
@@ -52,7 +50,8 @@ class SettingsViewModelTest {
             updateLocalPreferencesUseCase,
             signOutUserUseCase,
             getSignedInUserUseCase,
-            configureNotificationsUseCase
+            configureNotificationsUseCase,
+            SettingsUIState()
         )
     }
 
@@ -66,7 +65,7 @@ class SettingsViewModelTest {
         // GIVEN
         every { getLocalPreferencesUseCase() } answers { flowOf(Answer.Success(LocalPreferences.DEFAULT)) }
         // WHEN
-        viewModel.onNightModeChanged(true)
+        viewModel.acceptIntent(SettingsIntent.ChangeNightMode(true))
         // THEN
         coVerify {
             updateLocalPreferencesUseCase(any())
@@ -76,7 +75,7 @@ class SettingsViewModelTest {
     @Test
     fun `should sign out user`() {
         // GIVEN WHEN
-        viewModel.onSignedOut()
+        viewModel.acceptIntent(SettingsIntent.SignOut)
 
         // THEN
         verify {
@@ -87,13 +86,14 @@ class SettingsViewModelTest {
     @Test
     fun `should check if user is signed in`() = runTest {
         // WHEN
-        var signedIn = viewModel.isUserSignedIn.first()
+        var signedIn = viewModel.uiState.value.isUserSignedIn!!
 
         // THEN
         assertTrue(signedIn)
 
         // WHEN
-        signedIn = viewModel.isUserSignedIn.last()
+        viewModel.acceptIntent(SettingsIntent.SignOut)
+        signedIn = viewModel.uiState.value.isUserSignedIn!!
 
         // THEN
         assertFalse(signedIn)
@@ -104,7 +104,7 @@ class SettingsViewModelTest {
         // GIVEN
         every { getLocalPreferencesUseCase() } answers { flowOf(Answer.Success(LocalPreferences.DEFAULT)) }
         // WHEN
-        viewModel.onEnabledNotifications()
+        viewModel.acceptIntent(SettingsIntent.EnableNotifications)
         // THEN
         coVerify {
             getLocalPreferencesUseCase()
@@ -118,7 +118,7 @@ class SettingsViewModelTest {
         // GIVEN
         every { getLocalPreferencesUseCase() } answers { flowOf(Answer.Success(LocalPreferences.DEFAULT)) }
         // WHEN
-        viewModel.onDisabledNotifications()
+        viewModel.acceptIntent(SettingsIntent.DisableNotifications)
         // THEN
         coVerify {
             getLocalPreferencesUseCase()

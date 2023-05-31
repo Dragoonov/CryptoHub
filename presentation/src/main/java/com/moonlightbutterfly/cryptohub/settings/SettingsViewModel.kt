@@ -1,8 +1,8 @@
 package com.moonlightbutterfly.cryptohub.settings
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.moonlightbutterfly.cryptohub.data.common.Answer
+import com.moonlightbutterfly.cryptohub.core.BaseViewModel
+import com.moonlightbutterfly.cryptohub.data.common.getOrNull
+import com.moonlightbutterfly.cryptohub.data.common.getOrThrow
 import com.moonlightbutterfly.cryptohub.data.common.unpack
 import com.moonlightbutterfly.cryptohub.models.LocalPreferences
 import com.moonlightbutterfly.cryptohub.usecases.ConfigureNotificationsUseCase
@@ -11,10 +11,10 @@ import com.moonlightbutterfly.cryptohub.usecases.IsUserSignedInUseCase
 import com.moonlightbutterfly.cryptohub.usecases.SignOutUseCase
 import com.moonlightbutterfly.cryptohub.usecases.UpdateLocalPreferencesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -24,62 +24,65 @@ class SettingsViewModel @Inject constructor(
     private val signOutUserUseCase: SignOutUseCase,
     private val isUserSignedInUseCase: IsUserSignedInUseCase,
     private val configureNotificationsUseCase: ConfigureNotificationsUseCase,
-) : ViewModel() {
+    initialState: SettingsUIState,
+) : BaseViewModel<SettingsIntent, SettingsUIState>(initialState) {
 
-    val isNightModeEnabled = getLocalPreferencesUseCase()
-        .map { it.unpack(LocalPreferences.DEFAULT).nightModeEnabled }
-
-    val areNotificationsEnabled = getLocalPreferencesUseCase()
-        .map { it.unpack(LocalPreferences.DEFAULT).notificationsEnabled }
-
-    val isUserSignedIn = flow {
-        emit(isUserSignedInUseCase().unpack(false))
+    init {
+        acceptIntent(SettingsIntent.GetData)
     }
 
-    val notificationsSymbols = getLocalPreferencesUseCase()
-        .map {
-            it.unpack(LocalPreferences.DEFAULT).notificationsConfiguration
-                .map { crypto -> crypto.symbol }
-        }
-
-    fun onNightModeChanged(nightModeEnabled: Boolean) {
-        viewModelScope.launch {
-            getLocalPreferencesUseCase().first()
-                .let {
-                    if (it is Answer.Success) {
-                        updateLocalPreferencesUseCase(it.data.copy(nightModeEnabled = nightModeEnabled))
-                    }
-                }
+    private fun onNightModeChanged(nightModeEnabled: Boolean): Flow<SettingsUIState> = flow {
+        getLocalPreferencesUseCase().first().unpack(LocalPreferences.DEFAULT).let {
+            updateLocalPreferencesUseCase(it.copy(nightModeEnabled = nightModeEnabled)).getOrThrow()
+            emit(uiState.value.copy(nightModeEnabled = nightModeEnabled))
         }
     }
 
-    fun onSignedOut() {
-        viewModelScope.launch {
-            signOutUserUseCase()
+    private fun onSignedOut(): Flow<SettingsUIState> = flow {
+        signOutUserUseCase().getOrNull()?.let {
+            emit(uiState.value.copy(isUserSignedIn = false))
         }
     }
 
-    fun onEnabledNotifications() {
-        viewModelScope.launch {
-            getLocalPreferencesUseCase().first()
-                .let {
-                    if (it is Answer.Success) {
-                        configureNotificationsUseCase(it.data.notificationsConfiguration)
-                        updateLocalPreferencesUseCase(it.data.copy(notificationsEnabled = true))
-                    }
-                }
+    private fun onEnabledNotifications(): Flow<SettingsUIState> = flow {
+        getLocalPreferencesUseCase().first().unpack(LocalPreferences.DEFAULT).let {
+            configureNotificationsUseCase(it.notificationsConfiguration).getOrThrow()
+            updateLocalPreferencesUseCase(it.copy(notificationsEnabled = true)).getOrThrow()
+            emit(uiState.value.copy(notificationsEnabled = true))
         }
     }
 
-    fun onDisabledNotifications() {
-        viewModelScope.launch {
-            getLocalPreferencesUseCase().first()
-                .let {
-                    if (it is Answer.Success) {
-                        configureNotificationsUseCase(emptySet())
-                        updateLocalPreferencesUseCase(it.data.copy(notificationsEnabled = false))
-                    }
-                }
+    private fun onDisabledNotifications(): Flow<SettingsUIState> = flow {
+        getLocalPreferencesUseCase().first().unpack(LocalPreferences.DEFAULT).let {
+            configureNotificationsUseCase(emptySet()).getOrThrow()
+            updateLocalPreferencesUseCase(it.copy(notificationsEnabled = false)).getOrThrow()
+            emit(uiState.value.copy(notificationsEnabled = false))
+        }
+    }
+
+    private fun getData(): Flow<SettingsUIState> = flow {
+        val preferences =
+            getLocalPreferencesUseCase().map { it.unpack(LocalPreferences.DEFAULT) }.first()
+        val isUserSignedIn = isUserSignedInUseCase().unpack(false)
+        emit(
+            SettingsUIState(
+                nightModeEnabled = preferences.nightModeEnabled,
+                notificationsEnabled = preferences.notificationsEnabled,
+                notificationSymbols = preferences.notificationsConfiguration.map { it.symbol },
+                isUserSignedIn = isUserSignedIn,
+                isLoading = false,
+                error = null
+            )
+        )
+    }
+
+    override fun mapIntent(intent: SettingsIntent): Flow<SettingsUIState> {
+        return when (intent) {
+            is SettingsIntent.GetData -> getData()
+            is SettingsIntent.ChangeNightMode -> onNightModeChanged(intent.enable)
+            is SettingsIntent.DisableNotifications -> onDisabledNotifications()
+            is SettingsIntent.EnableNotifications -> onEnabledNotifications()
+            is SettingsIntent.SignOut -> onSignedOut()
         }
     }
 }
