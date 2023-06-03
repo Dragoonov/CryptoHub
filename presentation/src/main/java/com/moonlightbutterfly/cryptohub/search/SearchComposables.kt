@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.annotation.ExperimentalCoilApi
+import com.moonlightbutterfly.cryptohub.core.LoadingBar
 import com.moonlightbutterfly.cryptohub.list.CryptoAssetLogoFor
 import com.moonlightbutterfly.cryptohub.list.CryptoAssetNameColumnForAsset
 import com.moonlightbutterfly.cryptohub.models.CryptoAsset
@@ -42,51 +43,58 @@ import com.moonlightbutterfly.cryptohub.presentation.R
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @ExperimentalCoilApi
 @Composable
-fun SearchScreen(onCancelSearch: () -> Unit, onItemClicked: (asset: String) -> Unit, viewModel: SearchViewModel) {
+fun SearchScreen(
+    onCancelSearch: () -> Unit,
+    onItemClicked: (asset: String) -> Unit,
+    viewModel: SearchViewModel
+) {
 
-    val query by viewModel.currentSearchQuery.collectAsStateWithLifecycle(stringResource(id = R.string.search))
-    val results by viewModel.cryptoAssetsResults.collectAsStateWithLifecycle(emptyList())
-    val recents by viewModel.recents.collectAsStateWithLifecycle(emptyList())
-    val isLoading by viewModel.isLoading.collectAsStateWithLifecycle(false)
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val searchFocusRequester = FocusRequester()
 
-    Scaffold(
-        topBar = {
-            TopAppBar {
-                SearchHeader(
-                    query = query,
-                    onQueryChange = viewModel::onQueryChange,
-                    onCancelSearch = onCancelSearch,
-                    focusRequester = searchFocusRequester
-                )
-            }
-        },
-    ) {
-        Column(Modifier.verticalScroll(rememberScrollState())) {
-            if (query.isNotEmpty()) {
-                if (isLoading) {
-                    ProgressBar()
+    if (uiState.isLoading) {
+        LoadingBar()
+    } else {
+        Scaffold(
+            topBar = {
+                TopAppBar {
+                    SearchHeader(
+                        query = uiState.query!!,
+                        onQueryChange = { viewModel.acceptIntent(SearchIntent.Search(it)) },
+                        onCancelSearch = onCancelSearch,
+                        focusRequester = searchFocusRequester
+                    )
+                }
+            },
+        ) {
+            Column(Modifier.verticalScroll(rememberScrollState())) {
+                if (uiState.query!!.isNotEmpty()) {
+                    if (uiState.isSearchLoading!!) {
+                        ProgressBar()
+                    } else {
+                        uiState.searchResults.forEach {
+                            CryptoAssetSearchListItem(
+                                asset = it,
+                                onItemClicked = { asset ->
+                                    viewModel.acceptIntent(SearchIntent.PickResult(asset))
+                                    onItemClicked(asset.symbol)
+                                }
+                            )
+                        }
+                    }
                 } else {
-                    results.forEach {
+                    RecentlyViewedHeader {
+                        viewModel.acceptIntent(SearchIntent.DeleteRecents)
+                    }
+                    uiState.recents.reversed().forEach {
                         CryptoAssetSearchListItem(
                             asset = it,
                             onItemClicked = { asset ->
-                                viewModel.onResultClicked(asset)
+                                viewModel.acceptIntent(SearchIntent.PickResult(asset))
                                 onItemClicked(asset.symbol)
                             }
                         )
                     }
-                }
-            } else {
-                RecentlyViewedHeader(viewModel::onDeleteRecentsClicked)
-                recents.reversed().forEach {
-                    CryptoAssetSearchListItem(
-                        asset = it,
-                        onItemClicked = { asset ->
-                            viewModel.onResultClicked(asset)
-                            onItemClicked(asset.symbol)
-                        }
-                    )
                 }
             }
         }
@@ -181,7 +189,7 @@ fun CryptoAssetSearchListItem(
             .height(50.dp)
             .clickable { onItemClicked(asset) }
     ) {
-        CryptoAssetLogoFor(asset)
+        CryptoAssetLogoFor(asset.logoUrl)
         CryptoAssetNameColumnForAsset(asset)
     }
 }

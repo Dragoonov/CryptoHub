@@ -34,7 +34,14 @@ class SettingsViewModel @Inject constructor(
     private fun onNightModeChanged(nightModeEnabled: Boolean): Flow<SettingsUIState> = flow {
         getLocalPreferencesUseCase().first().unpack(LocalPreferences.DEFAULT).let {
             updateLocalPreferencesUseCase(it.copy(nightModeEnabled = nightModeEnabled)).getOrThrow()
-            emit(uiState.value.copy(nightModeEnabled = nightModeEnabled))
+            emit(
+                uiState.value.copy(
+                    nightModeEnabled = getLocalPreferencesUseCase()
+                        .first()
+                        .getOrThrow()
+                        .nightModeEnabled
+                )
+            )
         }
     }
 
@@ -44,11 +51,16 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
+    private suspend fun getCurrentNotificationsEnabled() = getLocalPreferencesUseCase()
+        .first()
+        .getOrThrow()
+        .notificationsEnabled
+
     private fun onEnabledNotifications(): Flow<SettingsUIState> = flow {
         getLocalPreferencesUseCase().first().unpack(LocalPreferences.DEFAULT).let {
             configureNotificationsUseCase(it.notificationsConfiguration).getOrThrow()
             updateLocalPreferencesUseCase(it.copy(notificationsEnabled = true)).getOrThrow()
-            emit(uiState.value.copy(notificationsEnabled = true))
+            emit(uiState.value.copy(notificationsEnabled = getCurrentNotificationsEnabled()))
         }
     }
 
@@ -56,7 +68,11 @@ class SettingsViewModel @Inject constructor(
         getLocalPreferencesUseCase().first().unpack(LocalPreferences.DEFAULT).let {
             configureNotificationsUseCase(emptySet()).getOrThrow()
             updateLocalPreferencesUseCase(it.copy(notificationsEnabled = false)).getOrThrow()
-            emit(uiState.value.copy(notificationsEnabled = false))
+            emit(
+                uiState.value.copy(
+                    notificationsEnabled = getCurrentNotificationsEnabled()
+                )
+            )
         }
     }
 

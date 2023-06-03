@@ -197,7 +197,7 @@ fun CryptoAssetListItem(
             .height(50.dp)
             .clickable { onItemClicked(asset.asset.symbol) }
     ) {
-        CryptoAssetLogoFor(asset.asset)
+        CryptoAssetLogoFor(asset.asset.logoUrl)
         CryptoAssetNameColumnForAsset(asset.asset)
         CryptoAssetPriceColumnForAsset(asset)
         Favourite(modifier = Modifier.padding(start = 10.dp), isInFavourites = isLiked, onSelectionChanged = onLiked)
@@ -206,8 +206,8 @@ fun CryptoAssetListItem(
 
 @ExperimentalCoilApi
 @Composable
-fun CryptoAssetLogoFor(asset: CryptoAsset) {
-    val painter = getImagePainterFor(asset.logoUrl)
+fun CryptoAssetLogoFor(logoUrl: String) {
+    val painter = getImagePainterFor(logoUrl)
     Image(
         painter = painter,
         modifier = Modifier

@@ -1,8 +1,10 @@
 package com.moonlightbutterfly.cryptohub.di
 
+import com.moonlightbutterfly.cryptohub.core.MainUIState
 import com.moonlightbutterfly.cryptohub.data.common.unpack
 import com.moonlightbutterfly.cryptohub.models.LocalPreferences
 import com.moonlightbutterfly.cryptohub.panel.CryptoAssetPanelUIState
+import com.moonlightbutterfly.cryptohub.search.SearchUIState
 import com.moonlightbutterfly.cryptohub.settings.SettingsUIState
 import com.moonlightbutterfly.cryptohub.signin.SignInUIState
 import com.moonlightbutterfly.cryptohub.usecases.GetLocalPreferencesUseCase
@@ -39,4 +41,18 @@ object ViewModelsModule {
         isLoading = false,
         error = null
     )
+
+    @Provides
+    fun provideMainUIInitialState(
+        getLocalPreferencesUseCase: GetLocalPreferencesUseCase
+    ): MainUIState = MainUIState(
+        nightModeEnabled = runBlocking {
+            getLocalPreferencesUseCase().first().unpack(
+                LocalPreferences.DEFAULT
+            )
+        }.nightModeEnabled
+    )
+
+    @Provides
+    fun provideSearchInitialState(): SearchUIState = SearchUIState(isLoading = true)
 }

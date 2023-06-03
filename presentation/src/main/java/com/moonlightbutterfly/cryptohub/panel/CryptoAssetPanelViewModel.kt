@@ -24,7 +24,7 @@ import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 @HiltViewModel
-@SuppressWarnings("LongParameterList")
+@SuppressWarnings("LongParameterList", "TooManyFunctions")
 class CryptoAssetPanelViewModel @Inject constructor(
     private val getCryptoAssetsMarketInfoUseCase: GetCryptoAssetsMarketInfoUseCase,
     private val getFavouritesUseCase: GetFavouritesUseCase,
@@ -59,8 +59,9 @@ class CryptoAssetPanelViewModel @Inject constructor(
     private fun addCryptoToFavourites() = flow {
         asset?.let {
             addFavouriteUseCase(it).getOrNull()?.let {
+                val isInFavourites = getFavouritesUseCase().first().getOrThrow().cryptoAssets.contains(asset)
                 emit(
-                    uiState.value.copy(isInFavourites = true)
+                    uiState.value.copy(isInFavourites = isInFavourites)
                 )
             }
         }
@@ -69,12 +70,20 @@ class CryptoAssetPanelViewModel @Inject constructor(
     private fun removeCryptoFromFavourites() = flow {
         asset?.let {
             removeFavouriteUseCase(it).getOrNull()?.let {
+                val isInFavourites = getFavouritesUseCase().first().getOrThrow().cryptoAssets.contains(asset)
                 emit(
-                    uiState.value.copy(isInFavourites = false)
+                    uiState.value.copy(isInFavourites = isInFavourites)
                 )
             }
         }
     }
+
+    private suspend fun getCurrentNotificationConfiguration() = getLocalPreferencesUseCase()
+        .first()
+        .getOrThrow()
+        .notificationsConfiguration.find {
+            it.symbol == asset?.symbol
+        } ?: NotificationConfiguration(asset?.symbol ?: "")
 
     private fun addCryptoToNotifications(time: NotificationTime?, interval: NotificationInterval?) =
         flow {
@@ -87,7 +96,7 @@ class CryptoAssetPanelViewModel @Inject constructor(
                     emit(
                         uiState.value.copy(
                             isInNotifications = true,
-                            notificationConfiguration = cryptoConfiguration
+                            notificationConfiguration = getCurrentNotificationConfiguration()
                         )
                     )
                 }
@@ -95,7 +104,7 @@ class CryptoAssetPanelViewModel @Inject constructor(
         }
 
     private fun removeCryptoFromNotifications() = flow {
-        asset?.let { asset ->
+        asset?.let {
             (getLocalPreferencesUseCase().first() as? Answer.Success)?.let { answer ->
                 val newSet = answer.freshConfiguration()
                 updateLocalPreferencesUseCase(answer.data.copy(notificationsConfiguration = newSet))
@@ -103,7 +112,7 @@ class CryptoAssetPanelViewModel @Inject constructor(
                 emit(
                     uiState.value.copy(
                         isInNotifications = false,
-                        notificationConfiguration = NotificationConfiguration(asset.symbol)
+                        notificationConfiguration = getCurrentNotificationConfiguration()
                     )
                 )
             }
@@ -135,7 +144,7 @@ class CryptoAssetPanelViewModel @Inject constructor(
                 )
             )
         } catch (exception: java.lang.Exception) {
-            emit(CryptoAssetPanelUIState(error = exception))
+            emit(CryptoAssetPanelUIState(error = exception, isLoading = false))
         }
     }
 
