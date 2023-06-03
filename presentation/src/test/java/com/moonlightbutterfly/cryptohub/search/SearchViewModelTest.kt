@@ -65,6 +65,7 @@ class SearchViewModelTest {
             clearRecentsUseCase,
             getAllCryptoAssetsMarketInfoUseCase,
             removeRecentUseCase,
+            SearchUIState()
         )
     }
 
@@ -76,10 +77,10 @@ class SearchViewModelTest {
     @Test
     fun `should not search by query less than 3 characters`() {
         // GIVEN WHEN
-        viewModel.onQueryChange("as")
+        viewModel.acceptIntent(SearchIntent.Search("as"))
 
         // THEN
-        assertEquals(0, viewModel.cryptoAssetsResults.value.size)
+        assertEquals(0, viewModel.uiState.value.searchResults.size)
         coVerify(exactly = 0) {
             getAllCryptoAssetsMarketInfoUseCase(any())
         }
@@ -88,11 +89,11 @@ class SearchViewModelTest {
     @Test
     fun `should search and filter by query of 3 characters`() = runTest(testDispatcher) {
         // WHEN
-        viewModel.onQueryChange("ada")
+        viewModel.acceptIntent(SearchIntent.Search("ada"))
         advanceTimeBy(1500)
 
         // THEN
-        assertEquals(2, viewModel.cryptoAssetsResults.value.size)
+        assertEquals(2, viewModel.uiState.value.searchResults.size)
         coVerify(exactly = 10) {
             getAllCryptoAssetsMarketInfoUseCase(any())
         }
@@ -104,7 +105,7 @@ class SearchViewModelTest {
         recentsFlow.emit(Answer.Success(CryptoCollection.EMPTY))
 
         // WHEN
-        viewModel.onResultClicked(CryptoAsset.EMPTY)
+        viewModel.acceptIntent(SearchIntent.PickResult(CryptoAsset.EMPTY))
 
         // THEN
         coVerify {
@@ -120,12 +121,13 @@ class SearchViewModelTest {
         // GIVEN
         val asset = CryptoAsset(name = "test")
         recentsFlow.emit(Answer.Success(CryptoCollection(cryptoAssets = listOf(asset))))
+        viewModel.acceptIntent(SearchIntent.GetData)
         backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
-            viewModel.recents.collect {}
+            viewModel.uiState.collect {}
         }
 
         // WHEN
-        viewModel.onResultClicked(asset)
+        viewModel.acceptIntent(SearchIntent.PickResult(asset))
 
         // THEN
         coVerify {
@@ -158,12 +160,13 @@ class SearchViewModelTest {
                 )
             )
         )
+        viewModel.acceptIntent(SearchIntent.GetData)
         backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
-            viewModel.recents.collect {}
+            viewModel.uiState.collect {}
         }
 
         // WHEN
-        viewModel.onResultClicked(asset2)
+        viewModel.acceptIntent(SearchIntent.PickResult(asset2))
 
         // THEN
         coVerify {
@@ -175,7 +178,7 @@ class SearchViewModelTest {
     @Test
     fun `should remove recents`() {
         // GIVEN WHEN
-        viewModel.onDeleteRecentsClicked()
+        viewModel.acceptIntent(SearchIntent.DeleteRecents)
 
         // THEN
         coVerify {
