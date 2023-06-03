@@ -190,6 +190,6 @@ fun CryptoAssetSearchListItem(
             .clickable { onItemClicked(asset) }
     ) {
         CryptoAssetLogoFor(asset.logoUrl)
-        CryptoAssetNameColumnForAsset(asset)
+        CryptoAssetNameColumnForAsset(asset.name, asset.symbol)
     }
 }
