@@ -2,6 +2,7 @@ package com.moonlightbutterfly.cryptohub.di
 
 import com.moonlightbutterfly.cryptohub.core.MainUIState
 import com.moonlightbutterfly.cryptohub.data.common.unpack
+import com.moonlightbutterfly.cryptohub.list.CryptoAssetsListUIState
 import com.moonlightbutterfly.cryptohub.models.LocalPreferences
 import com.moonlightbutterfly.cryptohub.panel.CryptoAssetPanelUIState
 import com.moonlightbutterfly.cryptohub.search.SearchUIState
@@ -55,4 +56,7 @@ object ViewModelsModule {
 
     @Provides
     fun provideSearchInitialState(): SearchUIState = SearchUIState(isLoading = true)
+
+    @Provides
+    fun provideCryptoAssetsListInitialState(): CryptoAssetsListUIState = CryptoAssetsListUIState(isLoading = true)
 }

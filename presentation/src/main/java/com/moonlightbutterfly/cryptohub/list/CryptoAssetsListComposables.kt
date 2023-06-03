@@ -5,6 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
@@ -41,10 +42,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.LoadState
+import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import coil.annotation.ExperimentalCoilApi
 import com.moonlightbutterfly.cryptohub.core.Favourite
+import com.moonlightbutterfly.cryptohub.core.LoadingBar
 import com.moonlightbutterfly.cryptohub.core.getImagePainterFor
 import com.moonlightbutterfly.cryptohub.models.CryptoAsset
 import com.moonlightbutterfly.cryptohub.models.CryptoAssetMarketInfo
@@ -62,10 +66,8 @@ fun CryptoAssetsListScreen(
     viewModel: CryptoAssetsListViewModel
 ) {
 
-    val cryptoAssets = viewModel.cryptoAssets.collectAsLazyPagingItems()
-
-    val favourites by viewModel.favourites.collectAsStateWithLifecycle(emptyList())
-
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val cryptoAssets = uiState.assets.collectAsLazyPagingItems()
     var isFavouritesSelected by remember { mutableStateOf(false) }
 
     Scaffold(
@@ -75,43 +77,95 @@ fun CryptoAssetsListScreen(
             }
         }
     ) {
-        Column(
-            Modifier
-                .fillMaxWidth()
-                .fillMaxHeight()
-        ) {
-            Row(
+        Box {
+            if (uiState.isLoading || cryptoAssets.loadState.refresh is LoadState.Loading) {
+                LoadingBar(transparentBackground = true)
+            }
+            Column(
                 Modifier
-                    .padding(10.dp)
-                    .fillMaxWidth(),
-                Arrangement.Start
+                    .fillMaxWidth()
+                    .fillMaxHeight()
             ) {
-                Chip(
-                    name = stringResource(id = R.string.favourites),
-                    isSelected = isFavouritesSelected,
-                    onSelectionChanged = { isFavouritesSelected = !isFavouritesSelected }
+                Filters(isFavouritesSelected = isFavouritesSelected) {
+                    isFavouritesSelected = !isFavouritesSelected
+                }
+                ListItems(
+                    isFavouritesSelected = isFavouritesSelected,
+                    favourites = uiState.favourites,
+                    onItemClicked = onItemClicked,
+                    onLiked = { asset ->
+                        viewModel.acceptIntent(
+                            CryptoAssetsListIntent.AddToFavourites(
+                                asset
+                            )
+                        )
+                    },
+                    onDisliked = { asset ->
+                        viewModel.acceptIntent(
+                            CryptoAssetsListIntent.RemoveFromFavourites(asset)
+                        )
+                    },
+                    cryptoAssets = cryptoAssets,
+                    isLiked = { viewModel.isCryptoInFavourites(it.asset) }
                 )
             }
-            LazyColumn {
-                if (isFavouritesSelected) {
-                    items(favourites) {
-                        ListItemContent(
-                            item = it,
-                            viewModel = viewModel,
-                            onItemClicked = onItemClicked
-                        )
-                    }
-                } else {
-                    items(cryptoAssets) {
-                        ListItemContent(
-                            item = it,
-                            viewModel = viewModel,
-                            onItemClicked = onItemClicked
-                        )
-                    }
-                }
+        }
+    }
+}
+
+@OptIn(ExperimentalCoilApi::class)
+@Composable
+@SuppressWarnings("LongParameterList")
+private fun ListItems(
+    isFavouritesSelected: Boolean,
+    favourites: List<CryptoAssetMarketInfo>,
+    isLiked: (CryptoAssetMarketInfo) -> Boolean,
+    onItemClicked: (symbol: String) -> Unit,
+    onLiked: (CryptoAssetMarketInfo) -> Unit,
+    onDisliked: (CryptoAssetMarketInfo) -> Unit,
+    cryptoAssets: LazyPagingItems<CryptoAssetMarketInfo>,
+) {
+    LazyColumn {
+        if (isFavouritesSelected) {
+            items(favourites) {
+                ListItemContent(
+                    item = it,
+                    isLiked = true,
+                    onItemClicked = onItemClicked,
+                    onLiked = onLiked,
+                    onDisliked = onDisliked
+                )
+            }
+        } else {
+            items(cryptoAssets) {
+                ListItemContent(
+                    item = it!!,
+                    isLiked = isLiked(it),
+                    onItemClicked = onItemClicked,
+                    onLiked = onLiked,
+                    onDisliked = onDisliked,
+                )
             }
         }
+    }
+}
+
+@Composable
+private fun Filters(
+    isFavouritesSelected: Boolean,
+    onSelectionChanged: () -> Unit
+) {
+    Row(
+        Modifier
+            .padding(10.dp)
+            .fillMaxWidth(),
+        Arrangement.Start
+    ) {
+        Chip(
+            name = stringResource(id = R.string.favourites),
+            isSelected = isFavouritesSelected,
+            onSelectionChanged = onSelectionChanged
+        )
     }
 }
 
@@ -139,20 +193,22 @@ private fun Header(onSearchClicked: () -> Unit) {
 @ExperimentalCoilApi
 @Composable
 private fun ListItemContent(
-    item: CryptoAssetMarketInfo?,
-    viewModel: CryptoAssetsListViewModel,
-    onItemClicked: (symbol: String) -> Unit
+    item: CryptoAssetMarketInfo,
+    isLiked: Boolean,
+    onItemClicked: (symbol: String) -> Unit,
+    onLiked: (CryptoAssetMarketInfo) -> Unit,
+    onDisliked: (CryptoAssetMarketInfo) -> Unit
 ) {
-    val isLiked by viewModel.isCryptoInFavourites(item!!.asset).collectAsStateWithLifecycle(false)
     CryptoAssetListItem(
-        asset = item!!,
+        asset = item.asset,
+        assetPrice = item.price,
         onItemClicked = onItemClicked,
         isLiked = isLiked,
         onLiked = {
             if (it) {
-                viewModel.addToFavourites(item.asset)
+                onLiked(item)
             } else {
-                viewModel.removeFromFavourites(item.asset)
+                onDisliked(item)
             }
         }
     )
@@ -186,7 +242,8 @@ fun Chip(
 @ExperimentalCoilApi
 @Composable
 fun CryptoAssetListItem(
-    asset: CryptoAssetMarketInfo,
+    asset: CryptoAsset,
+    assetPrice: Double,
     onItemClicked: (symbol: String) -> Unit,
     isLiked: Boolean,
     onLiked: (liked: Boolean) -> Unit
@@ -195,12 +252,16 @@ fun CryptoAssetListItem(
         Modifier
             .padding(20.dp)
             .height(50.dp)
-            .clickable { onItemClicked(asset.asset.symbol) }
+            .clickable { onItemClicked(asset.symbol) }
     ) {
-        CryptoAssetLogoFor(asset.asset.logoUrl)
-        CryptoAssetNameColumnForAsset(asset.asset)
-        CryptoAssetPriceColumnForAsset(asset)
-        Favourite(modifier = Modifier.padding(start = 10.dp), isInFavourites = isLiked, onSelectionChanged = onLiked)
+        CryptoAssetLogoFor(asset.logoUrl)
+        CryptoAssetNameColumnForAsset(asset.name, asset.symbol)
+        CryptoAssetPriceColumnForAsset(assetPrice)
+        Favourite(
+            modifier = Modifier.padding(start = 10.dp),
+            isInFavourites = isLiked,
+            onSelectionChanged = onLiked
+        )
     }
 }
 
@@ -219,7 +280,7 @@ fun CryptoAssetLogoFor(logoUrl: String) {
 }
 
 @Composable
-fun RowScope.CryptoAssetNameColumnForAsset(asset: CryptoAsset) {
+fun RowScope.CryptoAssetNameColumnForAsset(name: String, symbol: String) {
     Column(
         Modifier
             .weight(1f)
@@ -228,18 +289,18 @@ fun RowScope.CryptoAssetNameColumnForAsset(asset: CryptoAsset) {
         Arrangement.SpaceBetween
     ) {
         Text(
-            text = asset.name,
+            text = name,
             fontWeight = FontWeight.Bold
         )
         Text(
-            text = asset.symbol,
+            text = symbol,
             fontWeight = FontWeight.Light
         )
     }
 }
 
 @Composable
-fun RowScope.CryptoAssetPriceColumnForAsset(asset: CryptoAssetMarketInfo) {
+fun RowScope.CryptoAssetPriceColumnForAsset(price: Double) {
     Column(
         Modifier
             .weight(1f)
@@ -249,7 +310,7 @@ fun RowScope.CryptoAssetPriceColumnForAsset(asset: CryptoAssetMarketInfo) {
         val textModifier = Modifier.align(Alignment.End)
         Text(
             modifier = textModifier,
-            text = "${asset.price.round(2)} USD"
+            text = "${price.round(2)} USD"
         )
     }
 }
